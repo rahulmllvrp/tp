@@ -43,7 +43,7 @@ You can reach us at the email `seer[at]comp.nus.edu.sg`
 <img src="images/joshlohh.png" width="200px">
 
 [[github](http://github.com/JoshLohh)]
-[[portfolio](team/johndoe.md)]
+[[portfolio](team/joshloh.md)]
 
 * Role: Developer
 * Responsibilities: Dev Ops + Threading
