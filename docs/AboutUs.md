@@ -27,7 +27,7 @@ You can reach us at the email `seer[at]comp.nus.edu.sg`
 [[portfolio](team/gabriel.md)]
 
 * Role: Documentation
-* Responsibilities: Responsible for the quality of various project documents. 
+* Responsibilities: Responsible for the quality of various project documents.
 
 ### Johnny Doe
 
