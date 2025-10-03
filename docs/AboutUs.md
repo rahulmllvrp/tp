@@ -19,15 +19,15 @@ You can reach us at the email `seer[at]comp.nus.edu.sg`
 
 * Role: Project Advisor
 
-### Jane Doe
+### Gabriel Simundo
 
-<img src="images/johndoe.png" width="200px">
+<img src="images/gabriel-lll.png" width="200px">
 
-[[github](http://github.com/johndoe)]
-[[portfolio](team/johndoe.md)]
+[[github](http://github.com/gabriel-lll)]
+[[portfolio](team/gabriel.md)]
 
-* Role: Team Lead
-* Responsibilities: UI
+* Role: Documentation
+* Responsibilities: Responsible for the quality of various project documents.
 
 ### Johnny Doe
 
