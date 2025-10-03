@@ -260,74 +260,140 @@ _{Explain here how the data archiving feature will be implemented}_
 
 ### Product scope
 
+
 **Target user profile**:
 
-* has a need to manage a significant number of contacts
-* prefer desktop apps over other types
-* can type fast
-* prefers typing to mouse interactions
-* is reasonably comfortable using CLI apps
+* Party planners who organize birthdays, anniversaries, and social gatherings
+* Need to manage multiple vendor contacts (caterers, decorators, entertainers, venues)
+* Track client information and party preferences
+* Coordinate with various service providers for each party
+* Handle multiple parties simultaneously
+* Prefer desktop applications for quick data entry and retrieval
+* Are reasonably comfortable with CLI commands for efficiency
 
-**Value proposition**: manage contacts faster than a typical mouse/GUI driven app
+**Value proposition**: AbsolutSin-ema helps party planners manage their contacts more efficiently than generic contact management apps by:
 
+* Organizing vendor contacts by party type (birthday, anniversary, corporate, kids' parties)
+* Quick filtering by vendor category (caterer, decorator, DJ, venue, photographer)
+* Tracking vendor specialties (e.g., balloon artist, vegan caterer)
+* Fast CLI-based access for busy planners juggling multiple events
+* Tagging system for organizing by theme, budget tier, or reliability
 
+---
 ### User stories
 
-Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unlikely to have) - `*`
+Priorities: High (must have) - `* * *`, Medium (should have) - `* *`, Low (nice to have) - `*`
 
-| Priority | As a …​                                    | I want to …​                     | So that I can…​                                                        |
-| -------- | ------------------------------------------ | ------------------------------ | ---------------------------------------------------------------------- |
-| `* * *`  | new user                                   | see usage instructions         | refer to instructions when I forget how to use the App                 |
-| `* * *`  | user                                       | add a new person               |                                                                        |
-| `* * *`  | user                                       | delete a person                | remove entries that I no longer need                                   |
-| `* * *`  | user                                       | find a person by name          | locate details of persons without having to go through the entire list |
-| `* *`    | user                                       | hide private contact details   | minimize chance of someone else seeing them by accident                |
-| `*`      | user with many persons in the address book | sort persons by name           | locate a person easily                                                 |
+| Priority | As a …​               | I want to …​                      | So that I can…​                                      |
+| -------- | ---------------------- | --------------------------------- | ---------------------------------------------------- |
+| `* * *`  | user                   | add new contacts                  | expand my event planner network                      |
+| `* * *`  | user                   | delete contacts                   | remove unneeded or completed events                  |
+| `* * *`  | user                   | tag/untag contacts                | organise my contacts effectively                     |
+| `* * *`  | user                   | view a list of all contacts       | retrieve contact information quickly                 |
+| `* *`    | user                   | edit contacts                     | update information upon changes                      |
+| `* *`    | user                   | filter contacts by tag            | find specific profiles of interest                   |
+| `* *`    | user                   | see a confirmation before delete  | avoid accidental data loss                           |
+| `* *`    | first-time user        | see help messages                 | learn how to use the app                             |
+| `*`      | user                   | archive contacts                  | prevent clutter without deleting                     |
+| `*`      | user                   | sort contacts alphabetically      | organise and access easily                           |
+| `*`      | user                   | undo latest action                | recover from mistakes                                |
+| `*`      | user                   | import/export contacts (CSV)      | transfer or back up contacts                         |
+| `*`      | user                   | add notes to contacts             | record extra details                                 |
+| `*`      | user                   | set reminders                     | remember to communicate with vendors                 |
+| `*`      | user                   | schedule calls                    | keep track of vendor follow-ups                      |
+| `*`      | user                   | create events with associated contacts | manage all vendors for one event together        |
+| `*`      | user                   | create todo lists for events      | manage tasks efficiently                             |
+| `*`      | user                   | share contacts with colleagues    | allow team collaboration                             |
+| `*`      | user                   | view statistics                   | monitor number of contacts and growth                |
 
-*{More to be added}*
+---
 
 ### Use cases
 
-(For all use cases below, the **System** is the `AddressBook` and the **Actor** is the `user`, unless specified otherwise)
+(For all use cases below, the **System** is the `AbsolutSin-ema` app and the **Actor** is the `Party Planner`.)
 
-**Use case: Delete a person**
+**Use case UC01: Add a new caterer for kids' birthday parties**
 
 **MSS**
-
-1.  User requests to list persons
-2.  AddressBook shows a list of persons
-3.  User requests to delete a specific person in the list
-4.  AddressBook deletes the person
-
-    Use case ends.
+1. Planner searches for existing caterer to avoid duplicates
+2. System shows search results (none found)
+3. Planner enters `add n/Happy Foods Catering p/91234567 e/info@happyfoods.sg a/123 Food Street t/caterer t/kids t/halal`
+4. System validates all fields
+5. System adds contact and shows success message
 
 **Extensions**
+* 4a. Duplicate detected → System shows error message, use case ends
+* 4b. Invalid phone format → System shows error, user retries input
 
-* 2a. The list is empty.
 
-  Use case ends.
 
-* 3a. The given index is invalid.
+**Use case UC02: Find DJ for corporate party**
 
-    * 3a1. AddressBook shows an error message.
+**MSS**
+1. Planner enters `find dj`
+2. System filters and shows all contacts tagged with `dj`
+3. Planner reviews list
+4. Planner enters `list` to return to full contact list
 
-      Use case resumes at step 2.
+**Extensions**
+* 2a. No DJs found → System shows "0 contacts listed", use case ends
 
-*{More to be added}*
+
+
+**Use case UC03: Update decorator's service tags**
+
+**MSS**
+1. Planner views contact list
+2. Planner identifies decorator at index 3
+3. Planner enters `edit 3 t/decorator t/balloons t/elegant t/corporate`
+4. System validates tags
+5. System updates contact
+6. System shows success message with updated info
+
+---
 
 ### Non-Functional Requirements
 
-1.  Should work on any _mainstream OS_ as long as it has Java `17` or above installed.
-2.  Should be able to hold up to 1000 persons without a noticeable sluggishness in performance for typical usage.
-3.  A user with above average typing speed for regular English text (i.e. not code, not system admin commands) should be able to accomplish most of the tasks faster using commands than using the mouse.
+**Performance**
+1. System should respond to any command within 2 seconds
+2. Contact list should load within 3 seconds even with 1000+ contacts
 
-*{More to be added}*
+**Usability**
+3. CLI users should perform basic operations without referring to docs
+4. Error messages must clearly indicate fixes
+5. Contact info should be easily readable in the GUI
 
+**Scalability**
+6. Handle at least 1000 vendor contacts without noticeable lag
+7. Support at least 20 tags per contact
+
+**Reliability**
+8. Data auto-saved after each command
+9. Recover gracefully from corrupted data files
+
+**Portability**
+10. Work on Windows, macOS, Linux
+11. Distributed as a single JAR file
+
+**Maintainability**
+12. Code should follow OOP principles for easy extension
+13. New vendor categories should be addable without code changes
+
+---
 ### Glossary
 
-* **Mainstream OS**: Windows, Linux, Unix, MacOS
-* **Private contact detail**: A contact detail that is not meant to be shared with others
-
+| Term           | Definition                                                                 |
+|----------------|----------------------------------------------------------------------------|
+| Party Planner  | Professional who organizes and coordinates events                          |
+| Vendor         | Service provider (caterer, decorator, entertainer, venue, etc.)            |
+| Tag            | A label used to categorize contacts (e.g., `caterer`, `kids`, `halal`)     |
+| Contact        | Vendor or client entry with name, phone, email, address, and tags          |
+| CLI            | Command Line Interface, text-based commands                                |
+| GUI            | Graphical User Interface, displays contacts visually                       |
+| Index          | Numerical position of a contact in the displayed list                      |
+| Service Type   | Category of vendor service (caterer, DJ, venue, etc.)                      |
+| Party Theme    | Style of a party (princess, superhero, elegant, tropical)                  |
+| MVP            | Minimum Viable Product, core features needed for release                   |
 --------------------------------------------------------------------------------------------------------------------
 
 ## **Appendix: Instructions for manual testing**
