@@ -49,6 +49,27 @@ public class StringUtil {
     }
 
     /**
+     * Returns true if the {@code sentence} contains the {@code substring}.
+     * Ignores case and allows partial matching.
+     * <br>examples:<pre>
+     *     containsSubstringIgnoreCase("Alice Bob", "al") == true
+     *     containsSubstringIgnoreCase("Alice Bob", "ice") == true
+     *     containsSubstringIgnoreCase("Alice Bob", "xyz") == false
+     * </pre>
+     * @param sentence cannot be null
+     * @param substring cannot be null, cannot be empty
+     */
+    public static boolean containsSubstringIgnoreCase(String sentence, String substring) {
+        requireNonNull(sentence);
+        requireNonNull(substring);
+
+        String preppedSubstring = substring.trim();
+        checkArgument(!preppedSubstring.isEmpty(), "Substring parameter cannot be empty");
+
+        return sentence.toLowerCase().contains(preppedSubstring.toLowerCase());
+    }
+
+    /**
      * Returns true if {@code s} represents a non-zero unsigned integer
      * e.g. 1, 2, 3, ..., {@code Integer.MAX_VALUE} <br>
      * Will return false for any other non-null string input
