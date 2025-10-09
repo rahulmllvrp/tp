@@ -4,8 +4,8 @@
 
 ## Introduction
 
-AbsolutSin-ema is a **desktop app for party planners** to manage their contacts efficiently.  
-It is optimized for use via a **Command Line Interface (CLI)** while also providing a **Graphical User Interface (GUI)** built with JavaFX.  
+AbsolutSin-ema is a **desktop app for party planners** to manage their contacts efficiently.
+It is optimized for use via a **Command Line Interface (CLI)** while also providing a **Graphical User Interface (GUI)** built with JavaFX.
 It is written in **Java** (~10k LoC) and is based on the AddressBook-Level3 project.
 
 ---
