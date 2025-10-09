@@ -36,8 +36,8 @@ public class ModelManager implements Model {
         this.addressBook = new AddressBook(addressBook);
         this.userPrefs = new UserPrefs(userPrefs);
         filteredPersons = new FilteredList<>(this.addressBook.getPersonList());
-        sortedFilteredPersons = new SortedList<>(filteredPersons,
-                (person1, person2) -> person1.getName().fullName.compareToIgnoreCase(person2.getName().fullName));
+        sortedFilteredPersons = new SortedList<>(filteredPersons, (person1, person2) ->
+                person1.getName().fullName.compareToIgnoreCase(person2.getName().fullName));
     }
 
     public ModelManager() {
