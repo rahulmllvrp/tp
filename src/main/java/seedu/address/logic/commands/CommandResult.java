@@ -19,6 +19,12 @@ public class CommandResult {
     /** The application should exit. */
     private final boolean exit;
 
+    /** Confirmation dialog should be shown to the user. */
+    private final boolean showConfirmation;
+
+    /** The command to be executed after confirmation. */
+    private final Command commandToExecute;
+
     /**
      * Constructs a {@code CommandResult} with the specified fields.
      */
@@ -26,6 +32,8 @@ public class CommandResult {
         this.feedbackToUser = requireNonNull(feedbackToUser);
         this.showHelp = showHelp;
         this.exit = exit;
+        this.showConfirmation = false;
+        this.commandToExecute = null;
     }
 
     /**
@@ -34,6 +42,18 @@ public class CommandResult {
      */
     public CommandResult(String feedbackToUser) {
         this(feedbackToUser, false, false);
+    }
+
+    /**
+     * Constructs a {@code CommandResult} with the specified {@code feedbackToUser} and {@code commandToExecute},
+     * and other fields set to their default value.
+     */
+    public CommandResult(String feedbackToUser, Command commandToExecute) {
+        this.feedbackToUser = requireNonNull(feedbackToUser);
+        this.showHelp = false;
+        this.exit = false;
+        this.showConfirmation = true;
+        this.commandToExecute = commandToExecute;
     }
 
     public String getFeedbackToUser() {
@@ -46,6 +66,14 @@ public class CommandResult {
 
     public boolean isExit() {
         return exit;
+    }
+
+    public boolean isShowConfirmation() {
+        return showConfirmation;
+    }
+
+    public Command getCommandToExecute() {
+        return commandToExecute;
     }
 
     @Override
@@ -62,12 +90,14 @@ public class CommandResult {
         CommandResult otherCommandResult = (CommandResult) other;
         return feedbackToUser.equals(otherCommandResult.feedbackToUser)
                 && showHelp == otherCommandResult.showHelp
-                && exit == otherCommandResult.exit;
+                && exit == otherCommandResult.exit
+                && showConfirmation == otherCommandResult.showConfirmation
+                && Objects.equals(commandToExecute, otherCommandResult.commandToExecute);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(feedbackToUser, showHelp, exit);
+        return Objects.hash(feedbackToUser, showHelp, exit, showConfirmation, commandToExecute);
     }
 
     @Override
@@ -76,6 +106,8 @@ public class CommandResult {
                 .add("feedbackToUser", feedbackToUser)
                 .add("showHelp", showHelp)
                 .add("exit", exit)
+                .add("showConfirmation", showConfirmation)
+                .add("commandToExecute", commandToExecute)
                 .toString();
     }
 

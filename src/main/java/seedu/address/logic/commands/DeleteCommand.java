@@ -25,10 +25,19 @@ public class DeleteCommand extends Command {
 
     public static final String MESSAGE_DELETE_PERSON_SUCCESS = "Deleted Person: %1$s";
 
+    public static final String MESSAGE_CONFIRMATION = "Are you sure you want to delete this person? This action cannot be undone.";
+
     private final Index targetIndex;
 
+    private final boolean isConfirmed;
+
     public DeleteCommand(Index targetIndex) {
+        this(targetIndex, false);
+    }
+
+    public DeleteCommand(Index targetIndex, boolean isConfirmed) {
         this.targetIndex = targetIndex;
+        this.isConfirmed = isConfirmed;
     }
 
     @Override
@@ -38,6 +47,10 @@ public class DeleteCommand extends Command {
 
         if (targetIndex.getZeroBased() >= lastShownList.size()) {
             throw new CommandException(Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+        }
+
+        if (!isConfirmed) {
+            return new CommandResult(MESSAGE_CONFIRMATION, new DeleteCommand(targetIndex, true));
         }
 
         Person personToDelete = lastShownList.get(targetIndex.getZeroBased());
@@ -57,7 +70,8 @@ public class DeleteCommand extends Command {
         }
 
         DeleteCommand otherDeleteCommand = (DeleteCommand) other;
-        return targetIndex.equals(otherDeleteCommand.targetIndex);
+        return targetIndex.equals(otherDeleteCommand.targetIndex)
+                && isConfirmed == otherDeleteCommand.isConfirmed;
     }
 
     @Override
