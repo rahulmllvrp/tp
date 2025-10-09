@@ -24,6 +24,14 @@ public interface Logic {
     CommandResult execute(String commandText) throws CommandException, ParseException;
 
     /**
+     * Executes the command and returns the result.
+     * @param command The command to be executed.
+     * @return the result of the command execution.
+     * @throws CommandException If an error occurs during command execution.
+     */
+    CommandResult execute(seedu.address.logic.commands.Command command) throws CommandException;
+
+    /**
      * Returns the AddressBook.
      *
      * @see seedu.address.model.Model#getAddressBook()
