@@ -5,8 +5,6 @@ import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.input.Clipboard;
-import javafx.scene.input.ClipboardContent;
 import javafx.stage.Stage;
 import seedu.address.commons.core.LogsCenter;
 
@@ -15,8 +13,32 @@ import seedu.address.commons.core.LogsCenter;
  */
 public class HelpWindow extends UiPart<Stage> {
 
-    public static final String USERGUIDE_URL = "https://se-education.org/addressbook-level3/UserGuide.html";
-    public static final String HELP_MESSAGE = "Refer to the user guide: " + USERGUIDE_URL;
+    public static final String HELP_MESSAGE = "AbsolutSin-ema Command List\n\n"
+        + "==============================\n"
+        + "Add Contact\n"
+        + "  Command: add n/NAME p/PHONE e/EMAIL w/WEBSITE [t/TAG]...\n"
+        + "  Example: add n/Alice Tan p/91234567 e/alice@example.com w/www.alicetphotography.com t/photographer t/wedding\n"
+        + "  - NAME: Alphabets, spaces, hyphens, apostrophes.\n"
+        + "  - PHONE: 8-digit SG number starting with 6, 8, or 9.\n"
+        + "  - EMAIL: Standard format (user@example.com).\n"
+        + "  - WEBSITE: Starts with www. or https://\n"
+        + "  - TAG: Alphanumeric, single word, optional.\n"
+        + "\n"
+        + "Delete Contact\n"
+        + "  Command: delete INDEX\n"
+        + "  Example: delete 1\n"
+        + "  - INDEX: Positive integer (see list).\n"
+        + "\n"
+        + "View Contact List\n"
+        + "  Command: list\n"
+        + "  - Shows all contacts.\n"
+        + "\n"
+        + "Tag/Untag Contact\n"
+        + "  Tag:   edit INDEX t/NEW_TAG...\n"
+        + "  Untag: edit INDEX t/\n"
+        + "  - Tags must be alphanumeric.\n"
+        + "\n"
+        + "For more details, refer to the user guide or documentation.";
 
     private static final Logger logger = LogsCenter.getLogger(HelpWindow.class);
     private static final String FXML = "HelpWindow.fxml";
@@ -87,16 +109,5 @@ public class HelpWindow extends UiPart<Stage> {
      */
     public void focus() {
         getRoot().requestFocus();
-    }
-
-    /**
-     * Copies the URL to the user guide to the clipboard.
-     */
-    @FXML
-    private void copyUrl() {
-        final Clipboard clipboard = Clipboard.getSystemClipboard();
-        final ClipboardContent url = new ClipboardContent();
-        url.putString(USERGUIDE_URL);
-        clipboard.setContent(url);
     }
 }
