@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+
+<StackPane styleClass="search-box" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox spacing="5.0" alignment="CENTER_LEFT">
+         <children>
+            <ComboBox fx:id="searchTypeComboBox" prefWidth="100.0" styleClass="search-type-selector">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </ComboBox>
+            <TextField fx:id="searchTextField" promptText="Start typing to search..." styleClass="search-field" HBox.hgrow="ALWAYS">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </TextField>
+         </children>
+         <StackPane.margin>
+            <Insets />
+         </StackPane.margin>
+      </HBox>
+   </children>
+</StackPane>
