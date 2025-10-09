@@ -25,7 +25,8 @@ public class DeleteCommand extends Command {
 
     public static final String MESSAGE_DELETE_PERSON_SUCCESS = "Deleted Person: %1$s";
 
-    public static final String MESSAGE_CONFIRMATION = "Are you sure you want to delete this person? This action cannot be undone.";
+    public static final String MESSAGE_CONFIRMATION = "Are you sure you want to delete this person? "
+            + "This action cannot be undone.";
 
     private final Index targetIndex;
 
@@ -35,6 +36,10 @@ public class DeleteCommand extends Command {
         this(targetIndex, false);
     }
 
+    /**
+     * @param targetIndex of the person in the filtered person list to delete
+     * @param isConfirmed to confirm the deletion
+     */
     public DeleteCommand(Index targetIndex, boolean isConfirmed) {
         this.targetIndex = targetIndex;
         this.isConfirmed = isConfirmed;
@@ -78,6 +83,7 @@ public class DeleteCommand extends Command {
     public String toString() {
         return new ToStringBuilder(this)
                 .add("targetIndex", targetIndex)
+                .add("isConfirmed", isConfirmed)
                 .toString();
     }
 }
