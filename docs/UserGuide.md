@@ -3,7 +3,11 @@ layout: page
 title: User Guide
 ---
 
+<<<<<<< HEAD
 **AbsolutSin-ema** is a **desktop app for managing contacts, optimized for use via a Command Line Interface** (CLI) while still having the benefits of a Graphical User Interface (GUI). If you can type fast, AbsolutSin-ema can get your contact management tasks done faster than traditional GUI apps.
+=======
+AbsolutSin-ema is a **desktop app for managing contacts, optimized for use via a Command Line Interface** (CLI) while still having the benefits of a Graphical User Interface (GUI). If you can type fast, AbsolutSin-ema can get your contact management tasks done faster than traditional GUI apps.
+>>>>>>> 96bfb200 (Edit userguide to match MVP)
 
 * Table of Contents
 {:toc}
@@ -18,11 +22,18 @@ title: User Guide
 
 2. Download the latest `absolutsin-ema.jar` file from [here](https://github.com/AY2425S1-CS2103T-F12-4/tp/releases).
 
+<<<<<<< HEAD
 3. Copy the file to the folder you want to use as the _home folder_ for AbsolutSin-ema.
 
 4. Open a command terminal, `cd` into the folder you put the jar file in, and use the `java -jar absolutsin-ema.jar` command to run the application.
    A GUI similar to the below should appear in a few seconds. Note how the app contains some sample data.
    
+=======
+1. Copy the file to the folder you want to use as the _home folder_ for your AbsolutSin-ema.
+
+1. Open a command terminal, `cd` into the folder you put the jar file in, and use the `java -jar absolutsinema.jar` command to run the application.<br>
+   A GUI similar to the below should appear in a few seconds. Note how the app contains some sample data.<br>
+>>>>>>> 96bfb200 (Edit userguide to match MVP)
    ![Ui](images/Ui.png)
    
    <div markdown="span" class="alert alert-info">:information_source: **Note:** If the application doesn't start, ensure that you have the correct Java version installed and that the jar file is not corrupted. See the [Troubleshooting](#troubleshooting) section for more help.</div>
@@ -32,7 +43,11 @@ title: User Guide
 
    * `list` : Lists all contacts.
 
+<<<<<<< HEAD
    * `add n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01` : Adds a contact named `John Doe` to AbsolutSin-ema.
+=======
+   * `add n/John Doe p/98765432 e/johnd@example.com w/johndoe.com` : Adds a contact named `John Doe` to the AbsolutSin-ema.
+>>>>>>> 96bfb200 (Edit userguide to match MVP)
 
    * `delete 3` : Deletes the 3rd contact shown in the current list.
 
@@ -56,8 +71,13 @@ title: User Guide
 * **Optional parameters:** Items in square brackets are optional.
   e.g `n/NAME [t/TAG]` can be used as `n/John Doe t/friend` or as `n/John Doe`.
 
+<<<<<<< HEAD
 * **Multiple parameters:** Items with `…` after them can be used multiple times including zero times.
   e.g. `[t/TAG]…` can be used as ` ` (i.e. 0 times), `t/friend`, `t/friend t/family` etc.
+=======
+* Items with `…`​ after them can be used multiple times including zero times.<br>
+  e.g. `[t/TAG]…​` can be used as ` ` (i.e. 0 times), `t/friend`, `t/friend t/family` etc.
+>>>>>>> 96bfb200 (Edit userguide to match MVP)
 
 * **Parameter order:** Parameters can be in any order.
   e.g. if the command specifies `n/NAME p/PHONE_NUMBER`, `p/PHONE_NUMBER n/NAME` is also acceptable.
@@ -76,7 +96,7 @@ title: User Guide
 
 Shows a message explaining how to access the help page. This opens a pop-up window with a link to this User Guide.
 
-![help message](images/helpMessage.png)
+![help message](images/improvedHelpMessage.png)
 
 Format: `help`
 
@@ -87,14 +107,21 @@ You can also press `F1` or use the Help menu to access the help window.
 
 ### Adding a person: `add`
 
+<<<<<<< HEAD
 Adds a person to AbsolutSin-ema.
 
 Format: `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]…`
+=======
+Adds a person to the AbsolutSin-ema.
+
+Format: `add n/NAME p/PHONE_NUMBER e/EMAIL w/WEBSITE [t/TAG]…​`
+>>>>>>> 96bfb200 (Edit userguide to match MVP)
 
 <div markdown="span" class="alert alert-info">:information_source: **Note:**
 All fields except tags are mandatory. You must provide name, phone number, email, and address when adding a contact.
 </div>
 
+<<<<<<< HEAD
 <div markdown="span" class="alert alert-primary">:bulb: **Tip:**
 A person can have any number of tags (including 0). Tags are useful for categorizing contacts (e.g., friends, colleagues, family).
 </div>
@@ -114,6 +141,15 @@ A person can have any number of tags (including 0). Tags are useful for categori
 ### Listing all persons : `list`
 
 Shows a list of all persons in AbsolutSin-ema. This command displays all contacts in the order they were added, with their complete information including name, phone, email, address, and tags.
+=======
+Examples:
+* `add n/John Doe p/98765432 e/johnd@example.com w/johndoe.com`
+* `add n/Betsy Crowe t/friend e/betsycrowe@example.com w/betsycrowe.com p/1234567 t/criminal`
+
+### Listing all persons : `list`
+
+Shows a list of all persons in the AbsolutSin-ema.
+>>>>>>> 96bfb200 (Edit userguide to match MVP)
 
 Format: `list`
 
@@ -123,9 +159,15 @@ The `list` command will show all contacts even if you have previously filtered t
 
 ### Editing a person : `edit`
 
+<<<<<<< HEAD
 Edits an existing person in AbsolutSin-ema. You can modify any combination of the person's details.
 
 Format: `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]…`
+=======
+Edits an existing person in the AbsolutSin-ema.
+
+Format: `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [w/WEBSITE] [t/TAG]…​`
+>>>>>>> 96bfb200 (Edit userguide to match MVP)
 
 **How it works:**
 * Edits the person at the specified `INDEX`. The index refers to the index number shown in the displayed person list. The index **must be a positive integer** 1, 2, 3, …
@@ -134,12 +176,17 @@ Format: `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]…`
 * When editing tags, the existing tags of the person will be removed i.e adding of tags is not cumulative.
 * You can remove all the person's tags by typing `t/` without specifying any tags after it.
 
+<<<<<<< HEAD
 <div markdown="span" class="alert alert-warning">:exclamation: **Important:**
 Tag editing replaces ALL existing tags. To keep existing tags, you must include them in the edit command.
 </div>
 
 **Examples:**
 *  `edit 1 p/91234567 e/johndoe@example.com` Edits the phone number and email address of the 1st person to be `91234567` and `johndoe@example.com` respectively.
+=======
+Examples:
+*  `edit 1 p/91234567 e/johndoe@example.com w/johndoe.com` Edits the phone number, email and website of the 1st person to be `91234567`, `johndoe@example.com` and `johndoe.com` respectively.
+>>>>>>> 96bfb200 (Edit userguide to match MVP)
 *  `edit 2 n/Betsy Crower t/` Edits the name of the 2nd person to be `Betsy Crower` and clears all existing tags.
 *  `edit 3 t/friend t/colleague` Replaces all existing tags of the 3rd person with `friend` and `colleague`.
 
@@ -164,6 +211,7 @@ After using `find`, you can use `list` to see all contacts again.
 
 **Examples:**
 * `find John` returns `john` and `John Doe`
+<<<<<<< HEAD
 * `find alex david` returns `Alex Yeoh`, `David Li`
   
   ![result for 'find alex david'](images/findAlexDavidResult.png)
@@ -173,6 +221,25 @@ After using `find`, you can use `list` to see all contacts again.
 ### Deleting a person : `delete`
 
 Deletes the specified person from AbsolutSin-ema permanently. This action cannot be undone.
+=======
+* `find alex` returns `Alex Yeoh`<br>
+  ![result for 'find alex david'](images/findAlexResult.png)
+
+### Searching by tags: Search Bar
+
+In addition to the `find` command, you can also use the search bar at the top of the application to filter contacts by tags.
+
+*   To search for a specific tag, simply type the tag name in the search bar. For example, typing `friend` will show all contacts with the `friend` tag.
+*   The search is case-insensitive.
+*   You can search for multiple tags by separating them with spaces. For example, typing `friend family` will show contacts that have either the `friend` tag or the `family` tag (i.e. `OR` search).
+*   To clear the search filter, simply clear the text in the search bar.
+
+This provides a quick and easy way to filter your contacts without using commands.
+
+### Deleting a person : `delete`
+
+Deletes the specified person from the AbsolutSin-ema.
+>>>>>>> 96bfb200 (Edit userguide to match MVP)
 
 Format: `delete INDEX`
 
@@ -181,18 +248,27 @@ Format: `delete INDEX`
 * The index refers to the index number shown in the displayed person list.
 * The index **must be a positive integer** 1, 2, 3, …
 
+<<<<<<< HEAD
 <div markdown="span" class="alert alert-warning">:exclamation: **Warning:**
 This action is permanent and cannot be undone. Make sure you delete the correct person!
 </div>
 
 **Examples:**
 * `list` followed by `delete 2` deletes the 2nd person in AbsolutSin-ema.
+=======
+Examples:
+* `list` followed by `delete 2` deletes the 2nd person in the AbsolutSin-ema.
+>>>>>>> 96bfb200 (Edit userguide to match MVP)
 * `find Betsy` followed by `delete 1` deletes the 1st person in the results of the `find` command.
 * `delete 5` deletes the 5th person shown in the current list.
 
 ### Clearing all entries : `clear`
 
+<<<<<<< HEAD
 Clears all entries from AbsolutSin-ema. This removes every contact permanently.
+=======
+Clears all entries from the AbsolutSin-ema.
+>>>>>>> 96bfb200 (Edit userguide to match MVP)
 
 Format: `clear`
 
@@ -212,6 +288,7 @@ You can also close the program by clicking the X button on the window or pressin
 
 ### Saving the data
 
+<<<<<<< HEAD
 AbsolutSin-ema data are saved to the hard disk automatically after any command that changes the data. There is no need to save manually.
 
 <div markdown="span" class="alert alert-info">:information_source: **Auto-save:**
@@ -226,6 +303,17 @@ AbsolutSin-ema data are saved automatically as a JSON file `[JAR file location]/
 Direct file editing is for advanced users only. If your changes make the file format invalid, AbsolutSin-ema will discard all data and start with an empty data file at the next run. Hence, it is **strongly recommended** to take a backup of the file before editing it.
 
 Furthermore, certain edits can cause AbsolutSin-ema to behave in unexpected ways (e.g., if a value entered is outside of the acceptable range). Therefore, edit the data file only if you are confident that you can update it correctly.
+=======
+AbsolutSin-ema data are saved in the hard disk automatically after any command that changes the data. There is no need to save manually.
+
+### Editing the data file
+
+AbsolutSin-ema data are saved automatically as a JSON file `[JAR file location]/data/absolutsinema.json`. Advanced users are welcome to update data directly by editing that data file.
+
+<div markdown="span" class="alert alert-warning">:exclamation: **Caution:**
+If your changes to the data file makes its format invalid, AbsolutSin-ema will discard all data and start with an empty data file at the next run. Hence, it is recommended to take a backup of the file before editing it.<br>
+Furthermore, certain edits can cause the AbsolutSin-ema to behave in unexpected ways (e.g., if a value entered is outside of the acceptable range). Therefore, edit the data file only if you are confident that you can update it correctly.
+>>>>>>> 96bfb200 (Edit userguide to match MVP)
 </div>
 
 **File location:** The data file is located at `[JAR file location]/data/addressbook.json` on all platforms (Windows, Mac, and Linux).
@@ -238,6 +326,7 @@ _Details coming soon ..._
 
 ## FAQ
 
+<<<<<<< HEAD
 **Q**: How do I transfer my data to another computer?<br>
 **A**: Install AbsolutSin-ema on the new computer and overwrite the empty data file it creates with the file that contains the data of your previous AbsolutSin-ema home folder. The data file is located at `[JAR file location]/data/addressbook.json`.
 
@@ -261,6 +350,10 @@ _Details coming soon ..._
 
 **Q**: What characters are allowed in names and addresses?<br>
 **A**: Names can contain letters, numbers, and spaces. Addresses can contain any characters including special symbols, making them flexible for international addresses.
+=======
+**Q**: How do I transfer my data to another Computer?<br>
+**A**: Install the app in the other computer and overwrite the empty data file it creates with the file that contains the data of your previous AbsolutSin-ema home folder.
+>>>>>>> 96bfb200 (Edit userguide to match MVP)
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -322,6 +415,7 @@ _Details coming soon ..._
 
 ## Command summary
 
+<<<<<<< HEAD
 | Action | Format and Examples |
 |--------|---------------------|
 | **Add** | `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]…` <br> e.g., `add n/James Ho p/22224444 e/jamesho@example.com a/123, Clementi Rd, 1234665 t/friend t/colleague` |
@@ -346,3 +440,14 @@ _Details coming soon ..._
 * **Tag**: A label you can attach to contacts for categorization (e.g., friend, colleague).
 
 --------------------------------------------------------------------------------------------------------------------
+=======
+Action | Format, Examples
+--------|------------------
+**Add** | `add n/NAME p/PHONE_NUMBER e/EMAIL w/WEBSITE [t/TAG]…​` <br> e.g., `add n/James Ho p/22224444 e/jamesho@example.com w/jamesho.com t/friend t/colleague`
+**Clear** | `clear`
+**Delete** | `delete INDEX`<br> e.g., `delete 3`
+**Edit** | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [w/WEBSITE] [t/TAG]…​`<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com`
+**Find** | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find James Jake`
+**List** | `list`
+**Help** | `help`
+>>>>>>> 96bfb200 (Edit userguide to match MVP)
