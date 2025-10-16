@@ -297,6 +297,7 @@ Your data is automatically saved after every add, edit, delete, or clear command
 
 ### Editing the data file
 
+<<<<<<< HEAD
 AbsolutSin-ema data are saved automatically as a JSON file `[JAR file location]/data/addressbook.json`. Advanced users are welcome to update data directly by editing that data file.
 
 <div markdown="span" class="alert alert-warning">:exclamation: **Caution:**
@@ -314,6 +315,13 @@ AbsolutSin-ema data are saved automatically as a JSON file `[JAR file location]/
 If your changes to the data file makes its format invalid, AbsolutSin-ema will discard all data and start with an empty data file at the next run. Hence, it is recommended to take a backup of the file before editing it.<br>
 Furthermore, certain edits can cause the AbsolutSin-ema to behave in unexpected ways (e.g., if a value entered is outside of the acceptable range). Therefore, edit the data file only if you are confident that you can update it correctly.
 >>>>>>> 96bfb200 (Edit userguide to match MVP)
+=======
+AbsoluteSin-Ema data are saved automatically as a JSON file `[JAR file location]/data/absolutsinema `. Advanced users are welcome to update data directly by editing that data file.
+
+<div markdown="span" class="alert alert-warning">:exclamation: **Caution:**
+If your changes to the data file makes its format invalid, AbsoluteSin-Ema will discard all data and start with an empty data file at the next run. Hence, it is recommended to take a backup of the file before editing it.<br>
+Furthermore, certain edits can cause the AbsoluteSin-Ema to behave in unexpected ways (e.g., if a value entered is outside of the acceptable range). Therefore, edit the data file only if you are confident that you can update it correctly.
+>>>>>>> d6fead65 (Update the name of the app)
 </div>
 
 **File location:** The data file is located at `[JAR file location]/data/addressbook.json` on all platforms (Windows, Mac, and Linux).
