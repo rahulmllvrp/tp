@@ -458,4 +458,7 @@ Action | Format, Examples
 **Find** | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find James Jake`
 **List** | `list`
 **Help** | `help`
+<<<<<<< HEAD
 >>>>>>> 96bfb200 (Edit userguide to match MVP)
+=======
+>>>>>>> 548c188a (Fix ubuntu error)
