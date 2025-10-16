@@ -67,6 +67,37 @@ public class SearchBox extends UiPart<Region> {
     private void initializeSearchTypeComboBox() {
         searchTypeComboBox.setItems(FXCollections.observableArrayList(SearchType.values()));
         searchTypeComboBox.setValue(SearchType.BOTH);
+
+        searchTypeComboBox.setCellFactory(lv -> new javafx.scene.control.ListCell<SearchType>() {
+            @Override
+            protected void updateItem(SearchType item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setStyle("");
+                } else {
+                    setText(item.toString());
+                    setTextFill(javafx.scene.paint.Color.WHITE);
+                    setStyle("-fx-font-weight: bold;");
+                }
+            }
+        });
+
+        searchTypeComboBox.setButtonCell(new javafx.scene.control.ListCell<SearchType>() {
+            @Override
+            protected void updateItem(SearchType item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setStyle("");
+                } else {
+                    setText(item.toString());
+                    setTextFill(javafx.scene.paint.Color.WHITE);
+                    setStyle("-fx-font-weight: bold;");
+                }
+            }
+        });
+
         searchTypeComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             handleSearchInput(searchTextField.getText());
         });
