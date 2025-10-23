@@ -23,14 +23,16 @@ AbsolutSin-ema is a **desktop app for managing contacts, optimized for use via a
    A GUI similar to the below should appear in a few seconds. Note how the app contains some sample data.<br>
    ![Ui](images/Ui.png)
 
-1. Type the command in the command box and press Enter to execute it. e.g. typing **`help`** and pressing Enter will open the help window.<br>
-   Some example commands you can try:
+5. Type the command in the command box and press Enter to execute it. For example, typing **`help`** and pressing Enter will open the help window.
+   Here are some example commands you can try:
 
    * `list` : Lists all contacts.
 
    * `add n/John Doe p/98765432 e/johnd@example.com w/johndoe.com` : Adds a contact named `John Doe` to the AbsolutSin-ema.
 
    * `delete 3` : Deletes the 3rd contact shown in the current list.
+
+   * `undo` : Undoes the most recent add, delete, edit, or clear command.
 
    * `clear` : Deletes all contacts.
 
@@ -159,6 +161,35 @@ Clears all entries from the AbsolutSin-ema.
 
 Format: `clear`
 
+<div markdown="span" class="alert alert-danger">:exclamation: **Danger:**
+This will delete ALL contacts permanently and cannot be undone. Use with extreme caution!
+</div>
+
+### Undoing the previous command : `undo`
+
+Undoes the most recent add, delete, edit, or clear command. This restores AbsolutSin-ema to the state before the last command was executed.
+
+Format: `undo`
+
+**Commands that can be undone:**
+- `add` - Removes the person that was added
+- `delete` - Restores the person that was deleted
+- `edit` - Restores the person to their previous state
+- `clear` - Restores all contacts that were cleared
+
+<div markdown="span" class="alert alert-info">:information_source: **Note:**
+Only one level of undo is supported. You can only undo the most recent command.
+</div>
+
+<div markdown="span" class="alert alert-warning">:exclamation: **Important:**
+Commands like `find`, `list`, `help`, and `exit` do not modify data and therefore cannot be undone. The undo command will only affect the most recent command that actually changed your contacts.
+</div>
+
+**Examples:**
+* After running `add n/John Doe p/98765432 e/johnd@example.com w/johndoe.com`, typing `undo` will remove John Doe from your contacts.
+* After running `delete 3`, typing `undo` will restore the 3rd person back to your contact list.
+* After running `clear`, typing `undo` will restore all your contacts.
+
 ### Exiting the program : `exit`
 
 Exits the program.
@@ -186,8 +217,29 @@ _Details coming soon ..._
 
 ## FAQ
 
-**Q**: How do I transfer my data to another Computer?<br>
-**A**: Install the app in the other computer and overwrite the empty data file it creates with the file that contains the data of your previous AbsolutSin-ema home folder.
+**Q**: How do I transfer my data to another computer?<br>
+**A**: Install AbsolutSin-ema on the new computer and overwrite the empty data file it creates with the file that contains the data of your previous AbsolutSin-ema home folder. The data file is located at `[JAR file location]/data/addressbook.json`.
+
+**Q**: What happens if I accidentally delete a contact?<br>
+**A**: You can use the `undo` command to restore the deleted contact immediately after the deletion. If you have performed other commands after the deletion, you will need to add the contact again manually.
+
+**Q**: Why can't I find a contact even though I know they exist?<br>
+**A**: The `find` command only searches by name and requires exact word matches. Make sure you're typing the exact words that appear in the contact's name. Use `list` to see all contacts if needed.
+
+**Q**: Can I have two contacts with the same name?<br>
+**A**: No, AbsolutSin-ema does not allow duplicate names. Each contact must have a unique name. If you try to add a contact with an existing name, you will get an error message.
+
+**Q**: What should I do if the application won't start?<br>
+**A**: Ensure you have Java 17 or above installed. Check that the jar file is not corrupted by re-downloading it. Make sure you're running the command `java -jar absolutsin-ema.jar` from the correct directory. See the [Troubleshooting](#troubleshooting) section for more detailed steps.
+
+**Q**: Can I backup my data?<br>
+**A**: Yes, simply copy the `addressbook.json` file from the data folder to a safe location. You can restore it later by copying it back. It's recommended to backup your data regularly.
+
+**Q**: Are my contacts searchable by phone number or email?<br>
+**A**: Currently, the `find` command only searches by name. To find contacts by other fields, use the `list` command to view all contacts and manually search through them.
+
+**Q**: What characters are allowed in names and addresses?<br>
+**A**: Names can contain letters, numbers, and spaces. Addresses can contain any characters including special symbols, making them flexible for international addresses.
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -208,4 +260,5 @@ Action | Format, Examples
 **Edit** | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [w/WEBSITE] [t/TAG]…​`<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com`
 **Find** | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find James Jake`
 **List** | `list`
+**Undo** | `undo`
 **Help** | `help`
