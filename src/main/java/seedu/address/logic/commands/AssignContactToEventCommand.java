@@ -43,6 +43,7 @@ public class AssignContactToEventCommand extends Command {
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
+        model.saveStateForUndo("assign to party " + targetEventIndex.getOneBased());
         List<Event> lastShownEventList = model.getFilteredEventList();
         if (targetEventIndex.getZeroBased() >= lastShownEventList.size()) {
             throw new CommandException(Messages.MESSAGE_INVALID_EVENT_DISPLAYED_INDEX);

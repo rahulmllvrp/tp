@@ -3,6 +3,7 @@ package seedu.address.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import seedu.address.model.event.Event;
 import seedu.address.model.person.Person;
 
 /**
@@ -11,6 +12,7 @@ import seedu.address.model.person.Person;
  */
 public class AddressBookSnapshot {
     private final List<Person> persons;
+    private final List<Event> events;
     private final String operationDescription;
 
     /**
@@ -21,6 +23,7 @@ public class AddressBookSnapshot {
      */
     public AddressBookSnapshot(ReadOnlyAddressBook addressBook, String operationDescription) {
         this.persons = new ArrayList<>(addressBook.getPersonList());
+        this.events = new ArrayList<>(addressBook.getEventList());
         this.operationDescription = operationDescription;
     }
 
@@ -33,6 +36,9 @@ public class AddressBookSnapshot {
         AddressBook restoredBook = new AddressBook();
         for (Person person : persons) {
             restoredBook.addPerson(person);
+        }
+        for (Event event : events) {
+            restoredBook.addEvent(event);
         }
         return restoredBook;
     }

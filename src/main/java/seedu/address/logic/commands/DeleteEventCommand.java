@@ -34,6 +34,7 @@ public class DeleteEventCommand extends Command {
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
+        model.saveStateForUndo("delete party " + targetIndex.getOneBased());
         List<Event> lastShownList = model.getFilteredEventList();
 
         if (targetIndex.getZeroBased() >= lastShownList.size()) {

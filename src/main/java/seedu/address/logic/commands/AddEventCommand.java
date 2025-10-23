@@ -59,6 +59,7 @@ public class AddEventCommand extends Command {
         if (model.hasEvent(toAdd)) {
             throw new CommandException(MESSAGE_DUPLICATE_EVENT);
         }
+        model.saveStateForUndo("add party " + toAdd.getName().fullName);
         List<Person> lastShownPersonList = model.getFilteredPersonList();
         List<PersonId> assignedPersonIds = new ArrayList<>(toAdd.getParticipants());
         if (contactIndexes != null && !contactIndexes.isEmpty()) {
