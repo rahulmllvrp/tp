@@ -172,6 +172,36 @@ public class AddCommandTest {
         public String undo() {
             throw new AssertionError("This method should not be called.");
         }
+
+        @Override
+        public boolean hasEvent(seedu.address.model.event.Event event) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void deleteEvent(seedu.address.model.event.Event target) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void addEvent(seedu.address.model.event.Event event) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void setEvent(seedu.address.model.event.Event target, seedu.address.model.event.Event editedEvent) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public ObservableList<seedu.address.model.event.Event> getFilteredEventList() {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void updateFilteredEventList(Predicate<seedu.address.model.event.Event> predicate) {
+            throw new AssertionError("This method should not be called.");
+        }
     }
 
     /**
