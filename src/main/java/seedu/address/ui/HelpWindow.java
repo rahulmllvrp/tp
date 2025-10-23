@@ -1,9 +1,12 @@
 package seedu.address.ui;
 
+import java.awt.Desktop;
+import java.net.URI;
 import java.util.logging.Logger;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import seedu.address.commons.core.LogsCenter;
@@ -46,6 +49,9 @@ public class HelpWindow extends UiPart<Stage> {
     @FXML
     private Label helpMessage;
 
+    @FXML
+    private Hyperlink userGuideLink;
+
     /**
      * Creates a new HelpWindow.
      *
@@ -53,7 +59,19 @@ public class HelpWindow extends UiPart<Stage> {
      */
     public HelpWindow(Stage root) {
         super(FXML, root);
-        helpMessage.setText(HELP_MESSAGE);
+        // Set help message without the URL
+        String helpText = HELP_MESSAGE.substring(0, HELP_MESSAGE.lastIndexOf("https://"));
+        helpMessage.setText(helpText.trim());
+        // Set up the hyperlink for the User Guide
+        String userGuideUrl = "https://ay2526s1-cs2103t-t12-4.github.io/tp/UserGuide.html";
+        userGuideLink.setText(userGuideUrl);
+        userGuideLink.setOnAction(e -> {
+            try {
+                Desktop.getDesktop().browse(new URI(userGuideUrl));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
     }
 
     /**
