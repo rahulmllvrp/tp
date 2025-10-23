@@ -76,6 +76,9 @@ public class ParserUtil {
     public static Website parseWebsite(String website) throws ParseException {
         requireNonNull(website);
         String trimmedWebsite = website.trim();
+        if (trimmedWebsite.isEmpty()) {
+            return new Website("");
+        }
         if (!Website.isValidWebsite(trimmedWebsite)) {
             throw new ParseException(Website.MESSAGE_CONSTRAINTS);
         }
