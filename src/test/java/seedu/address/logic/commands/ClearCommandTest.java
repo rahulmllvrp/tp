@@ -1,9 +1,5 @@
 package seedu.address.logic.commands;
 
-import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
-import seedu.address.logic.commands.CommandResult;
-import seedu.address.logic.commands.CommandTestUtil;
-import seedu.address.logic.commands.ConfirmClearCommand;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 
 import org.junit.jupiter.api.Test;
@@ -19,7 +15,9 @@ public class ClearCommandTest {
     public void execute_emptyAddressBook_success() {
         Model model = new ModelManager();
         Model expectedModel = new ModelManager();
-        CommandResult expectedCommandResult = new CommandResult("Are you sure you want to clear the address book?", new ConfirmClearCommand());
+        CommandResult expectedCommandResult =
+                new CommandResult("Are you sure you want to clear the address book?",
+                        new ConfirmClearCommand());
         CommandTestUtil.assertCommandSuccess(new ClearCommand(), model, expectedCommandResult, expectedModel);
     }
 
@@ -28,7 +26,9 @@ public class ClearCommandTest {
         Model model = new ModelManager(getTypicalAddressBook(), new UserPrefs());
         Model expectedModel = new ModelManager(getTypicalAddressBook(), new UserPrefs());
 
-        CommandResult expectedCommandResult = new CommandResult("Are you sure you want to clear the address book?", new ConfirmClearCommand());
+        CommandResult expectedCommandResult =
+                new CommandResult("Are you sure you want to clear the address book?",
+                        new ConfirmClearCommand());
         CommandTestUtil.assertCommandSuccess(new ClearCommand(), model, expectedCommandResult, expectedModel);
     }
 
