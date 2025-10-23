@@ -121,4 +121,50 @@ public class ParserUtil {
         }
         return tagSet;
     }
+
+    /**
+     * Parses a {@code String name} into a {@code EventName}.
+     * Leading and trailing whitespaces will be trimmed.
+     *
+     * @throws ParseException if the given {@code name} is invalid.
+     */
+    public static seedu.address.model.event.EventName parseEventName(String name) throws ParseException {
+        requireNonNull(name);
+        String trimmedName = name.trim();
+        if (!seedu.address.model.event.EventName.isValidName(trimmedName)) {
+            throw new ParseException(seedu.address.model.event.EventName.MESSAGE_CONSTRAINTS);
+        }
+        return new seedu.address.model.event.EventName(trimmedName);
+    }
+
+    /**
+     * Parses a {@code String date} into a {@code EventDate}.
+     * Leading and trailing whitespaces will be trimmed.
+     *
+     * @throws ParseException if the given {@code date} is invalid.
+     */
+    public static seedu.address.model.event.EventDate parseEventDate(String date) throws ParseException {
+        requireNonNull(date);
+        String trimmedDate = date.trim();
+        if (!seedu.address.model.event.EventDate.isValidDate(trimmedDate)) {
+            throw new ParseException(seedu.address.model.event.EventDate.MESSAGE_CONSTRAINTS);
+        }
+        return new seedu.address.model.event.EventDate(trimmedDate);
+    }
+
+    /**
+     * Parses a {@code String time} into a {@code EventTime}.
+     * Leading and trailing whitespaces will be trimmed.
+     *
+     * @throws ParseException if the given {@code time} is invalid.
+     */
+    public static seedu.address.model.event.EventTime parseEventTime(String time) throws ParseException {
+        requireNonNull(time);
+        String trimmedTime = time.trim();
+        if (!seedu.address.model.event.EventTime.isValidTime(trimmedTime)) {
+            throw new ParseException(seedu.address.model.event.EventTime.MESSAGE_CONSTRAINTS);
+        }
+        return new seedu.address.model.event.EventTime(trimmedTime);
+    }
 }
+
