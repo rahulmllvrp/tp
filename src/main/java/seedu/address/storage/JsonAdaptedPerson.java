@@ -94,13 +94,7 @@ class JsonAdaptedPerson {
         }
         final Email modelEmail = new Email(email);
 
-        if (website == null) {
-            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Website.class.getSimpleName()));
-        }
-        if (!Website.isValidWebsite(website)) {
-            throw new IllegalValueException(Website.MESSAGE_CONSTRAINTS);
-        }
-        final Website modelWebsite = new Website(website);
+        final Website modelWebsite = (website == null || website.isEmpty()) ? new Website("") : new Website(website);
 
         final Set<Tag> modelTags = new HashSet<>(personTags);
         return new Person(modelName, modelPhone, modelEmail, modelWebsite, modelTags);
