@@ -92,6 +92,9 @@ public class AddressBookParser {
 
         case seedu.address.logic.commands.ViewCommand.COMMAND_WORD:
             return new seedu.address.logic.parser.ViewCommandParser().parse(arguments);
+        case seedu.address.logic.commands.AssignContactToEventCommand.COMMAND_WORD:
+            return new seedu.address.logic.parser.AssignContactToEventCommandParser().parse(arguments);
+        case seedu.address.logic.commands.UnassignContactFromEventCommand.COMMAND_WORD:
 
         default:
             logger.finer("This user input caused a ParseException: " + userInput);
