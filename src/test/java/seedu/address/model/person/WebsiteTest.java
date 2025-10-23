@@ -14,21 +14,13 @@ public class WebsiteTest {
     }
 
     @Test
-    public void constructor_invalidWebsite_throwsIllegalArgumentException() {
-        String invalidWebsite = "";
-        assertThrows(IllegalArgumentException.class, () -> new Website(invalidWebsite));
-    }
-
-    @Test
     public void isValidWebsite() {
         // null website
         assertThrows(NullPointerException.class, () -> Website.isValidWebsite(null));
 
-        // invalid websites
-        assertFalse(Website.isValidWebsite("")); // empty string
-        assertFalse(Website.isValidWebsite(" ")); // spaces only
-
         // valid websites
+        assertTrue(Website.isValidWebsite("")); // empty string
+        assertFalse(Website.isValidWebsite(" ")); // spaces only
         assertTrue(Website.isValidWebsite("https://www.google.com"));
         assertTrue(Website.isValidWebsite("https://www.example.com"));
         assertTrue(Website.isValidWebsite("example.com"));

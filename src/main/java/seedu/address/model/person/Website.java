@@ -9,7 +9,7 @@ import static seedu.address.commons.util.AppUtil.checkArgument;
  */
 public class Website {
 
-    public static final String MESSAGE_CONSTRAINTS = "Websites can take any values, and it should not be blank";
+    public static final String MESSAGE_CONSTRAINTS = "Websites can take any values, but should not be blank if present";
 
     /*
      * The first character of the website must not be a whitespace,
@@ -26,15 +26,15 @@ public class Website {
      */
     public Website(String website) {
         requireNonNull(website);
-        checkArgument(isValidWebsite(website), MESSAGE_CONSTRAINTS);
+        checkArgument(website.isEmpty() || isValidWebsite(website), MESSAGE_CONSTRAINTS);
         value = website;
     }
 
     /**
-     * Returns true if a given string is a valid email.
+     * Returns true if a given string is a valid website.
      */
     public static boolean isValidWebsite(String test) {
-        return test.matches(VALIDATION_REGEX);
+        return test.isEmpty() || test.matches(VALIDATION_REGEX);
     }
 
     @Override

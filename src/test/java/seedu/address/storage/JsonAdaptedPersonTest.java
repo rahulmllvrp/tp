@@ -18,9 +18,9 @@ import seedu.address.model.person.Phone;
 import seedu.address.model.person.Website;
 
 public class JsonAdaptedPersonTest {
+
     private static final String INVALID_NAME = "R@chel";
     private static final String INVALID_PHONE = "+651234";
-    private static final String INVALID_WEBSITE = " ";
     private static final String INVALID_EMAIL = "example.com";
     private static final String INVALID_TAG = "#friend";
 
@@ -84,18 +84,15 @@ public class JsonAdaptedPersonTest {
     }
 
     @Test
-    public void toModelType_invalidWebsite_throwsIllegalValueException() {
-        JsonAdaptedPerson person =
-                new JsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL, INVALID_WEBSITE, VALID_TAGS);
-        String expectedMessage = Website.MESSAGE_CONSTRAINTS;
-        assertThrows(IllegalValueException.class, expectedMessage, person::toModelType);
+    public void toModelType_nullWebsite_returnsPersonWithEmptyWebsite() throws Exception {
+        JsonAdaptedPerson person = new JsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL, null, VALID_TAGS);
+        assertEquals(new Website(""), person.toModelType().getWebsite());
     }
 
     @Test
-    public void toModelType_nullWebsite_throwsIllegalValueException() {
-        JsonAdaptedPerson person = new JsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL, null, VALID_TAGS);
-        String expectedMessage = String.format(MISSING_FIELD_MESSAGE_FORMAT, Website.class.getSimpleName());
-        assertThrows(IllegalValueException.class, expectedMessage, person::toModelType);
+    public void toModelType_emptyWebsite_returnsPersonWithEmptyWebsite() throws Exception {
+        JsonAdaptedPerson person = new JsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL, "", VALID_TAGS);
+        assertEquals(new Website(""), person.toModelType().getWebsite());
     }
 
     @Test
@@ -106,5 +103,4 @@ public class JsonAdaptedPersonTest {
                 new JsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL, VALID_WEBSITE, invalidTags);
         assertThrows(IllegalValueException.class, person::toModelType);
     }
-
 }
