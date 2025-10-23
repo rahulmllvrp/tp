@@ -161,8 +161,10 @@ Clears all entries from the AbsolutSin-ema.
 
 Format: `clear`
 
-<div markdown="span" class="alert alert-danger">:exclamation: **Danger:**
-This will delete ALL contacts permanently and cannot be undone. Use with extreme caution!
+Upon executing the `clear` command, a confirmation message will appear to prevent accidental data loss. You must confirm the action to proceed.
+
+<div markdown="span" class="alert alert-warning">:exclamation: **Warning:**
+This will delete ALL contacts permanently. While this action can be undone, it should still be used with caution.
 </div>
 
 ### Undoing the previous command : `undo`
