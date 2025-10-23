@@ -16,20 +16,20 @@ import seedu.address.model.event.Event;
  */
 public class AddEventCommand extends Command {
 
-    public static final String COMMAND_WORD = "addevent";
+    public static final String COMMAND_WORD = "addp";
 
-    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Adds an event to the address book. "
+    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Adds a party to the party list. "
             + "Parameters: "
             + PREFIX_EVENT_NAME + "NAME "
             + PREFIX_DATE + "DATE "
             + PREFIX_TIME + "TIME\n"
             + "Example: " + COMMAND_WORD + " "
-            + PREFIX_EVENT_NAME + "Meeting with team "
-            + PREFIX_DATE + "12-12-2024 "
-            + PREFIX_TIME + "14:30";
+            + PREFIX_EVENT_NAME + "John's Birthday "
+            + PREFIX_DATE + "12-12-2025 "
+            + PREFIX_TIME + "18:00";
 
-    public static final String MESSAGE_SUCCESS = "New event added: %1$s";
-    public static final String MESSAGE_DUPLICATE_EVENT = "This event already exists in the address book";
+    public static final String MESSAGE_SUCCESS = "New party added: %1$s";
+    public static final String MESSAGE_DUPLICATE_EVENT = "This party already exists in the party list";
 
     private final Event toAdd;
 

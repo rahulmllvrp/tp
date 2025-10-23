@@ -26,22 +26,23 @@ import seedu.address.model.event.EventTime;
  */
 public class EditEventCommand extends Command {
 
-    public static final String COMMAND_WORD = "editevent";
+    public static final String COMMAND_WORD = "editp";
 
-    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Edits the details of the event identified "
-            + "by the index number used in the displayed event list. "
+    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Edits the details of the party identified "
+            + "by the index number used in the displayed party list. "
             + "Existing values will be overwritten by the input values.\n"
             + "Parameters: INDEX (must be a positive integer) "
             + "[" + PREFIX_EVENT_NAME + "NAME] "
             + "[" + PREFIX_DATE + "DATE] "
             + "[" + PREFIX_TIME + "TIME]\n"
             + "Example: " + COMMAND_WORD + " 1 "
-            + PREFIX_DATE + "13-12-2024 "
-            + PREFIX_TIME + "15:00";
+            + PREFIX_EVENT_NAME + "John's Birthday "
+            + PREFIX_DATE + "13-12-2025 "
+            + PREFIX_TIME + "19:00";
 
-    public static final String MESSAGE_EDIT_EVENT_SUCCESS = "Edited Event: %1$s";
+    public static final String MESSAGE_EDIT_EVENT_SUCCESS = "Edited Party: %1$s";
     public static final String MESSAGE_NOT_EDITED = "At least one field to edit must be provided.";
-    public static final String MESSAGE_DUPLICATE_EVENT = "This event already exists in the address book.";
+    public static final String MESSAGE_DUPLICATE_EVENT = "This party already exists in the party list.";
 
     private final Index index;
     private final EditEventDescriptor editEventDescriptor;

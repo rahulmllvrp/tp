@@ -12,18 +12,18 @@ import seedu.address.model.Model;
 import seedu.address.model.event.Event;
 
 /**
- * Deletes an event identified using it's displayed index from the address book.
+ * Deletes an event identified using it's displayed index from the party list.
  */
 public class DeleteEventCommand extends Command {
 
-    public static final String COMMAND_WORD = "deleteevent";
+    public static final String COMMAND_WORD = "deletep";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
-            + ": Deletes the event identified by the index number used in the displayed event list.\n"
+            + ": Deletes the party identified by the index number used in the displayed party list.\n"
             + "Parameters: INDEX (must be a positive integer)\n"
             + "Example: " + COMMAND_WORD + " 1";
 
-    public static final String MESSAGE_DELETE_EVENT_SUCCESS = "Deleted Event: %1$s";
+    public static final String MESSAGE_DELETE_EVENT_SUCCESS = "Deleted Party: %1$s";
 
     private final Index targetIndex;
 
