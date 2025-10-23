@@ -1,12 +1,17 @@
 package seedu.address.logic.parser;
 
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_CONTACT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_DATE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EVENT_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TIME;
 
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 
+import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.AddEventCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.event.Event;
@@ -18,7 +23,6 @@ import seedu.address.model.event.EventTime;
  * Parses input arguments and creates a new AddEventCommand object
  */
 public class AddEventCommandParser implements Parser<AddEventCommand> {
-
     /**
      * Parses the given {@code String} of arguments in the context of the AddEventCommand
      * and returns an AddEventCommand object for execution.
@@ -26,21 +30,34 @@ public class AddEventCommandParser implements Parser<AddEventCommand> {
      */
     public AddEventCommand parse(String args) throws ParseException {
         ArgumentMultimap argMultimap =
-                ArgumentTokenizer.tokenize(args, PREFIX_EVENT_NAME, PREFIX_DATE, PREFIX_TIME);
+                ArgumentTokenizer.tokenize(args, PREFIX_EVENT_NAME, PREFIX_DATE, PREFIX_TIME, PREFIX_CONTACT);
 
         if (!arePrefixesPresent(argMultimap, PREFIX_EVENT_NAME, PREFIX_DATE, PREFIX_TIME)
                 || !argMultimap.getPreamble().isEmpty()) {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddEventCommand.MESSAGE_USAGE));
         }
 
-        argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_EVENT_NAME, PREFIX_DATE, PREFIX_TIME);
-        EventName eventName = ParserUtil.parseEventName(argMultimap.getValue(PREFIX_EVENT_NAME).get());
-        EventDate eventDate = ParserUtil.parseEventDate(argMultimap.getValue(PREFIX_DATE).get());
-        EventTime eventTime = ParserUtil.parseEventTime(argMultimap.getValue(PREFIX_TIME).get());
+        argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_EVENT_NAME, PREFIX_DATE, PREFIX_TIME, PREFIX_CONTACT);
+        Optional<String> eventNameOpt = argMultimap.getValue(PREFIX_EVENT_NAME);
+        Optional<String> eventDateOpt = argMultimap.getValue(PREFIX_DATE);
+        Optional<String> eventTimeOpt = argMultimap.getValue(PREFIX_TIME);
+
+        if (eventNameOpt.isEmpty() || eventDateOpt.isEmpty() || eventTimeOpt.isEmpty()) {
+            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddEventCommand.MESSAGE_USAGE));
+        }
+
+        EventName eventName = ParserUtil.parseEventName(eventNameOpt.get());
+        EventDate eventDate = ParserUtil.parseEventDate(eventDateOpt.get());
+        EventTime eventTime = ParserUtil.parseEventTime(eventTimeOpt.get());
+
+        Set<Index> contactIndexes = new HashSet<>();
+        Optional<String> contactIndexesOpt = argMultimap.getValue(PREFIX_CONTACT);
+        if (contactIndexesOpt.isPresent()) {
+            contactIndexes = ParserUtil.parseContactIndexes(contactIndexesOpt.get());
+        }
 
         Event event = new Event(eventName, eventDate, eventTime);
-
-        return new AddEventCommand(event);
+        return new AddEventCommand(event, contactIndexes);
     }
 
     /**
@@ -50,5 +67,4 @@ public class AddEventCommandParser implements Parser<AddEventCommand> {
     private static boolean arePrefixesPresent(ArgumentMultimap argumentMultimap, Prefix... prefixes) {
         return Stream.of(prefixes).allMatch(prefix -> argumentMultimap.getValue(prefix).isPresent());
     }
-
 }

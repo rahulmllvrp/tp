@@ -1,30 +1,40 @@
 package seedu.address.model.event;
 
-import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
-
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
-import seedu.address.commons.util.ToStringBuilder;
+import seedu.address.model.person.PersonId;
 
 /**
  * Represents an Event in the address book.
  * Guarantees: details are present and not null, field values are validated, immutable.
  */
 public class Event {
-
     // Identity fields
     private final EventName eventName;
     private final EventDate eventDate;
     private final EventTime eventTime;
+    private final List<PersonId> participants;
 
     /**
-     * Every field must be present and not null.
+     * Initialize with empty participants list
      */
     public Event(EventName eventName, EventDate eventDate, EventTime eventTime) {
-        requireAllNonNull(eventName, eventDate, eventTime);
         this.eventName = eventName;
         this.eventDate = eventDate;
         this.eventTime = eventTime;
+        this.participants = new ArrayList<>();
+    }
+
+    /**
+     * Initialize with participants list
+     */
+    public Event(EventName eventName, EventDate eventDate, EventTime eventTime, List<PersonId> participants) {
+        this.eventName = eventName;
+        this.eventDate = eventDate;
+        this.eventTime = eventTime;
+        this.participants = participants;
     }
 
     public EventName getName() {
@@ -39,52 +49,38 @@ public class Event {
         return eventTime;
     }
 
-    /**
-     * Returns true if both events have the same name.
-     * This defines a weaker notion of equality between two events.
-     */
-    public boolean isSameEvent(Event otherEvent) {
-        if (otherEvent == this) {
-            return true;
-        }
-
-        return otherEvent != null
-                && otherEvent.getName().equals(getName());
+    public List<PersonId> getParticipants() {
+        return participants;
     }
 
     /**
-     * Returns true if both events have the same identity and data fields.
-     * This defines a stronger notion of equality between two events.
+     * Checks if this Event is the same as another Event.
+     * Events are the same if they have the same name.
      */
-    @Override
-    public boolean equals(Object other) {
-        if (other == this) {
+    public boolean isSameEvent(Event other) {
+        if (this == other) {
             return true;
         }
+        return this.eventName.equals(other.eventName);
+    }
 
-        // instanceof handles nulls
-        if (!(other instanceof Event)) {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Event)) {
             return false;
         }
-
-        Event otherEvent = (Event) other;
-        return eventName.equals(otherEvent.eventName)
-                && eventDate.equals(otherEvent.eventDate)
-                && eventTime.equals(otherEvent.eventTime);
+        Event other = (Event) o;
+        return this.eventName.equals(other.eventName)
+                && this.eventDate.equals(other.eventDate)
+                && this.eventTime.equals(other.eventTime)
+                && this.participants.equals(other.participants);
     }
 
     @Override
     public int hashCode() {
-        // use this method for custom fields hashing instead of implementing your own
-        return Objects.hash(eventName, eventDate, eventTime);
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this)
-                .add("name", eventName)
-                .add("date", eventDate)
-                .add("time", eventTime)
-                .toString();
+        return Objects.hash(eventName, eventDate, eventTime, participants);
     }
 }
