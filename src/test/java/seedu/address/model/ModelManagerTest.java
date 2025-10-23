@@ -129,4 +129,68 @@ public class ModelManagerTest {
         differentUserPrefs.setAddressBookFilePath(Paths.get("differentFilePath"));
         assertFalse(modelManager.equals(new ModelManager(addressBook, differentUserPrefs)));
     }
+
+    @Test
+    public void canUndo_noStatesSaved_returnsFalse() {
+        assertFalse(modelManager.canUndo());
+    }
+
+    @Test
+    public void canUndo_statesSaved_returnsTrue() {
+        modelManager.saveStateForUndo("test operation");
+        assertTrue(modelManager.canUndo());
+    }
+
+    @Test
+    public void undo_validState_success() {
+        // Save initial state
+        modelManager.saveStateForUndo("add person");
+
+        // Add a person
+        modelManager.addPerson(ALICE);
+        assertTrue(modelManager.hasPerson(ALICE));
+
+        // Undo the operation
+        String result = modelManager.undo();
+
+        assertEquals("add person", result);
+        assertFalse(modelManager.hasPerson(ALICE));
+    }
+
+    @Test
+    public void undo_noStateSaved_returnsDefaultMessage() {
+        String result = modelManager.undo();
+        assertEquals("No operation to undo", result);
+    }
+
+    @Test
+    public void saveStateForUndo_validOperation_success() {
+        assertFalse(modelManager.canUndo());
+
+        modelManager.saveStateForUndo("test operation");
+
+        assertTrue(modelManager.canUndo());
+    }
+
+    @Test
+    public void undo_afterMultipleOperations_undoesLastSavedState() {
+        // Save state before first operation
+        modelManager.saveStateForUndo("first operation");
+
+        // Add ALICE
+        modelManager.addPerson(ALICE);
+
+        // Save state before second operation
+        modelManager.saveStateForUndo("second operation");
+
+        // Add BENSON
+        modelManager.addPerson(BENSON);
+
+        // Undo should revert to state after ALICE was added
+        String result = modelManager.undo();
+
+        assertEquals("second operation", result);
+        assertTrue(modelManager.hasPerson(ALICE));
+        assertFalse(modelManager.hasPerson(BENSON));
+    }
 }

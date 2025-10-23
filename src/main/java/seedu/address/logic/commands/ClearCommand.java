@@ -17,6 +17,8 @@ public class ClearCommand extends Command {
     @Override
     public CommandResult execute(Model model) {
         requireNonNull(model);
+        int personCount = model.getAddressBook().getPersonList().size();
+        model.saveStateForUndo("clear (" + personCount + " contacts)");
         model.setAddressBook(new AddressBook());
         return new CommandResult(MESSAGE_SUCCESS);
     }
