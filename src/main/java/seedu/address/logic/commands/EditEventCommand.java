@@ -28,9 +28,8 @@ public class EditEventCommand extends Command {
 
     public static final String COMMAND_WORD = "editp";
 
-    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Edits the details of the party identified "
-            + "by the index number used in the displayed party list. "
-            + "Existing values will be overwritten by the input values.\n"
+    public static final String MESSAGE_USAGE = COMMAND_WORD
+            + ": Edits party\n"
             + "Parameters: INDEX (must be a positive integer) "
             + "[" + PREFIX_EVENT_NAME + "NAME] "
             + "[" + PREFIX_DATE + "DATE] "
@@ -86,12 +85,11 @@ public class EditEventCommand extends Command {
      */
     private static Event createEditedEvent(Event eventToEdit, EditEventDescriptor editEventDescriptor) {
         assert eventToEdit != null;
-
         EventName updatedName = editEventDescriptor.getName().orElse(eventToEdit.getName());
         EventDate updatedDate = editEventDescriptor.getDate().orElse(eventToEdit.getDate());
         EventTime updatedTime = editEventDescriptor.getTime().orElse(eventToEdit.getTime());
-
-        return new Event(updatedName, updatedDate, updatedTime);
+        // Keep participants unchanged
+        return new Event(updatedName, updatedDate, updatedTime, eventToEdit.getParticipants());
     }
 
     @Override

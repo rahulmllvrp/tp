@@ -166,5 +166,21 @@ public class ParserUtil {
         }
         return new seedu.address.model.event.EventTime(trimmedTime);
     }
-}
 
+    /**
+     * Parses a contact index string (e.g. "1,2,3") into a Set<Index>.
+     * Leading and trailing whitespaces will be trimmed.
+     * @throws ParseException if any index is invalid.
+     */
+    public static Set<Index> parseContactIndexes(String contactIndexesString) throws ParseException {
+        requireNonNull(contactIndexesString);
+        Set<Index> indexSet = new HashSet<>();
+        String[] splitIndexes = contactIndexesString.trim().split(",");
+        for (String indexStr : splitIndexes) {
+            if (!indexStr.isBlank()) {
+                indexSet.add(parseIndex(indexStr));
+            }
+        }
+        return indexSet;
+    }
+}
