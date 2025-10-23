@@ -155,6 +155,75 @@ Examples:
 * `list` followed by `delete 2` deletes the 2nd person in the AbsolutSin-ema.
 * `find Betsy` followed by `delete 1` deletes the 1st person in the results of the `find` command.
 
+### Managing parties
+
+AbsolutSin-ema allows you to manage parties (events) and assign contacts to them.
+
+#### Adding a party: `addp`
+Adds a party to the party list.
+
+Format: `addp n/NAME d/DATE t/TIME [c/CONTACT_INDEX ...]`
+
+* You may optionally assign contacts to the party using their indexes.
+* The date must be in a valid format (e.g. 12-12-2025).
+* The time must be in a valid format (e.g. 18:00).
+
+Examples:
+* `addp n/John's Birthday d/12-12-2025 t/18:00`
+* `addp n/Team Meeting d/01-11-2025 t/14:00 c/1,2`
+
+#### Editing a party: `editp`
+Edits the details of an existing party.
+
+Format: `editp INDEX [n/NAME] [d/DATE] [t/TIME]`
+
+* Edits the party at the specified `INDEX` in the party list.
+* At least one of the optional fields must be provided.
+
+Examples:
+* `editp 1 n/John's Surprise Party d/13-12-2025 t/19:00`
+* `editp 2 t/15:00`
+
+#### Deleting a party: `deletep`
+Deletes a party from the party list.
+
+Format: `deletep INDEX`
+
+* Deletes the party at the specified `INDEX` in the party list.
+
+Example:
+* `deletep 1`
+
+#### Assigning contacts to a party: `assign`
+Assigns contacts to a specific party.
+
+Format: `assign INDEX c/CONTACT_INDEX[,CONTACT_INDEX ...]`
+
+* Assigns the specified contacts to the party at the given `INDEX`.
+
+Example:
+* `assign 1 c/1,2`
+
+#### Unassigning contacts from a party: `unassign`
+Unassigns contacts from a specific party.
+
+Format: `unassign INDEX c/CONTACT_INDEX[,CONTACT_INDEX ...]`
+
+* Unassigns the specified contacts from the party at the given `INDEX`.
+
+Example:
+* `unassign 1 c/1,2`
+
+#### Viewing party participants: `view`
+Shows all contacts assigned to a party.
+
+Format: `view INDEX`
+
+* Displays all contacts assigned to the party at the specified `INDEX`.
+
+Example:
+* `view 1`
+
 ### Clearing all entries : `clear`
 
 Clears all entries from the AbsolutSin-ema.
@@ -169,7 +238,7 @@ This will delete ALL contacts permanently. While this action can be undone, it s
 
 ### Undoing the previous command : `undo`
 
-Undoes the most recent add, delete, edit, or clear command. This restores AbsolutSin-ema to the state before the last command was executed.
+Undoes the most recent add, delete, edit, clear, or any party-related command. This restores AbsolutSin-ema to the state before the last command was executed.
 
 Format: `undo`
 
@@ -178,19 +247,24 @@ Format: `undo`
 - `delete` - Restores the person that was deleted
 - `edit` - Restores the person to their previous state
 - `clear` - Restores all contacts that were cleared
+- `addp` - Removes the party that was added
+- `editp` - Restores the party to its previous state
+- `deletep` - Restores the party that was deleted
+- `assign` - Reverts the assignment of contacts to a party
+- `unassign` - Reverts the removal of contacts from a party
 
 <div markdown="span" class="alert alert-info">:information_source: **Note:**
 Only one level of undo is supported. You can only undo the most recent command.
 </div>
 
 <div markdown="span" class="alert alert-warning">:exclamation: **Important:**
-Commands like `find`, `list`, `help`, and `exit` do not modify data and therefore cannot be undone. The undo command will only affect the most recent command that actually changed your contacts.
+Commands like `find`, `list`, `help`, and `exit` do not modify data and therefore cannot be undone. The undo command will only affect the most recent command that actually changed your contacts or parties.
 </div>
 
 **Examples:**
-* After running `add n/John Doe p/98765432 e/johnd@example.com w/johndoe.com`, typing `undo` will remove John Doe from your contacts.
-* After running `delete 3`, typing `undo` will restore the 3rd person back to your contact list.
-* After running `clear`, typing `undo` will restore all your contacts.
+* After running `addp en/John's Birthday d/12-12-2025 t/18:00`, typing `undo` will remove the party from your party list.
+* After running `assign 1 c/2`, typing `undo` will unassign contact 2 from the 1st party.
+* After running `deletep 2`, typing `undo` will restore the 2nd party back to your party list.
 
 ### Exiting the program : `exit`
 
@@ -257,10 +331,15 @@ _Details coming soon ..._
 Action | Format, Examples
 --------|------------------
 **Add** | `add n/NAME p/PHONE_NUMBER e/EMAIL w/WEBSITE [t/TAG]…​` <br> e.g., `add n/James Ho p/22224444 e/jamesho@example.com w/jamesho.com t/friend t/colleague`
+**Add Party** | `addp en/NAME d/DATE t/TIME [c/CONTACT_INDEX...]` <br> e.g., `addp en/John's Birthday d/12-12-2025 t/18:00 c/1,2`
 **Clear** | `clear`
 **Delete** | `delete INDEX`<br> e.g., `delete 3`
+**Delete Party** | `deletep INDEX` <br> e.g., `deletep 2`
 **Edit** | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [w/WEBSITE] [t/TAG]…​`<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com`
+**Edit Party** | `editp INDEX [en/NAME] [d/DATE] [t/TIME]` <br> e.g., `editp 1 en/John's Birthday d/13-12-2025 t/19:00`
+**Assign to Party** | `assign PARTY_INDEX c/CONTACT_INDEX...` <br> e.g., `assign 1 c/1,2,3`
+**Unassign from Party** | `unassign PARTY_INDEX c/CONTACT_INDEX...` <br> e.g., `unassign 1 c/2,3`
 **Find** | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find James Jake`
 **List** | `list`
 **Undo** | `undo`
-**Help** | `help`
+**Help** |

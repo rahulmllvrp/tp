@@ -19,6 +19,8 @@ public class Messages {
     public static final String MESSAGE_PERSONS_LISTED_OVERVIEW = "%1$d persons listed!";
     public static final String MESSAGE_DUPLICATE_FIELDS =
                 "Multiple values specified for the following single-valued field(s): ";
+    public static final String MESSAGE_NO_CONTACTS_SPECIFIED = "No contacts specified for assignment/unassignment.";
+    public static final String MESSAGE_TRY_PERSON_LIST_MODE = "Try switching to the person list view and retry.";
 
     /**
      * Returns an error message indicating the duplicate prefixes.

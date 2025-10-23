@@ -1,5 +1,8 @@
 package seedu.address.storage;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -19,16 +22,18 @@ class JsonAdaptedEvent {
     private final String name;
     private final String date;
     private final String time;
+    private final List<String> participants;
 
     /**
      * Constructs a {@code JsonAdaptedEvent} with the given event details.
      */
     @JsonCreator
     public JsonAdaptedEvent(@JsonProperty("name") String name, @JsonProperty("date") String date,
-            @JsonProperty("time") String time) {
+            @JsonProperty("time") String time, @JsonProperty("participants") List<String> participants) {
         this.name = name;
         this.date = date;
         this.time = time;
+        this.participants = participants != null ? participants : new ArrayList<>();
     }
 
     /**
@@ -38,6 +43,9 @@ class JsonAdaptedEvent {
         name = source.getName().fullName;
         date = source.getDate().value;
         time = source.getTime().value;
+        participants = source.getParticipants().stream()
+                .map(Object::toString)
+                .collect(java.util.stream.Collectors.toList());
     }
 
     /**
@@ -50,30 +58,24 @@ class JsonAdaptedEvent {
             throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT,
                     EventName.class.getSimpleName()));
         }
-        if (!EventName.isValidName(name)) {
-            throw new IllegalValueException(EventName.MESSAGE_CONSTRAINTS);
-        }
-        final EventName modelName = new EventName(name);
-
         if (date == null) {
             throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT,
                     EventDate.class.getSimpleName()));
         }
-        if (!EventDate.isValidDate(date)) {
-            throw new IllegalValueException(EventDate.MESSAGE_CONSTRAINTS);
-        }
-        final EventDate modelDate = new EventDate(date);
-
         if (time == null) {
             throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT,
                     EventTime.class.getSimpleName()));
         }
-        if (!EventTime.isValidTime(time)) {
-            throw new IllegalValueException(EventTime.MESSAGE_CONSTRAINTS);
-        }
+        final EventName modelName = new EventName(name);
+        final EventDate modelDate = new EventDate(date);
         final EventTime modelTime = new EventTime(time);
-
-        return new Event(modelName, modelDate, modelTime);
+        final List<seedu.address.model.person.PersonId> modelParticipants = new ArrayList<>();
+        if (participants != null) {
+            for (String id : participants) {
+                modelParticipants.add(new seedu.address.model.person.PersonId(id));
+            }
+        }
+        return new Event(modelName, modelDate, modelTime, modelParticipants);
     }
 
 }

@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import seedu.address.commons.core.index.Index;
@@ -11,6 +12,7 @@ import seedu.address.commons.util.StringUtil;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
+import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
 import seedu.address.model.person.Website;
 import seedu.address.model.tag.Tag;
@@ -169,5 +171,41 @@ public class ParserUtil {
         }
         return new seedu.address.model.event.EventTime(trimmedTime);
     }
-}
 
+    /**
+     * Parses a contact index string (e.g. "1,2,3") into a Set of {@link Index}.
+     * Leading and trailing whitespaces will be trimmed.
+     *
+     * @param contactIndexesString String containing contact indexes separated by commas.
+     * @return Set of Index objects parsed from the string.
+     * @throws ParseException if any index is invalid.
+     */
+    public static Set<Index> parseContactIndexes(String contactIndexesString) throws ParseException {
+        requireNonNull(contactIndexesString);
+        Set<Index> indexSet = new HashSet<>();
+        String[] splitIndexes = contactIndexesString.trim().split(",");
+        for (String indexStr : splitIndexes) {
+            if (!indexStr.isBlank()) {
+                indexSet.add(parseIndex(indexStr));
+            }
+        }
+        return indexSet;
+    }
+
+    /**
+     * Parses a {@code List<Person> personList} into a {@code String}.
+     * Leading and trailing whitespaces will be trimmed.
+     *
+     * @throws ParseException if the given {@code personList} is invalid.
+     */
+    public static String parsePersonListToString(List<Person> personList) {
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < personList.size(); i++) {
+            builder.append(personList.get(i).getName());
+            if (i < personList.size() - 1) {
+                builder.append(", ");
+            }
+        }
+        return builder.toString();
+    }
+}
