@@ -42,6 +42,9 @@ public interface Logic {
     /** Returns an unmodifiable view of the filtered list of persons */
     ObservableList<Person> getFilteredPersonList();
 
+    /** Returns an unmodifiable view of the filtered list of events */
+    ObservableList<seedu.address.model.event.Event> getFilteredEventList();
+
     /**
      * Returns the user prefs' address book file path.
      */

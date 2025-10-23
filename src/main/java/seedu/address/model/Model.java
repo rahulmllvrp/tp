@@ -23,6 +23,9 @@ public interface Model {
     /** Predicate that shows all persons without any filtering */
     Predicate<Person> PREDICATE_SHOW_ALL_PERSONS = unused -> true;
 
+    /** Predicate that shows all events without any filtering */
+    Predicate<seedu.address.model.event.Event> PREDICATE_SHOW_ALL_EVENTS = unused -> true;
+
     // ========================= USER PREFERENCES =========================
 
     /**
@@ -133,6 +136,30 @@ public interface Model {
      */
     void setPerson(Person target, Person editedPerson);
 
+    /**
+     * Returns true if an event with the same identity as {@code event} exists in the address book.
+     */
+    boolean hasEvent(seedu.address.model.event.Event event);
+
+    /**
+     * Deletes the given event.
+     * The event must exist in the address book.
+     */
+    void deleteEvent(seedu.address.model.event.Event target);
+
+    /**
+     * Adds the given event.
+     * {@code event} must not already exist in the address book.
+     */
+    void addEvent(seedu.address.model.event.Event event);
+
+    /**
+     * Replaces the given event {@code target} with {@code editedEvent}.
+     * {@code target} must exist in the address book.
+     * The event identity of {@code editedEvent} must not be the same as another existing event in the address book.
+     */
+    void setEvent(seedu.address.model.event.Event target, seedu.address.model.event.Event editedEvent);
+
     // ========================= UI FILTERING & DISPLAY =========================
 
     /**
@@ -163,6 +190,15 @@ public interface Model {
      * @throws NullPointerException if predicate is null
      */
     void updateFilteredPersonList(Predicate<Person> predicate);
+
+    /** Returns an unmodifiable view of the filtered list of events */
+    ObservableList<seedu.address.model.event.Event> getFilteredEventList();
+
+    /**
+     * Updates the filter of the filtered event list to filter by the given {@code predicate}.
+     * @throws NullPointerException if {@code predicate} is null.
+     */
+    void updateFilteredEventList(Predicate<seedu.address.model.event.Event> predicate);
 
     /**
      * Saves the current state of the address book before executing a command that modifies it.

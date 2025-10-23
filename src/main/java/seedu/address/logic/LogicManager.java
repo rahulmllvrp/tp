@@ -89,6 +89,11 @@ public class LogicManager implements Logic {
     }
 
     @Override
+    public ObservableList<seedu.address.model.event.Event> getFilteredEventList() {
+        return model.getFilteredEventList();
+    }
+
+    @Override
     public Path getAddressBookFilePath() {
         return model.getAddressBookFilePath();
     }

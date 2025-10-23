@@ -103,6 +103,11 @@ public class AddressBookTest {
         public ObservableList<Person> getPersonList() {
             return persons;
         }
+
+        @Override
+        public ObservableList<seedu.address.model.event.Event> getEventList() {
+            return FXCollections.observableArrayList();
+        }
     }
 
 }

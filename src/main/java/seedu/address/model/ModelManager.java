@@ -24,6 +24,7 @@ public class ModelManager implements Model {
     private final UserPrefs userPrefs;
     private final FilteredList<Person> filteredPersons;
     private final SortedList<Person> sortedFilteredPersons;
+    private final FilteredList<seedu.address.model.event.Event> filteredEvents;
     private AddressBookSnapshot undoSnapshot; // Stores the previous state for undo
 
     /**
@@ -39,6 +40,7 @@ public class ModelManager implements Model {
         filteredPersons = new FilteredList<>(this.addressBook.getPersonList());
         sortedFilteredPersons = new SortedList<>(filteredPersons, (person1, person2) ->
                 person1.getName().fullName.compareToIgnoreCase(person2.getName().fullName));
+        filteredEvents = new FilteredList<>(this.addressBook.getEventList());
     }
 
     public ModelManager() {
@@ -116,6 +118,30 @@ public class ModelManager implements Model {
         addressBook.setPerson(target, editedPerson);
     }
 
+    @Override
+    public boolean hasEvent(seedu.address.model.event.Event event) {
+        requireNonNull(event);
+        return addressBook.hasEvent(event);
+    }
+
+    @Override
+    public void deleteEvent(seedu.address.model.event.Event target) {
+        addressBook.removeEvent(target);
+    }
+
+    @Override
+    public void addEvent(seedu.address.model.event.Event event) {
+        addressBook.addEvent(event);
+        updateFilteredEventList(PREDICATE_SHOW_ALL_EVENTS);
+    }
+
+    @Override
+    public void setEvent(seedu.address.model.event.Event target, seedu.address.model.event.Event editedEvent) {
+        requireAllNonNull(target, editedEvent);
+
+        addressBook.setEvent(target, editedEvent);
+    }
+
     //=========== Filtered Person List Accessors =============================================================
 
     /**
@@ -131,6 +157,17 @@ public class ModelManager implements Model {
     public void updateFilteredPersonList(Predicate<Person> predicate) {
         requireNonNull(predicate);
         filteredPersons.setPredicate(predicate);
+    }
+
+    @Override
+    public ObservableList<seedu.address.model.event.Event> getFilteredEventList() {
+        return filteredEvents;
+    }
+
+    @Override
+    public void updateFilteredEventList(Predicate<seedu.address.model.event.Event> predicate) {
+        requireNonNull(predicate);
+        filteredEvents.setPredicate(predicate);
     }
 
     //=========== Undo Functionality ==========================================================================
