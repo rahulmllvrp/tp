@@ -163,4 +163,26 @@ public interface Model {
      * @throws NullPointerException if predicate is null
      */
     void updateFilteredPersonList(Predicate<Person> predicate);
+
+    /**
+     * Saves the current state of the address book before executing a command that modifies it.
+     * This enables undo functionality.
+     *
+     * @param operationDescription A description of the operation about to be performed.
+     */
+    void saveStateForUndo(String operationDescription);
+
+    /**
+     * Checks if an undo operation is possible.
+     *
+     * @return true if there is a saved state to undo to, false otherwise.
+     */
+    boolean canUndo();
+
+    /**
+     * Undoes the last operation by restoring the previously saved state.
+     *
+     * @return A description of the operation that was undone.
+     */
+    String undo();
 }

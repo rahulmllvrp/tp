@@ -39,7 +39,11 @@ AbsolutSin-ema is a **desktop app for managing contacts, optimized for use via a
    <div markdown="span" class="alert alert-info">:information_source: **Note:** If the application doesn't start, ensure that you have the correct Java version installed and that the jar file is not corrupted. See the [Troubleshooting](#troubleshooting) section for more help.</div>
 
 5. Type the command in the command box and press Enter to execute it. For example, typing **`help`** and pressing Enter will open the help window.
+<<<<<<< HEAD
    Some example commands you can try:
+=======
+   Here are some example commands you can try:
+>>>>>>> 2ed3cb3d (Add Undo Comman and Tests)
 
    * `list` : Lists all contacts.
 
@@ -50,6 +54,8 @@ AbsolutSin-ema is a **desktop app for managing contacts, optimized for use via a
 >>>>>>> 96bfb200 (Edit userguide to match MVP)
 
    * `delete 3` : Deletes the 3rd contact shown in the current list.
+
+   * `undo` : Undoes the most recent add, delete, edit, or clear command.
 
    * `clear` : Deletes all contacts.
 
@@ -276,6 +282,34 @@ Format: `clear`
 This will delete ALL contacts permanently and cannot be undone. Use with extreme caution!
 </div>
 
+<<<<<<< HEAD
+=======
+### Undoing the previous command : `undo`
+
+Undoes the most recent add, delete, edit, or clear command. This restores AbsolutSin-ema to the state before the last command was executed.
+
+Format: `undo`
+
+**Commands that can be undone:**
+- `add` - Removes the person that was added
+- `delete` - Restores the person that was deleted
+- `edit` - Restores the person to their previous state
+- `clear` - Restores all contacts that were cleared
+
+<div markdown="span" class="alert alert-info">:information_source: **Note:**
+Only one level of undo is supported. You can only undo the most recent command.
+</div>
+
+<div markdown="span" class="alert alert-warning">:exclamation: **Important:**
+Commands like `find`, `list`, `help`, and `exit` do not modify data and therefore cannot be undone. The undo command will only affect the most recent command that actually changed your contacts.
+</div>
+
+**Examples:**
+* After running `add n/John Doe p/98765432 e/johnd@example.com w/johndoe.com`, typing `undo` will remove John Doe from your contacts.
+* After running `delete 3`, typing `undo` will restore the 3rd person back to your contact list.
+* After running `clear`, typing `undo` will restore all your contacts.
+
+>>>>>>> 2ed3cb3d (Add Undo Comman and Tests)
 ### Exiting the program : `exit`
 
 Exits the program. All data is automatically saved before the program closes.
@@ -335,11 +369,18 @@ _Details coming soon ..._
 ## FAQ
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 2ed3cb3d (Add Undo Comman and Tests)
 **Q**: How do I transfer my data to another computer?<br>
 **A**: Install AbsolutSin-ema on the new computer and overwrite the empty data file it creates with the file that contains the data of your previous AbsolutSin-ema home folder. The data file is located at `[JAR file location]/data/addressbook.json`.
 
 **Q**: What happens if I accidentally delete a contact?<br>
+<<<<<<< HEAD
 **A**: Unfortunately, there is no undo feature. The contact will be permanently deleted. You will need to add the contact again manually. Consider making regular backups of your data file to prevent data loss.
+=======
+**A**: You can use the `undo` command to restore the deleted contact immediately after the deletion. If you have performed other commands after the deletion, you will need to add the contact again manually.
+>>>>>>> 2ed3cb3d (Add Undo Comman and Tests)
 
 **Q**: Why can't I find a contact even though I know they exist?<br>
 **A**: The `find` command only searches by name and requires exact word matches. Make sure you're typing the exact words that appear in the contact's name. Use `list` to see all contacts if needed.
@@ -358,10 +399,13 @@ _Details coming soon ..._
 
 **Q**: What characters are allowed in names and addresses?<br>
 **A**: Names can contain letters, numbers, and spaces. Addresses can contain any characters including special symbols, making them flexible for international addresses.
+<<<<<<< HEAD
 =======
 **Q**: How do I transfer my data to another Computer?<br>
 **A**: Install the app in the other computer and overwrite the empty data file it creates with the file that contains the data of your previous AbsolutSin-ema home folder.
 >>>>>>> 96bfb200 (Edit userguide to match MVP)
+=======
+>>>>>>> 2ed3cb3d (Add Undo Comman and Tests)
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -457,6 +501,7 @@ Action | Format, Examples
 **Edit** | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [w/WEBSITE] [t/TAG]…​`<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com`
 **Find** | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find James Jake`
 **List** | `list`
+**Undo** | `undo`
 **Help** | `help`
 <<<<<<< HEAD
 >>>>>>> 96bfb200 (Edit userguide to match MVP)

@@ -24,6 +24,7 @@ public class ModelManager implements Model {
     private final UserPrefs userPrefs;
     private final FilteredList<Person> filteredPersons;
     private final SortedList<Person> sortedFilteredPersons;
+    private AddressBookSnapshot undoSnapshot; // Stores the previous state for undo
 
     /**
      * Initializes a ModelManager with the given addressBook and userPrefs.
@@ -130,6 +131,34 @@ public class ModelManager implements Model {
     public void updateFilteredPersonList(Predicate<Person> predicate) {
         requireNonNull(predicate);
         filteredPersons.setPredicate(predicate);
+    }
+
+    //=========== Undo Functionality ==========================================================================
+
+    @Override
+    public void saveStateForUndo(String operationDescription) {
+        undoSnapshot = new AddressBookSnapshot(addressBook, operationDescription);
+    }
+
+    @Override
+    public boolean canUndo() {
+        return undoSnapshot != null;
+    }
+
+    @Override
+    public String undo() {
+        if (undoSnapshot == null) {
+            return "No operation to undo";
+        }
+
+        String description = undoSnapshot.getOperationDescription();
+        AddressBook restoredBook = undoSnapshot.restoreAddressBook();
+        addressBook.resetData(restoredBook);
+
+        // Clear the undo snapshot after using it
+        undoSnapshot = null;
+
+        return description;
     }
 
     @Override
