@@ -170,8 +170,11 @@ public class ParserUtil {
     }
 
     /**
-     * Parses a contact index string (e.g. "1,2,3") into a Set<Index>.
+     * Parses a contact index string (e.g. "1,2,3") into a Set of {@link Index}.
      * Leading and trailing whitespaces will be trimmed.
+     *
+     * @param contactIndexesString String containing contact indexes separated by commas.
+     * @return Set of Index objects parsed from the string.
      * @throws ParseException if any index is invalid.
      */
     public static Set<Index> parseContactIndexes(String contactIndexesString) throws ParseException {

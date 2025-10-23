@@ -35,11 +35,24 @@ public class UnassignContactFromEventCommand extends Command {
     private final Index targetEventIndex;
     private final Set<Index> unassignedPersonIndexList;
 
+    /**
+     * Constructs an UnassignContactFromEventCommand.
+     *
+     * @param targetEventIndex Index of the event to unassign contacts from.
+     * @param unassignedPersonIndexList Set of person indexes to unassign.
+     */
     public UnassignContactFromEventCommand(Index targetEventIndex, Set<Index> unassignedPersonIndexList) {
         this.targetEventIndex = targetEventIndex;
         this.unassignedPersonIndexList = unassignedPersonIndexList;
     }
 
+    /**
+     * Executes the unassignment of contacts from the specified event.
+     *
+     * @param model The model in which the command operates.
+     * @return CommandResult of the unassignment.
+     * @throws CommandException if any index is invalid or contact not assigned.
+     */
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
@@ -68,7 +81,8 @@ public class UnassignContactFromEventCommand extends Command {
                 existingPersonsInEvent.remove(person.getId());
             }
         }
-        Event newEvent = new Event(eventToModify.getName(), eventToModify.getDate(), eventToModify.getTime(), existingPersonsInEvent);
+        Event newEvent = new Event(eventToModify.getName(), eventToModify.getDate(), eventToModify.getTime(),
+                existingPersonsInEvent);
         model.setEvent(eventToModify, newEvent);
         String unassignedPersonNames = parsePersonListToString(contactsToUnassign);
         return new CommandResult(String.format(MESSAGE_UNASSIGN_FROM_EVENT_SUCCESS,

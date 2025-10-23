@@ -1,5 +1,8 @@
 package seedu.address.storage;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -8,9 +11,6 @@ import seedu.address.model.event.Event;
 import seedu.address.model.event.EventDate;
 import seedu.address.model.event.EventName;
 import seedu.address.model.event.EventTime;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Jackson-friendly version of {@link Event}.

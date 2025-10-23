@@ -35,11 +35,24 @@ public class AssignContactToEventCommand extends Command {
     private final Index targetEventIndex;
     private final Set<Index> assignedPersonIndexList;
 
+    /**
+     * Constructs an AssignContactToEventCommand.
+     *
+     * @param targetEventIndex Index of the event to assign contacts to.
+     * @param assignedPersonIndexList Set of person indexes to assign.
+     */
     public AssignContactToEventCommand(Index targetEventIndex, Set<Index> assignedPersonIndexList) {
         this.targetEventIndex = targetEventIndex;
         this.assignedPersonIndexList = assignedPersonIndexList;
     }
 
+    /**
+     * Executes the assignment of contacts to the specified event.
+     *
+     * @param model The model in which the command operates.
+     * @return CommandResult of the assignment.
+     * @throws CommandException if any index is invalid or contact already assigned.
+     */
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
@@ -68,7 +81,8 @@ public class AssignContactToEventCommand extends Command {
                 existingPersonsInEvent.add(person.getId());
             }
         }
-        Event newEvent = new Event(eventToModify.getName(), eventToModify.getDate(), eventToModify.getTime(), existingPersonsInEvent);
+        Event newEvent = new Event(eventToModify.getName(), eventToModify.getDate(), eventToModify.getTime(),
+                existingPersonsInEvent);
         model.setEvent(eventToModify, newEvent);
         String assignedPersonNames = parsePersonListToString(newContactsAssignedToEvent);
         return new CommandResult(String.format(MESSAGE_ASSIGN_TO_EVENT_SUCCESS,

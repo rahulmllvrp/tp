@@ -75,7 +75,8 @@ public class AddEventCommand extends Command {
                 assignedPersonIds.add(personToAssign.getId());
             }
         }
-        Event newEvent = new Event(toAdd.getName(), toAdd.getDate(), toAdd.getTime(), new ArrayList<>(assignedPersonIds));
+        Event newEvent = new Event(toAdd.getName(), toAdd.getDate(), toAdd.getTime(),
+                new ArrayList<>(assignedPersonIds));
         model.addEvent(newEvent);
         return new CommandResult(String.format(MESSAGE_SUCCESS, Messages.format(newEvent)));
     }

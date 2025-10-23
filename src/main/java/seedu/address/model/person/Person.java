@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -81,16 +80,15 @@ public class Person {
     }
 
     /**
-     * Returns true if both persons have the same phone number.
+     * Returns true if both persons have the same name (case-sensitive, no trailing spaces).
      * This defines a weaker notion of equality between two persons.
      */
     public boolean isSamePerson(Person otherPerson) {
         if (otherPerson == this) {
             return true;
         }
-
         return otherPerson != null
-                && otherPerson.getPhone().equals(getPhone());
+                && otherPerson.getName().equals(getName());
     }
 
     /**
@@ -124,13 +122,10 @@ public class Person {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-                .add("id", id)
-                .add("name", name)
-                .add("phone", phone)
-                .add("email", email)
-                .add("website", website)
-                .add("tags", tags)
-                .toString();
+        return Person.class.getCanonicalName() + "{name=" + name
+                + ", phone=" + phone
+                + ", email=" + email
+                + ", website=" + website
+                + ", tags=" + tags + "}";
     }
 }

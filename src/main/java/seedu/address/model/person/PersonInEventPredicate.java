@@ -1,6 +1,7 @@
 package seedu.address.model.person;
 
 import java.util.function.Predicate;
+
 import seedu.address.model.event.Event;
 
 /**
@@ -21,7 +22,8 @@ public class PersonInEventPredicate implements Predicate<Person> {
 
     @Override
     public boolean equals(Object other) {
-        return other == this || (other instanceof PersonInEventPredicate && event.equals(((PersonInEventPredicate) other).event));
+        return other == this
+                || (other instanceof PersonInEventPredicate
+                && event.equals(((PersonInEventPredicate) other).event));
     }
 }
-
