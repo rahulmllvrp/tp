@@ -31,7 +31,8 @@ public class JsonAbsolutSinemaStorageTest {
     }
 
     private java.util.Optional<ReadOnlyAbsolutSinema> readAbsolutSinema(String filePath) throws Exception {
-        return new JsonAbsolutSinemaStorage(Paths.get(filePath)).readAbsolutSinema(addToTestDataPathIfNotNull(filePath));
+        return new JsonAbsolutSinemaStorage(Paths.get(filePath))
+                .readAbsolutSinema(addToTestDataPathIfNotNull(filePath));
     }
 
     private Path addToTestDataPathIfNotNull(String prefsFileInTestDataFolder) {
