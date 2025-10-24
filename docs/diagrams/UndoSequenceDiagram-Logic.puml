@@ -32,6 +32,7 @@ activate UndoCommand
 
 UndoCommand -> Model : undoAddressBook()
 activate Model
+note right: Undoes the last contact/event modification\n(add, delete, edit operations)
 
 Model --> UndoCommand
 deactivate Model
