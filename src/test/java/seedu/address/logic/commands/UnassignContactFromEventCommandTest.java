@@ -1,7 +1,7 @@
 package seedu.address.logic.commands;
 
-import static seedu.address.testutil.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static seedu.address.testutil.Assert.assertThrows;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
 
@@ -75,6 +75,7 @@ public class UnassignContactFromEventCommandTest {
                 new UnassignContactFromEventCommand(Index.fromOneBased(1), contactIndices);
 
         assertThrows(CommandException.class,
-                Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX + " " + Messages.MESSAGE_TRY_PERSON_LIST_MODE, () -> unassignCommand.execute(model));
+                Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX
+                        + " " + Messages.MESSAGE_TRY_PERSON_LIST_MODE, () -> unassignCommand.execute(model));
     }
 }
