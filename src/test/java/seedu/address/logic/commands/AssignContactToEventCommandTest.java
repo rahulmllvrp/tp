@@ -5,7 +5,6 @@ import static seedu.address.testutil.Assert.assertThrows;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
 
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -32,7 +31,6 @@ public class AssignContactToEventCommandTest {
 
     private Model model;
     private Event eventOne;
-    private Event eventTwo;
 
     @BeforeEach
     public void setUp() {
@@ -41,7 +39,7 @@ public class AssignContactToEventCommandTest {
         // create two events
         eventOne = new Event(new EventName("John's Party"), new EventDate("01-01-2024"),
                 new EventTime("12:00"));
-        eventTwo = new Event(new EventName("Jane's Party"), new EventDate("02-02-2024"),
+        Event eventTwo = new Event(new EventName("Jane's Party"), new EventDate("02-02-2024"),
                 new EventTime("18:00"));
 
         model.addEvent(eventOne);
@@ -89,4 +87,3 @@ public class AssignContactToEventCommandTest {
                 "Alice Pauline has already been assigned to this party.", () -> assignCommand.execute(model));
     }
 }
-
