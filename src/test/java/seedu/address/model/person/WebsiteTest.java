@@ -14,35 +14,57 @@ public class WebsiteTest {
     }
 
     @Test
+    public void constructor_invalidWebsite_throwsIllegalArgumentException() {
+        String invalidWebsite = " ";
+        assertThrows(IllegalArgumentException.class, () -> new Website(invalidWebsite));
+    }
+
+    @Test
     public void isValidWebsite() {
         // null website
         assertThrows(NullPointerException.class, () -> Website.isValidWebsite(null));
 
+        // invalid websites
+        assertFalse(Website.isValidWebsite(" ")); // spaces only
+        assertFalse(Website.isValidWebsite("  abc")); // starts with whitespace
+
         // valid websites
         assertTrue(Website.isValidWebsite("")); // empty string
-        assertFalse(Website.isValidWebsite(" ")); // spaces only
         assertTrue(Website.isValidWebsite("https://www.google.com"));
-        assertTrue(Website.isValidWebsite("https://www.example.com"));
         assertTrue(Website.isValidWebsite("example.com"));
+        assertFalse(Website.isValidWebsite("  example.com ")); // spaces in between (invalid)
     }
 
     @Test
     public void equals() {
-        Website website = new Website("https://www.example.com");
-
-        // same values -> returns true
-        assertTrue(website.equals(new Website("https://www.example.com")));
+        Website website = new Website("valid.com");
 
         // same object -> returns true
         assertTrue(website.equals(website));
 
-        // null -> returns false
-        assertFalse(website.equals(null));
-
-        // different types -> returns false
-        assertFalse(website.equals(5.0f));
+        // same values -> returns true
+        Website websiteCopy = new Website("valid.com");
+        assertTrue(website.equals(websiteCopy));
 
         // different values -> returns false
-        assertFalse(website.equals(new Website("https://www.google.com")));
+        assertFalse(website.equals(new Website("other.com")));
+
+        // different types -> returns false
+        assertFalse(website.equals(1));
+
+        // null -> returns false
+        assertFalse(website.equals(null));
+    }
+
+    @Test
+    public void hashCodeTest() {
+        Website website = new Website("valid.com");
+
+        // same value -> same hashcode
+        Website websiteCopy = new Website("valid.com");
+        assertTrue(website.hashCode() == websiteCopy.hashCode());
+
+        // different value -> different hashcode
+        assertFalse(website.hashCode() == new Website("other.com").hashCode());
     }
 }
