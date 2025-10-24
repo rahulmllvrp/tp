@@ -8,7 +8,7 @@ import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.Model;
-import seedu.address.model.ReadOnlyAddressBook;
+import seedu.address.model.ReadOnlyAbsolutSinema;
 import seedu.address.model.person.Person;
 
 /**
@@ -33,11 +33,11 @@ public interface Logic {
     CommandResult execute(seedu.address.logic.commands.Command command) throws CommandException;
 
     /**
-     * Returns the AddressBook.
+     * Returns the AbsolutSinema.
      *
-     * @see seedu.address.model.Model#getAddressBook()
+     * @see seedu.address.model.Model#getAbsolutSinema()
      */
-    ReadOnlyAddressBook getAddressBook();
+    ReadOnlyAbsolutSinema getAbsolutSinema();
 
     /** Returns an unmodifiable view of the filtered list of persons */
     ObservableList<Person> getFilteredPersonList();
@@ -46,9 +46,9 @@ public interface Logic {
     ObservableList<seedu.address.model.event.Event> getFilteredEventList();
 
     /**
-     * Returns the user prefs' address book file path.
+     * Returns the user prefs' absolut sinema file path.
      */
-    Path getAddressBookFilePath();
+    Path getAbsolutSinemaFilePath();
 
     /**
      * Returns the user prefs' GUI settings.

@@ -4,14 +4,14 @@ import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 
 /**
- * Undoes the previous command that modified the address book.
+ * Undoes the previous command that modified the absolut sinema.
  */
 public class UndoCommand extends Command {
 
     public static final String COMMAND_WORD = "undo";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
-            + ": Undoes the previous command that modified the address book.";
+            + ": Undoes the previous command that modified the absolut sinema.";
 
     public static final String MESSAGE_SUCCESS = "Previous command undone: %1$s";
     public static final String MESSAGE_NO_COMMAND_TO_UNDO = "No command to undo.";

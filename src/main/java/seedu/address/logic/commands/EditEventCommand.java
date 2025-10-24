@@ -22,7 +22,7 @@ import seedu.address.model.event.EventName;
 import seedu.address.model.event.EventTime;
 
 /**
- * Edits the details of an existing event in the address book.
+ * Edits the details of an existing event in the absolut sinema.
  */
 public class EditEventCommand extends Command {
 

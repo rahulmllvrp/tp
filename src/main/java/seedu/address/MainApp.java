@@ -15,15 +15,15 @@ import seedu.address.commons.util.ConfigUtil;
 import seedu.address.commons.util.StringUtil;
 import seedu.address.logic.Logic;
 import seedu.address.logic.LogicManager;
-import seedu.address.model.AddressBook;
+import seedu.address.model.AbsolutSinema;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
-import seedu.address.model.ReadOnlyAddressBook;
+import seedu.address.model.ReadOnlyAbsolutSinema;
 import seedu.address.model.ReadOnlyUserPrefs;
 import seedu.address.model.UserPrefs;
 import seedu.address.model.util.SampleDataUtil;
-import seedu.address.storage.AddressBookStorage;
-import seedu.address.storage.JsonAddressBookStorage;
+import seedu.address.storage.AbsolutSinemaStorage;
+import seedu.address.storage.JsonAbsolutSinemaStorage;
 import seedu.address.storage.JsonUserPrefsStorage;
 import seedu.address.storage.Storage;
 import seedu.address.storage.StorageManager;
@@ -57,8 +57,8 @@ public class MainApp extends Application {
 
         UserPrefsStorage userPrefsStorage = new JsonUserPrefsStorage(config.getUserPrefsFilePath());
         UserPrefs userPrefs = initPrefs(userPrefsStorage);
-        AddressBookStorage addressBookStorage = new JsonAddressBookStorage(userPrefs.getAddressBookFilePath());
-        storage = new StorageManager(addressBookStorage, userPrefsStorage);
+        AbsolutSinemaStorage absolutSinemaStorage = new JsonAbsolutSinemaStorage(userPrefs.getAbsolutSinemaFilePath());
+        storage = new StorageManager(absolutSinemaStorage, userPrefsStorage);
 
         model = initModelManager(storage, userPrefs);
 
@@ -68,26 +68,26 @@ public class MainApp extends Application {
     }
 
     /**
-     * Returns a {@code ModelManager} with the data from {@code storage}'s address book and {@code userPrefs}. <br>
-     * The data from the sample address book will be used instead if {@code storage}'s address book is not found,
-     * or an empty address book will be used instead if errors occur when reading {@code storage}'s address book.
+     * Returns a {@code ModelManager} with the data from {@code storage}'s absolut sinema and {@code userPrefs}. <br>
+     * The data from the sample absolut sinema will be used instead if {@code storage}'s absolut sinema is not found,
+     * or an empty absolut sinema will be used instead if errors occur when reading {@code storage}'s absolut sinema.
      */
     private Model initModelManager(Storage storage, ReadOnlyUserPrefs userPrefs) {
-        logger.info("Using data file : " + storage.getAddressBookFilePath());
+        logger.info("Using data file : " + storage.getAbsolutSinemaFilePath());
 
-        Optional<ReadOnlyAddressBook> addressBookOptional;
-        ReadOnlyAddressBook initialData;
+        Optional<ReadOnlyAbsolutSinema> absolutSinemaOptional;
+        ReadOnlyAbsolutSinema initialData;
         try {
-            addressBookOptional = storage.readAddressBook();
-            if (!addressBookOptional.isPresent()) {
-                logger.info("Creating a new data file " + storage.getAddressBookFilePath()
+            absolutSinemaOptional = storage.readAbsolutSinema();
+            if (!absolutSinemaOptional.isPresent()) {
+                logger.info("Creating a new data file " + storage.getAbsolutSinemaFilePath()
                         + " populated with a sample AbsoluteSin-Ema.");
             }
-            initialData = addressBookOptional.orElseGet(SampleDataUtil::getSampleAddressBook);
+            initialData = absolutSinemaOptional.orElseGet(SampleDataUtil::getSampleAbsolutSinema);
         } catch (DataLoadingException e) {
-            logger.warning("Data file at " + storage.getAddressBookFilePath() + " could not be loaded."
+            logger.warning("Data file at " + storage.getAbsolutSinemaFilePath() + " could not be loaded."
                     + " Will be starting with an empty AbsoluteSin-Ema.");
-            initialData = new AddressBook();
+            initialData = new AbsolutSinema();
         }
 
         return new ModelManager(initialData, userPrefs);

@@ -11,7 +11,7 @@ import seedu.address.model.person.Person;
  * The API of the Model component.
  *
  * The Model is the central data management layer that handles:
- * - All person data in the address book
+ * - All person data in the absolut sinema
  * - User preferences and GUI settings
  * - Filtering and display logic for the UI
  * - Data persistence coordination
@@ -61,44 +61,44 @@ public interface Model {
     void setGuiSettings(GuiSettings guiSettings);
 
     /**
-     * Returns the file path where address book data is stored.
+     * Returns the file path where absolut sinema data is stored.
      * Used for data persistence and file operations.
      *
-     * @return Path to the address book data file
+     * @return Path to the absolut sinema data file
      */
-    Path getAddressBookFilePath();
+    Path getAbsolutSinemaFilePath();
 
     /**
-     * Sets the file path where address book data should be stored.
+     * Sets the file path where absolut sinema data should be stored.
      * Changes where the application saves/loads data.
      *
-     * @param addressBookFilePath New file path for address book data
+     * @param absolutSinemaFilePath New file path for absolut sinema data
      */
-    void setAddressBookFilePath(Path addressBookFilePath);
+    void setAbsolutSinemaFilePath(Path absolutSinemaFilePath);
 
-    // ========================= ADDRESS BOOK DATA =========================
+    // ========================= ABSOLUT SINEMA DATA =========================
 
     /**
-     * Replaces all address book data with the provided data.
+     * Replaces all absolut sinema data with the provided data.
      * This completely overwrites existing person records.
      * Used when loading data from file or resetting the application.
      *
-     * @param addressBook New address book data to set
+     * @param absolutSinema New absolut sinema data to set
      */
-    void setAddressBook(ReadOnlyAddressBook addressBook);
+    void setAbsolutSinema(ReadOnlyAbsolutSinema absolutSinema);
 
     /**
-     * Returns the complete address book data.
+     * Returns the complete absolut sinema data.
      * Contains all person records, regardless of current filtering.
      *
-     * @return Read-only view of the entire address book
+     * @return Read-only view of the entire absolut sinema
      */
-    ReadOnlyAddressBook getAddressBook();
+    ReadOnlyAbsolutSinema getAbsolutSinema();
 
     // ========================= PERSON OPERATIONS =========================
 
     /**
-     * Checks if a person with the same identity already exists in the address book.
+     * Checks if a person with the same identity already exists in the absolut sinema.
      * Identity is typically determined by name (see Person.isSamePerson()).
      * Used to prevent duplicate entries.
      *
@@ -108,26 +108,26 @@ public interface Model {
     boolean hasPerson(Person person);
 
     /**
-     * Removes the specified person from the address book.
-     * The person must exist in the address book, otherwise behavior is undefined.
+     * Removes the specified person from the absolut sinema.
+     * The person must exist in the absolut sinema, otherwise behavior is undefined.
      * Used by delete commands and UI operations.
      *
-     * @param target Person to remove from address book
+     * @param target Person to remove from absolut sinema
      */
     void deletePerson(Person target);
 
     /**
-     * Adds a new person to the address book.
+     * Adds a new person to the absolut sinema.
      * The person must not already exist (use hasPerson() to check first).
      * Used by add commands and import operations.
      *
-     * @param person New person to add to address book
+     * @param person New person to add to absolut sinema
      */
     void addPerson(Person person);
 
     /**
      * Updates an existing person with new information.
-     * The target person must exist in the address book.
+     * The target person must exist in the absolut sinema.
      * The edited person must not have the same identity as another existing person.
      * Used by edit commands to modify person details.
      *
@@ -137,26 +137,26 @@ public interface Model {
     void setPerson(Person target, Person editedPerson);
 
     /**
-     * Returns true if an event with the same identity as {@code event} exists in the address book.
+     * Returns true if an event with the same identity as {@code event} exists in the absolut sinema.
      */
     boolean hasEvent(seedu.address.model.event.Event event);
 
     /**
      * Deletes the given event.
-     * The event must exist in the address book.
+     * The event must exist in the absolut sinema.
      */
     void deleteEvent(seedu.address.model.event.Event target);
 
     /**
      * Adds the given event.
-     * {@code event} must not already exist in the address book.
+     * {@code event} must not already exist in the absolut sinema.
      */
     void addEvent(seedu.address.model.event.Event event);
 
     /**
      * Replaces the given event {@code target} with {@code editedEvent}.
-     * {@code target} must exist in the address book.
-     * The event identity of {@code editedEvent} must not be the same as another existing event in the address book.
+     * {@code target} must exist in the absolut sinema.
+     * The event identity of {@code editedEvent} must not be the same as another existing event in the absolut sinema.
      */
     void setEvent(seedu.address.model.event.Event target, seedu.address.model.event.Event editedEvent);
 
@@ -164,12 +164,12 @@ public interface Model {
 
     /**
      * Returns the currently filtered and displayed list of persons.
-     * This is what the UI shows to the user - it's a subset of the full address book
+     * This is what the UI shows to the user - it's a subset of the full absolut sinema
      * based on the current search/filter criteria.
      *
      * This list automatically updates when:
      * - The filter predicate changes (via updateFilteredPersonList)
-     * - The underlying address book data changes (add/edit/delete)
+     * - The underlying absolut sinema data changes (add/edit/delete)
      *
      * @return Observable list of persons currently displayed in UI
      */
@@ -201,7 +201,7 @@ public interface Model {
     void updateFilteredEventList(Predicate<seedu.address.model.event.Event> predicate);
 
     /**
-     * Saves the current state of the address book before executing a command that modifies it.
+     * Saves the current state of the absolut sinema before executing a command that modifies it.
      * This enables undo functionality.
      *
      * @param operationDescription A description of the operation about to be performed.

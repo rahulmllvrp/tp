@@ -7,33 +7,33 @@ import seedu.address.model.event.Event;
 import seedu.address.model.person.Person;
 
 /**
- * Represents a snapshot of an AddressBook at a specific point in time.
+ * Represents a snapshot of an AbsolutSinema at a specific point in time.
  * Used for implementing undo functionality.
  */
-public class AddressBookSnapshot {
+public class AbsolutSinemaSnapshot {
     private final List<Person> persons;
     private final List<Event> events;
     private final String operationDescription;
 
     /**
-     * Creates a snapshot of the given AddressBook.
+     * Creates a snapshot of the given AbsolutSinema.
      *
-     * @param addressBook The AddressBook to create a snapshot of.
+     * @param absolutSinema The AbsolutSinema to create a snapshot of.
      * @param operationDescription Description of the operation that was performed.
      */
-    public AddressBookSnapshot(ReadOnlyAddressBook addressBook, String operationDescription) {
-        this.persons = new ArrayList<>(addressBook.getPersonList());
-        this.events = new ArrayList<>(addressBook.getEventList());
+    public AbsolutSinemaSnapshot(ReadOnlyAbsolutSinema absolutSinema, String operationDescription) {
+        this.persons = new ArrayList<>(absolutSinema.getPersonList());
+        this.events = new ArrayList<>(absolutSinema.getEventList());
         this.operationDescription = operationDescription;
     }
 
     /**
-     * Restores an AddressBook from this snapshot.
+     * Restores an AbsolutSinema from this snapshot.
      *
-     * @return A new AddressBook with the data from this snapshot.
+     * @return A new AbsolutSinema with the data from this snapshot.
      */
-    public AddressBook restoreAddressBook() {
-        AddressBook restoredBook = new AddressBook();
+    public AbsolutSinema restoreAbsolutSinema() {
+        AbsolutSinema restoredBook = new AbsolutSinema();
         for (Person person : persons) {
             restoredBook.addPerson(person);
         }

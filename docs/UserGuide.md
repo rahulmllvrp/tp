@@ -15,7 +15,7 @@ AbsolutSin-ema is a **desktop app for managing contacts, optimized for use via a
 1. Ensure you have Java `17` or above installed in your Computer.<br>
    **Mac users:** Ensure you have the precise JDK version prescribed [here](https://se-education.org/guides/tutorials/javaInstallationMac.html).
 
-1. Download the latest `.jar` file from [here](https://github.com/se-edu/addressbook-level3/releases).
+1. Download the latest `.jar` file from [here](https://github.com/se-edu/absolutsinema-level3/releases).
 
 1. Copy the file to the folder you want to use as the _home folder_ for your AbsolutSin-ema.
 
@@ -294,7 +294,7 @@ _Details coming soon ..._
 ## FAQ
 
 **Q**: How do I transfer my data to another computer?<br>
-**A**: Install AbsolutSin-ema on the new computer and overwrite the empty data file it creates with the file that contains the data of your previous AbsolutSin-ema home folder. The data file is located at `[JAR file location]/data/addressbook.json`.
+**A**: Install AbsolutSin-ema on the new computer and overwrite the empty data file it creates with the file that contains the data of your previous AbsolutSin-ema home folder. The data file is located at `[JAR file location]/data/absolutsinema.json`.
 
 **Q**: What happens if I accidentally delete a contact?<br>
 **A**: You can use the `undo` command to restore the deleted contact immediately after the deletion. If you have performed other commands after the deletion, you will need to add the contact again manually.
@@ -309,7 +309,7 @@ _Details coming soon ..._
 **A**: Ensure you have Java 17 or above installed. Check that the jar file is not corrupted by re-downloading it. Make sure you're running the command `java -jar absolutsin-ema.jar` from the correct directory. See the [Troubleshooting](#troubleshooting) section for more detailed steps.
 
 **Q**: Can I backup my data?<br>
-**A**: Yes, simply copy the `addressbook.json` file from the data folder to a safe location. You can restore it later by copying it back. It's recommended to backup your data regularly.
+**A**: Yes, simply copy the `absolutsinema.json` file from the data folder to a safe location. You can restore it later by copying it back. It's recommended to backup your data regularly.
 
 **Q**: Are my contacts searchable by phone number or email?<br>
 **A**: Currently, the `find` command only searches by name. To find contacts by other fields, use the `list` command to view all contacts and manually search through them.

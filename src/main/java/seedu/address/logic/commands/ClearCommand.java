@@ -3,7 +3,7 @@ package seedu.address.logic.commands;
 import seedu.address.model.Model;
 
 /**
- * Prompts the user for confirmation to clear the address book.
+ * Prompts the user for confirmation to clear the absolut sinema.
  */
 public class ClearCommand extends Command {
 
@@ -12,6 +12,6 @@ public class ClearCommand extends Command {
 
     @Override
     public CommandResult execute(Model model) {
-        return new CommandResult("Are you sure you want to clear the address book?", new ConfirmClearCommand());
+        return new CommandResult("Are you sure you want to clear the absolut sinema?", new ConfirmClearCommand());
     }
 }

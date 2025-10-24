@@ -5,14 +5,14 @@ import java.nio.file.Path;
 import java.util.Optional;
 
 import seedu.address.commons.exceptions.DataLoadingException;
-import seedu.address.model.ReadOnlyAddressBook;
+import seedu.address.model.ReadOnlyAbsolutSinema;
 import seedu.address.model.ReadOnlyUserPrefs;
 import seedu.address.model.UserPrefs;
 
 /**
  * API of the Storage component
  */
-public interface Storage extends AddressBookStorage, UserPrefsStorage {
+public interface Storage extends AbsolutSinemaStorage, UserPrefsStorage {
 
     @Override
     Optional<UserPrefs> readUserPrefs() throws DataLoadingException;
@@ -21,12 +21,12 @@ public interface Storage extends AddressBookStorage, UserPrefsStorage {
     void saveUserPrefs(ReadOnlyUserPrefs userPrefs) throws IOException;
 
     @Override
-    Path getAddressBookFilePath();
+    Path getAbsolutSinemaFilePath();
 
     @Override
-    Optional<ReadOnlyAddressBook> readAddressBook() throws DataLoadingException;
+    Optional<ReadOnlyAbsolutSinema> readAbsolutSinema() throws DataLoadingException;
 
     @Override
-    void saveAddressBook(ReadOnlyAddressBook addressBook) throws IOException;
+    void saveAbsolutSinema(ReadOnlyAbsolutSinema absolutSinema) throws IOException;
 
 }

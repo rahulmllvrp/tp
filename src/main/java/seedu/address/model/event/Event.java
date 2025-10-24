@@ -7,7 +7,7 @@ import java.util.Objects;
 import seedu.address.model.person.PersonId;
 
 /**
- * Represents an Event in the address book.
+ * Represents an Event in the absolut sinema.
  * Guarantees: details are present and not null, field values are validated, immutable.
  */
 public class Event {

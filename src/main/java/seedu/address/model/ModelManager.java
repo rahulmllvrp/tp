@@ -15,36 +15,36 @@ import seedu.address.commons.core.LogsCenter;
 import seedu.address.model.person.Person;
 
 /**
- * Represents the in-memory model of the address book data.
+ * Represents the in-memory model of the absolut sinema data.
  */
 public class ModelManager implements Model {
     private static final Logger logger = LogsCenter.getLogger(ModelManager.class);
 
-    private final AddressBook addressBook;
+    private final AbsolutSinema absolutSinema;
     private final UserPrefs userPrefs;
     private final FilteredList<Person> filteredPersons;
     private final SortedList<Person> sortedFilteredPersons;
     private final FilteredList<seedu.address.model.event.Event> filteredEvents;
-    private AddressBookSnapshot undoSnapshot; // Stores the previous state for undo
+    private AbsolutSinemaSnapshot undoSnapshot; // Stores the previous state for undo
 
     /**
-     * Initializes a ModelManager with the given addressBook and userPrefs.
+     * Initializes a ModelManager with the given absolutSinema and userPrefs.
      */
-    public ModelManager(ReadOnlyAddressBook addressBook, ReadOnlyUserPrefs userPrefs) {
-        requireAllNonNull(addressBook, userPrefs);
+    public ModelManager(ReadOnlyAbsolutSinema absolutSinema, ReadOnlyUserPrefs userPrefs) {
+        requireAllNonNull(absolutSinema, userPrefs);
 
-        logger.fine("Initializing with address book: " + addressBook + " and user prefs " + userPrefs);
+        logger.fine("Initializing with absolut sinema: " + absolutSinema + " and user prefs " + userPrefs);
 
-        this.addressBook = new AddressBook(addressBook);
+        this.absolutSinema = new AbsolutSinema(absolutSinema);
         this.userPrefs = new UserPrefs(userPrefs);
-        filteredPersons = new FilteredList<>(this.addressBook.getPersonList());
+        filteredPersons = new FilteredList<>(this.absolutSinema.getPersonList());
         sortedFilteredPersons = new SortedList<>(filteredPersons, (person1, person2) ->
                 person1.getName().fullName.compareToIgnoreCase(person2.getName().fullName));
-        filteredEvents = new FilteredList<>(this.addressBook.getEventList());
+        filteredEvents = new FilteredList<>(this.absolutSinema.getEventList());
     }
 
     public ModelManager() {
-        this(new AddressBook(), new UserPrefs());
+        this(new AbsolutSinema(), new UserPrefs());
     }
 
     //=========== UserPrefs ==================================================================================
@@ -72,42 +72,42 @@ public class ModelManager implements Model {
     }
 
     @Override
-    public Path getAddressBookFilePath() {
-        return userPrefs.getAddressBookFilePath();
+    public Path getAbsolutSinemaFilePath() {
+        return userPrefs.getAbsolutSinemaFilePath();
     }
 
     @Override
-    public void setAddressBookFilePath(Path addressBookFilePath) {
-        requireNonNull(addressBookFilePath);
-        userPrefs.setAddressBookFilePath(addressBookFilePath);
+    public void setAbsolutSinemaFilePath(Path absolutSinemaFilePath) {
+        requireNonNull(absolutSinemaFilePath);
+        userPrefs.setAbsolutSinemaFilePath(absolutSinemaFilePath);
     }
 
-    //=========== AddressBook ================================================================================
+    //=========== AbsolutSinema ================================================================================
 
     @Override
-    public void setAddressBook(ReadOnlyAddressBook addressBook) {
-        this.addressBook.resetData(addressBook);
+    public void setAbsolutSinema(ReadOnlyAbsolutSinema absolutSinema) {
+        this.absolutSinema.resetData(absolutSinema);
     }
 
     @Override
-    public ReadOnlyAddressBook getAddressBook() {
-        return addressBook;
+    public ReadOnlyAbsolutSinema getAbsolutSinema() {
+        return absolutSinema;
     }
 
     @Override
     public boolean hasPerson(Person person) {
         requireNonNull(person);
-        return addressBook.hasPerson(person);
+        return absolutSinema.hasPerson(person);
     }
 
     @Override
     public void deletePerson(Person target) {
-        addressBook.removePerson(target);
+        absolutSinema.removePerson(target);
     }
 
     @Override
     public void addPerson(Person person) {
-        addressBook.addPerson(person);
+        absolutSinema.addPerson(person);
         updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
     }
 
@@ -115,23 +115,23 @@ public class ModelManager implements Model {
     public void setPerson(Person target, Person editedPerson) {
         requireAllNonNull(target, editedPerson);
 
-        addressBook.setPerson(target, editedPerson);
+        absolutSinema.setPerson(target, editedPerson);
     }
 
     @Override
     public boolean hasEvent(seedu.address.model.event.Event event) {
         requireNonNull(event);
-        return addressBook.hasEvent(event);
+        return absolutSinema.hasEvent(event);
     }
 
     @Override
     public void deleteEvent(seedu.address.model.event.Event target) {
-        addressBook.removeEvent(target);
+        absolutSinema.removeEvent(target);
     }
 
     @Override
     public void addEvent(seedu.address.model.event.Event event) {
-        addressBook.addEvent(event);
+        absolutSinema.addEvent(event);
         updateFilteredEventList(PREDICATE_SHOW_ALL_EVENTS);
     }
 
@@ -139,14 +139,14 @@ public class ModelManager implements Model {
     public void setEvent(seedu.address.model.event.Event target, seedu.address.model.event.Event editedEvent) {
         requireAllNonNull(target, editedEvent);
 
-        addressBook.setEvent(target, editedEvent);
+        absolutSinema.setEvent(target, editedEvent);
     }
 
     //=========== Filtered Person List Accessors =============================================================
 
     /**
      * Returns an unmodifiable view of the list of {@code Person} backed by the internal list of
-     * {@code versionedAddressBook}
+     * {@code versionedAbsolutSinema}
      */
     @Override
     public ObservableList<Person> getFilteredPersonList() {
@@ -174,7 +174,7 @@ public class ModelManager implements Model {
 
     @Override
     public void saveStateForUndo(String operationDescription) {
-        undoSnapshot = new AddressBookSnapshot(addressBook, operationDescription);
+        undoSnapshot = new AbsolutSinemaSnapshot(absolutSinema, operationDescription);
     }
 
     @Override
@@ -189,8 +189,8 @@ public class ModelManager implements Model {
         }
 
         String description = undoSnapshot.getOperationDescription();
-        AddressBook restoredBook = undoSnapshot.restoreAddressBook();
-        addressBook.resetData(restoredBook);
+        AbsolutSinema restoredBook = undoSnapshot.restoreAbsolutSinema();
+        absolutSinema.resetData(restoredBook);
 
         // Clear the undo snapshot after using it
         undoSnapshot = null;
@@ -210,7 +210,7 @@ public class ModelManager implements Model {
         }
 
         ModelManager otherModelManager = (ModelManager) other;
-        return addressBook.equals(otherModelManager.addressBook)
+        return absolutSinema.equals(otherModelManager.absolutSinema)
                 && userPrefs.equals(otherModelManager.userPrefs)
                 && filteredPersons.equals(otherModelManager.filteredPersons);
     }

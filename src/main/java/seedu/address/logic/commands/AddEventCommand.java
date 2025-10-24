@@ -20,7 +20,7 @@ import seedu.address.model.person.Person;
 import seedu.address.model.person.PersonId;
 
 /**
- * Adds an event to the address book.
+ * Adds an event to the absolut sinema.
  */
 public class AddEventCommand extends Command {
 
