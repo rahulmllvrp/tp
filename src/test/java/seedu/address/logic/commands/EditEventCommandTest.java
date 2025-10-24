@@ -41,7 +41,8 @@ public class EditEventCommandTest {
         EditEventDescriptor descriptor = new EditEventDescriptorBuilder(editedEvent).build();
         EditEventCommand editEventCommand = new EditEventCommand(INDEX_FIRST_EVENT, descriptor);
 
-        String expectedMessage = String.format(EditEventCommand.MESSAGE_EDIT_EVENT_SUCCESS, Messages.format(editedEvent));
+        String expectedMessage = String.format(
+                EditEventCommand.MESSAGE_EDIT_EVENT_SUCCESS, Messages.format(editedEvent));
 
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
         expectedModel.setEvent(model.getFilteredEventList().get(0), editedEvent);
@@ -62,7 +63,8 @@ public class EditEventCommandTest {
                 .withDate(VALID_DATE_MEETING).withTime(VALID_TIME_MEETING).build();
         EditEventCommand editEventCommand = new EditEventCommand(indexLastEvent, descriptor);
 
-        String expectedMessage = String.format(EditEventCommand.MESSAGE_EDIT_EVENT_SUCCESS, Messages.format(editedEvent));
+        String expectedMessage = String.format(
+                EditEventCommand.MESSAGE_EDIT_EVENT_SUCCESS, Messages.format(editedEvent));
 
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
         expectedModel.setEvent(lastEvent, editedEvent);
@@ -75,7 +77,8 @@ public class EditEventCommandTest {
         EditEventCommand editEventCommand = new EditEventCommand(INDEX_FIRST_EVENT, new EditEventDescriptor());
         Event editedEvent = model.getFilteredEventList().get(INDEX_FIRST_EVENT.getZeroBased());
 
-        String expectedMessage = String.format(EditEventCommand.MESSAGE_EDIT_EVENT_SUCCESS, Messages.format(editedEvent));
+        String expectedMessage = String.format(
+                EditEventCommand.MESSAGE_EDIT_EVENT_SUCCESS, Messages.format(editedEvent));
 
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
 
@@ -91,7 +94,8 @@ public class EditEventCommandTest {
         EditEventCommand editEventCommand = new EditEventCommand(INDEX_FIRST_EVENT,
                 new EditEventDescriptorBuilder().withName("Filtered Unique Event Name").build());
 
-        String expectedMessage = String.format(EditEventCommand.MESSAGE_EDIT_EVENT_SUCCESS, Messages.format(editedEvent));
+        String expectedMessage = String.format(
+                EditEventCommand.MESSAGE_EDIT_EVENT_SUCCESS, Messages.format(editedEvent));
 
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
         expectedModel.setEvent(model.getFilteredEventList().get(0), editedEvent);

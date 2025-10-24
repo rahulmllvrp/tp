@@ -6,10 +6,6 @@ import java.util.List;
 
 import seedu.address.model.AddressBook;
 import seedu.address.model.event.Event;
-import seedu.address.model.event.EventDate;
-import seedu.address.model.event.EventName;
-import seedu.address.model.event.EventTime;
-import seedu.address.model.person.PersonId;
 
 /**
  * A utility class containing a list of {@code Event} objects to be used in tests.

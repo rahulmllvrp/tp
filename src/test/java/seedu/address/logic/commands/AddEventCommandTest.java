@@ -10,15 +10,12 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import java.util.function.Predicate;
 
 import org.junit.jupiter.api.Test;
 
 import javafx.collections.ObservableList;
 import seedu.address.commons.core.GuiSettings;
-import seedu.address.commons.core.index.Index;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.AddressBook;
@@ -30,7 +27,6 @@ import seedu.address.model.event.EventDate;
 import seedu.address.model.event.EventName;
 import seedu.address.model.event.EventTime;
 import seedu.address.model.person.Person;
-import seedu.address.model.person.PersonId;
 
 public class AddEventCommandTest {
 
@@ -57,13 +53,16 @@ public class AddEventCommandTest {
         AddEventCommand addEventCommand = new AddEventCommand(validEvent, new HashSet<>());
         ModelStubWithEvent modelStub = new ModelStubWithEvent(validEvent);
 
-        assertThrows(CommandException.class, AddEventCommand.MESSAGE_DUPLICATE_EVENT, () -> addEventCommand.execute(modelStub));
+        assertThrows(CommandException.class,
+                AddEventCommand.MESSAGE_DUPLICATE_EVENT, () -> addEventCommand.execute(modelStub));
     }
 
     @Test
     public void equals() {
-        Event event1 = new Event(new EventName("Event 1"), new EventDate("01-01-2025"), new EventTime("10:00"));
-        Event event2 = new Event(new EventName("Event 2"), new EventDate("02-01-2025"), new EventTime("11:00"));
+        Event event1 = new Event(
+                new EventName("Event 1"), new EventDate("01-01-2025"), new EventTime("10:00"));
+        Event event2 = new Event(
+                new EventName("Event 2"), new EventDate("02-01-2025"), new EventTime("11:00"));
         AddEventCommand addEvent1Command = new AddEventCommand(event1, new HashSet<>());
         AddEventCommand addEvent2Command = new AddEventCommand(event2, new HashSet<>());
 
