@@ -38,8 +38,9 @@ Storage -right-|> AddressBookStorage
 JsonUserPrefsStorage .up.|> UserPrefsStorage
 JsonAddressBookStorage .up.|> AddressBookStorage
 JsonAddressBookStorage ..> JsonSerializableAddressBook
-JsonSerializableAddressBook --> "*" JsonAdaptedPerson
-JsonSerializableAddressBook --> "*" JsonAdaptedEvent
+JsonSerializableAddressBook "1" --> "*" JsonAdaptedPerson
+JsonSerializableAddressBook "1" --> "*" JsonAdaptedEvent
 JsonAdaptedPerson --> "*" JsonAdaptedTag
+JsonAdaptedEvent ..> JsonAdaptedPerson
 
 @enduml
