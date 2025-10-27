@@ -42,5 +42,4 @@ JsonSerializableAddressBook "1" --> "*" JsonAdaptedPerson
 JsonSerializableAddressBook "1" --> "*" JsonAdaptedEvent
 JsonAdaptedPerson --> "*" JsonAdaptedTag
 JsonAdaptedEvent ..> JsonAdaptedPerson
-
 @enduml

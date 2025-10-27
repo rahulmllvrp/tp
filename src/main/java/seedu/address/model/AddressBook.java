@@ -152,6 +152,14 @@ public class AddressBook implements ReadOnlyAddressBook {
                 .toString();
     }
 
+    public UniquePersonList getModifiablePersonList() {
+        return persons;
+    }
+
+    public UniqueEventList getModifiableEventList() {
+        return events;
+    }
+
     @Override
     public ObservableList<Person> getPersonList() {
         return persons.asUnmodifiableObservableList();

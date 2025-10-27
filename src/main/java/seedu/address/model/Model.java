@@ -2,6 +2,7 @@ package seedu.address.model;
 
 import java.nio.file.Path;
 import java.util.function.Predicate;
+import java.util.Optional;
 
 import javafx.collections.ObservableList;
 import seedu.address.commons.core.GuiSettings;
@@ -135,6 +136,11 @@ public interface Model {
      * @param editedPerson The updated person information
      */
     void setPerson(Person target, Person editedPerson);
+
+    /**
+     * Returns a person with the given PersonId, or an empty Optional if not found.
+     */
+    Optional<seedu.address.model.person.Person> getPersonById(seedu.address.model.person.PersonId id);
 
     /**
      * Returns true if an event with the same identity as {@code event} exists in the address book.

@@ -13,6 +13,7 @@ import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.event.Event;
+import seedu.address.model.person.Budget;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.PersonId;
 
@@ -62,6 +63,7 @@ public class AssignContactToEventCommand extends Command {
             throw new CommandException(Messages.MESSAGE_INVALID_EVENT_DISPLAYED_INDEX);
         }
         Event eventToModify = lastShownEventList.get(targetEventIndex.getZeroBased());
+        double eventBudget = Double.parseDouble(eventToModify.getRemainingBudget().value);
         ArrayList<Person> newContactsAssignedToEvent = new ArrayList<>();
         List<Person> lastShownList = model.getFilteredPersonList();
         for (Index i : assignedPersonIndexList) {
@@ -70,6 +72,12 @@ public class AssignContactToEventCommand extends Command {
                         + Messages.MESSAGE_TRY_PERSON_LIST_MODE);
             } else {
                 Person personToAdd = lastShownList.get(i.getZeroBased());
+                double personBudget = Double.parseDouble(personToAdd.getBudget().value);
+                if (eventBudget < personBudget) {
+                    throw new CommandException("The budget of " + personToAdd.getName().toString()
+                            + " exceeds the remaining budget of the party.");
+                }
+                eventBudget -= personBudget;
                 newContactsAssignedToEvent.add(personToAdd);
             }
         }
@@ -82,7 +90,7 @@ public class AssignContactToEventCommand extends Command {
             }
         }
         Event newEvent = new Event(eventToModify.getName(), eventToModify.getDate(), eventToModify.getTime(),
-                existingPersonsInEvent);
+                existingPersonsInEvent, eventToModify.getInitialBudget(), new Budget(String.valueOf(eventBudget)));
         model.setEvent(eventToModify, newEvent);
         String assignedPersonNames = parsePersonListToString(newContactsAssignedToEvent);
         return new CommandResult(String.format(MESSAGE_ASSIGN_TO_EVENT_SUCCESS,

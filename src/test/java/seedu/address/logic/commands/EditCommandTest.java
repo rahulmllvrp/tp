@@ -15,6 +15,9 @@ import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 
+import java.util.List;
+import java.util.ArrayList;
+
 import org.junit.jupiter.api.Test;
 
 import seedu.address.commons.core.index.Index;
@@ -169,6 +172,51 @@ public class EditCommandTest {
 
         // different descriptor -> returns false
         assertFalse(standardCommand.equals(new EditCommand(INDEX_FIRST_PERSON, DESC_BOB)));
+    }
+
+    @Test
+    public void execute_editPersonBudget_updatesEventBudget() {
+        // Setup: Create a person and an event, and assign the person to the event
+        Person personToEdit = new PersonBuilder().withBudget("100").build();
+        seedu.address.model.event.Event event = new seedu.address.testutil.EventBuilder()
+                .withBudget("1000")
+                .withParticipants(personToEdit.getId())
+                .build();
+
+        Model localModel = new ModelManager(new AddressBook(), new UserPrefs());
+        localModel.addPerson(personToEdit);
+        localModel.addEvent(event);
+
+        // Manually update the event in the model to reflect the budget change from adding the person
+        seedu.address.model.event.Event eventWithPerson = new seedu.address.testutil.EventBuilder(event)
+                .withRemainingBudget("900").build();
+        localModel.setEvent(event, eventWithPerson);
+
+        // The person is at index 0
+        Index personIndex = Index.fromOneBased(1);
+
+        // Edit the person's budget
+        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder().withBudget("200").build();
+        EditCommand editCommand = new EditCommand(personIndex, descriptor);
+
+        // Expected person and event after the edit
+        Person expectedPerson = new PersonBuilder(personToEdit).withBudget("200").build();
+        seedu.address.model.event.Event expectedEvent = new seedu.address.testutil.EventBuilder(eventWithPerson)
+                .withParticipants(expectedPerson.getId())
+                .withRemainingBudget("800") // 1000 (initial) - 100 (initial person budget) - (200 - 100) = 800
+                .build();
+        String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(expectedPerson));
+
+        Model expectedModel = new ModelManager(new AddressBook(localModel.getAddressBook()), new UserPrefs());
+        AddressBook expectedAddressBook = (AddressBook) expectedModel.getAddressBook();
+
+        expectedAddressBook.getModifiablePersonList().setPerson(personToEdit, expectedPerson);
+        seedu.address.model.event.Event originalEventInExpectedModel = expectedAddressBook.getModifiableEventList().asUnmodifiableObservableList().stream()
+                .filter(e -> e.isSameEvent(event))
+                .findFirst().orElseThrow();
+        expectedAddressBook.getModifiableEventList().setEvent(originalEventInExpectedModel, expectedEvent);
+
+        assertEquals(expectedModel.getAddressBook(), localModel.getAddressBook());
     }
 
     @Test

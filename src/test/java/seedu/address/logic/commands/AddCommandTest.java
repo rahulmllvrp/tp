@@ -202,6 +202,11 @@ public class AddCommandTest {
         public void updateFilteredEventList(Predicate<seedu.address.model.event.Event> predicate) {
             throw new AssertionError("This method should not be called.");
         }
+
+        @Override
+        public java.util.Optional<seedu.address.model.person.Person> getPersonById(seedu.address.model.person.PersonId personId) {
+            throw new AssertionError("This method should not be called.");
+        }
     }
 
     /**

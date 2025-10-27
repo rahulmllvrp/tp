@@ -1,6 +1,7 @@
 package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_BUDGET;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_DATE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EVENT_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TIME;
@@ -20,6 +21,7 @@ import seedu.address.model.event.Event;
 import seedu.address.model.event.EventDate;
 import seedu.address.model.event.EventName;
 import seedu.address.model.event.EventTime;
+import seedu.address.model.person.Budget;
 
 /**
  * Edits the details of an existing event in the address book.
@@ -33,11 +35,12 @@ public class EditEventCommand extends Command {
             + "Parameters: INDEX (must be a positive integer) "
             + "[" + PREFIX_EVENT_NAME + "NAME] "
             + "[" + PREFIX_DATE + "DATE] "
-            + "[" + PREFIX_TIME + "TIME]\n"
+            + "[" + PREFIX_TIME + "TIME] "
+            + "[" + PREFIX_BUDGET + "BUDGET] \n"
             + "Example: " + COMMAND_WORD + " 1 "
             + PREFIX_EVENT_NAME + "John's Birthday "
             + PREFIX_DATE + "13-12-2025 "
-            + PREFIX_TIME + "19:00";
+            + PREFIX_TIME + "19:00" + PREFIX_BUDGET + "500";
 
     public static final String MESSAGE_EDIT_EVENT_SUCCESS = "Edited Party: %1$s";
     public static final String MESSAGE_NOT_EDITED = "At least one field to edit must be provided.";
@@ -89,8 +92,16 @@ public class EditEventCommand extends Command {
         EventName updatedName = editEventDescriptor.getName().orElse(eventToEdit.getName());
         EventDate updatedDate = editEventDescriptor.getDate().orElse(eventToEdit.getDate());
         EventTime updatedTime = editEventDescriptor.getTime().orElse(eventToEdit.getTime());
+        Budget updatedInitialBudget = editEventDescriptor.getBudget().orElse(eventToEdit.getInitialBudget());
+        Budget updatedRemainingBudget;
+        if (editEventDescriptor.getBudget().isPresent()) {
+            updatedRemainingBudget = updatedInitialBudget;
+        } else {
+            updatedRemainingBudget = eventToEdit.getRemainingBudget();
+        }
         // Keep participants unchanged
-        return new Event(updatedName, updatedDate, updatedTime, eventToEdit.getParticipants());
+        return new Event(updatedName, updatedDate, updatedTime, eventToEdit.getParticipants(),
+                updatedInitialBudget, updatedRemainingBudget);
     }
 
     @Override
@@ -125,6 +136,7 @@ public class EditEventCommand extends Command {
         private EventName name;
         private EventDate date;
         private EventTime time;
+        private Budget budget;
 
         public EditEventDescriptor() {}
 
@@ -135,13 +147,14 @@ public class EditEventCommand extends Command {
             setName(toCopy.name);
             setDate(toCopy.date);
             setTime(toCopy.time);
+            setBudget(toCopy.budget);
         }
 
         /**
          * Returns true if at least one field is edited.
          */
         public boolean isAnyFieldEdited() {
-            return CollectionUtil.isAnyNonNull(name, date, time);
+            return CollectionUtil.isAnyNonNull(name, date, time, budget);
         }
 
         public void setName(EventName name) {
@@ -153,7 +166,7 @@ public class EditEventCommand extends Command {
         }
 
         public void setDate(EventDate date) {
-            this.date = date;
+            this.date = date;
         }
 
         public Optional<EventDate> getDate() {
@@ -166,6 +179,14 @@ public class EditEventCommand extends Command {
 
         public Optional<EventTime> getTime() {
             return Optional.ofNullable(time);
+        }
+
+        public void setBudget(Budget budget) {
+            this.budget = budget;
+        }
+
+        public Optional<Budget> getBudget() {
+            return Optional.ofNullable(budget);
         }
 
         @Override
@@ -182,7 +203,8 @@ public class EditEventCommand extends Command {
             EditEventDescriptor otherEditEventDescriptor = (EditEventDescriptor) other;
             return Objects.equals(name, otherEditEventDescriptor.name)
                     && Objects.equals(date, otherEditEventDescriptor.date)
-                    && Objects.equals(time, otherEditEventDescriptor.time);
+                    && Objects.equals(time, otherEditEventDescriptor.time)
+                    && Objects.equals(budget, otherEditEventDescriptor.budget);
         }
 
         @Override
@@ -191,6 +213,7 @@ public class EditEventCommand extends Command {
                     .add("name", name)
                     .add("date", date)
                     .add("time", time)
+                    .add("budget", budget)
                     .toString();
         }
     }
