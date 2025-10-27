@@ -45,4 +45,46 @@ public class AddCommandIntegrationTest {
                 AddCommand.MESSAGE_DUPLICATE_PERSON);
     }
 
+    @Test
+    public void execute_newPersonWithoutWebsite_success() {
+        Person personWithoutWebsite = new PersonBuilder().withWebsite("").build();
+
+        Model expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
+        expectedModel.addPerson(personWithoutWebsite);
+
+        assertCommandSuccess(new AddCommand(personWithoutWebsite), model,
+                String.format(AddCommand.MESSAGE_SUCCESS, Messages.format(personWithoutWebsite)),
+                expectedModel);
+    }
+
+    @Test
+    public void execute_newPersonWithoutWebsiteAndWithTags_success() {
+        Person personWithoutWebsite = new PersonBuilder()
+                .withWebsite("")
+                .withTags("friends", "colleague")
+                .build();
+
+        Model expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
+        expectedModel.addPerson(personWithoutWebsite);
+
+        assertCommandSuccess(new AddCommand(personWithoutWebsite), model,
+                String.format(AddCommand.MESSAGE_SUCCESS, Messages.format(personWithoutWebsite)),
+                expectedModel);
+    }
+
+    @Test
+    public void execute_newPersonWithoutWebsiteOrTags_success() {
+        Person personMinimalFields = new PersonBuilder()
+                .withWebsite("")
+                .withTags()
+                .build();
+
+        Model expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
+        expectedModel.addPerson(personMinimalFields);
+
+        assertCommandSuccess(new AddCommand(personMinimalFields), model,
+                String.format(AddCommand.MESSAGE_SUCCESS, Messages.format(personMinimalFields)),
+                expectedModel);
+    }
+
 }

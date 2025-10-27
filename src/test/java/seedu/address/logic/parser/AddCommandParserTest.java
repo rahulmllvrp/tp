@@ -134,9 +134,19 @@ public class AddCommandParserTest {
         assertParseSuccess(parser, NAME_DESC_AMY + PHONE_DESC_AMY + EMAIL_DESC_AMY + WEBSITE_DESC_AMY,
                 new AddCommand(expectedPerson));
 
-        // missing website
+        // missing website with tags
         expectedPerson = new PersonBuilder(AMY).withWebsite("").build();
         assertParseSuccess(parser, NAME_DESC_AMY + PHONE_DESC_AMY + EMAIL_DESC_AMY + TAG_DESC_FRIEND,
+                new AddCommand(expectedPerson));
+
+        // missing website without tags
+        expectedPerson = new PersonBuilder(AMY).withWebsite("").withTags().build();
+        assertParseSuccess(parser, NAME_DESC_AMY + PHONE_DESC_AMY + EMAIL_DESC_AMY,
+                new AddCommand(expectedPerson));
+
+        // missing both website and tags
+        expectedPerson = new PersonBuilder(BOB).withWebsite("").withTags().build();
+        assertParseSuccess(parser, NAME_DESC_BOB + PHONE_DESC_BOB + EMAIL_DESC_BOB,
                 new AddCommand(expectedPerson));
     }
 
