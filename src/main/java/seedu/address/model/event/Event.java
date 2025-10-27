@@ -40,7 +40,7 @@ public class Event {
         this.eventName = eventName;
         this.eventDate = eventDate;
         this.eventTime = eventTime;
-        this.participants = participants;
+        this.participants = new ArrayList<>(participants); // Defensive copy
         this.initialBudget = initialBudget;
         this.remainingBudget = remainingBudget;
     }

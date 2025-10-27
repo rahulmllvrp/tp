@@ -166,7 +166,8 @@ public class EditEventCommand extends Command {
         }
 
         public void setDate(EventDate date) {
-            this.date = date;
+            this.date = date;
+
         }
 
         public Optional<EventDate> getDate() {

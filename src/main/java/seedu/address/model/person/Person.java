@@ -114,8 +114,7 @@ public class Person {
         }
 
         Person otherPerson = (Person) other;
-        return id.equals(otherPerson.id)
-                && name.equals(otherPerson.name)
+        return name.equals(otherPerson.name)
                 && phone.equals(otherPerson.phone)
                 && email.equals(otherPerson.email)
                 && website.equals(otherPerson.website)

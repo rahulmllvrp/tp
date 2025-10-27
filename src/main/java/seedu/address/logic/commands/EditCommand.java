@@ -106,11 +106,7 @@ public class EditCommand extends Command {
                     double currentRemainingBudget = Double.parseDouble(event.getRemainingBudget().value);
                     double newRemainingBudget = currentRemainingBudget - budgetDifference;
 
-                    System.out.println("Old budget: " + oldBudget);
-                    System.out.println("New budget: " + newBudget);
-                    System.out.println("Budget difference: " + budgetDifference);
-                    System.out.println("Current remaining budget: " + currentRemainingBudget);
-                    System.out.println("New remaining budget: " + newRemainingBudget);
+
 
                     // Create a new event with the updated remaining budget
                     seedu.address.model.event.Event updatedEvent = new seedu.address.model.event.Event(
