@@ -227,7 +227,8 @@ public class AddEventCommandTest {
         }
 
         @Override
-        public java.util.Optional<seedu.address.model.person.Person> getPersonById(seedu.address.model.person.PersonId personId) {
+        public java.util.Optional<seedu.address.model.person.Person> getPersonById(
+                seedu.address.model.person.PersonId personId) {
             throw new AssertionError("This method should not be called.");
         }
     }

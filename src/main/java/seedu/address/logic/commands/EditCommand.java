@@ -1,6 +1,7 @@
 package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_BUDGET;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
@@ -14,7 +15,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.ArrayList;
 
 import seedu.address.commons.core.index.Index;
 import seedu.address.commons.util.CollectionUtil;
@@ -26,7 +26,6 @@ import seedu.address.model.person.Budget;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
-import seedu.address.model.person.PersonId;
 import seedu.address.model.person.Phone;
 import seedu.address.model.person.Website;
 import seedu.address.model.tag.Tag;
@@ -46,7 +45,8 @@ public class EditCommand extends Command {
             + "[" + PREFIX_PHONE + "PHONE] "
             + "[" + PREFIX_EMAIL + "EMAIL] "
             + "[" + PREFIX_WEBSITE + "WEBSITE] "
-            + "[" + PREFIX_TAG + "TAG]...\n"
+            + "[" + PREFIX_TAG + "TAG]... "
+            + "[" + PREFIX_BUDGET + "BUDGET]\n"
             + "Example: " + COMMAND_WORD + " 1 "
             + PREFIX_PHONE + "91234567 "
             + PREFIX_EMAIL + "johndoe@example.com";
@@ -89,67 +89,39 @@ public class EditCommand extends Command {
         model.saveStateForUndo("edit " + personToEdit.getName().fullName);
         model.setPerson(personToEdit, editedPerson);
 
-                        // Check if budget has changed and update associated events
+        // Check if budget has changed and update associated events
+        if (!personToEdit.getBudget().equals(editedPerson.getBudget())) {
+            // Calculate the budget difference
+            double oldBudget = Double.parseDouble(personToEdit.getBudget().value);
+            double newBudget = Double.parseDouble(editedPerson.getBudget().value);
+            double budgetDifference = newBudget - oldBudget;
 
-                        if (!personToEdit.getBudget().equals(editedPerson.getBudget())) {
+            List<seedu.address.model.event.Event> allEvents = model.getAddressBook().getEventList();
+            for (seedu.address.model.event.Event event : allEvents) {
+                // Check if the edited person is a participant in this event
+                boolean isParticipant = event.getParticipants().contains(personToEdit.getId());
 
-                            // Calculate the budget difference
+                if (isParticipant) {
+                    // Update the remaining budget of the event
+                    double currentRemainingBudget = Double.parseDouble(event.getRemainingBudget().value);
+                    double newRemainingBudget = currentRemainingBudget - budgetDifference;
 
-                            double oldBudget = Double.parseDouble(personToEdit.getBudget().value);
+                    System.out.println("Old budget: " + oldBudget);
+                    System.out.println("New budget: " + newBudget);
+                    System.out.println("Budget difference: " + budgetDifference);
+                    System.out.println("Current remaining budget: " + currentRemainingBudget);
+                    System.out.println("New remaining budget: " + newRemainingBudget);
 
-                            double newBudget = Double.parseDouble(editedPerson.getBudget().value);
-
-                            double budgetDifference = newBudget - oldBudget;
-
-                
-
-                            List<seedu.address.model.event.Event> allEvents = model.getAddressBook().getEventList(); // Get all events
-
-                            for (seedu.address.model.event.Event event : allEvents) {
-
-                                // Check if the edited person is a participant in this event
-
-                                boolean isParticipant = event.getParticipants().contains(personToEdit.getId());
-
-                
-
-                                if (isParticipant) {
-
-                                    // Update the remaining budget of the event
-
-                                                        double currentRemainingBudget = Double.parseDouble(event.getRemainingBudget().value);
-
-                                                        double newRemainingBudget = currentRemainingBudget - budgetDifference;
-
-                                                        System.out.println("Old budget: " + oldBudget);
-
-                                                        System.out.println("New budget: " + newBudget);
-
-                                                        System.out.println("Budget difference: " + budgetDifference);
-
-                                                        System.out.println("Current remaining budget: " + currentRemainingBudget);
-
-                                                        System.out.println("New remaining budget: " + newRemainingBudget);
-
-                
-
-                                    // Create a new event with the updated remaining budget
-
-                                    seedu.address.model.event.Event updatedEvent = new seedu.address.model.event.Event(
-
-                                            event.getName(), event.getDate(), event.getTime(),
-
-                                            event.getParticipants(), event.getInitialBudget(),
-
-                                            new Budget(String.valueOf(newRemainingBudget)));
-
-                                    model.setEvent(event, updatedEvent); // Update the event in the model
-
-                                }
-
-                            }
-
-                        }        model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+                    // Create a new event with the updated remaining budget
+                    seedu.address.model.event.Event updatedEvent = new seedu.address.model.event.Event(
+                            event.getName(), event.getDate(), event.getTime(),
+                            event.getParticipants(), event.getInitialBudget(),
+                            new Budget(String.valueOf(newRemainingBudget)));
+                    model.setEvent(event, updatedEvent); // Update the event in the model
+                }
+            }
+        }
+        model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
         return new CommandResult(String.format(MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson)));
     }
 

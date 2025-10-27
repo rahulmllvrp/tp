@@ -15,9 +15,6 @@ import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 
-import java.util.List;
-import java.util.ArrayList;
-
 import org.junit.jupiter.api.Test;
 
 import seedu.address.commons.core.index.Index;
@@ -210,11 +207,14 @@ public class EditCommandTest {
         Model expectedModel = new ModelManager(new AddressBook(localModel.getAddressBook()), new UserPrefs());
         AddressBook expectedAddressBook = (AddressBook) expectedModel.getAddressBook();
 
-        expectedAddressBook.getModifiablePersonList().setPerson(personToEdit, expectedPerson);
-        seedu.address.model.event.Event originalEventInExpectedModel = expectedAddressBook.getModifiableEventList().asUnmodifiableObservableList().stream()
+        expectedAddressBook.getModifiablePersonList().setPerson(
+                personToEdit, expectedPerson);
+        seedu.address.model.event.Event originalEventInExpectedModel = expectedAddressBook.getModifiableEventList()
+                .asUnmodifiableObservableList().stream()
                 .filter(e -> e.isSameEvent(event))
                 .findFirst().orElseThrow();
-        expectedAddressBook.getModifiableEventList().setEvent(originalEventInExpectedModel, expectedEvent);
+        expectedAddressBook.getModifiableEventList()
+                .setEvent(originalEventInExpectedModel, expectedEvent);
 
         assertEquals(expectedModel.getAddressBook(), localModel.getAddressBook());
     }
@@ -224,8 +224,8 @@ public class EditCommandTest {
         Index index = Index.fromOneBased(1);
         EditPersonDescriptor editPersonDescriptor = new EditPersonDescriptor();
         EditCommand editCommand = new EditCommand(index, editPersonDescriptor);
-        String expected = EditCommand.class.getCanonicalName() + "{index=" + index + ", editPersonDescriptor="
-                + editPersonDescriptor + "}";
+        String expected = EditCommand.class.getCanonicalName() + "{index=" + index
+                + ", editPersonDescriptor=" + editPersonDescriptor + "}";
         assertEquals(expected, editCommand.toString());
     }
 
