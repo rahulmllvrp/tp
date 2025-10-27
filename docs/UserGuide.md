@@ -130,16 +130,6 @@ Examples:
 * `find alex` returns `Alex Yeoh`<br>
   ![result for 'find alex david'](images/findAlexResult.png)
 
-### Searching by tags: Search Bar
-
-In addition to the `find` command, you can also use the search bar at the top of the application to filter contacts by tags.
-
-*   To search for a specific tag, simply type the tag name in the search bar. For example, typing `friend` will show all contacts with the `friend` tag.
-*   The search is case-insensitive.
-*   You can search for multiple tags by separating them with spaces. For example, typing `friend family` will show contacts that have either the `friend` tag or the `family` tag (i.e. `OR` search).
-*   To clear the search filter, simply clear the text in the search bar.
-
-This provides a quick and easy way to filter your contacts without using commands.
 
 ### Deleting a person : `delete`
 
