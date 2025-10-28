@@ -1,6 +1,7 @@
 package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_BUDGET;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_CONTACT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_DATE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EVENT_NAME;
@@ -32,11 +33,13 @@ public class AddEventCommand extends Command {
             + PREFIX_EVENT_NAME + "NAME "
             + PREFIX_DATE + "DATE "
             + PREFIX_TIME + "TIME "
+            + PREFIX_BUDGET + "BUDGET "
             + "[" + PREFIX_CONTACT + "CONTACT_INDEX...]\n"
             + "Example: " + COMMAND_WORD + " "
             + PREFIX_EVENT_NAME + "John's Birthday "
             + PREFIX_DATE + "12-12-2025 "
             + PREFIX_TIME + "18:00 "
+            + PREFIX_BUDGET + "500 "
             + PREFIX_CONTACT + "1,2";
 
     public static final String MESSAGE_SUCCESS = "New party added: %1$s";
