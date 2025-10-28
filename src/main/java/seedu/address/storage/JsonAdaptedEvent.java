@@ -11,6 +11,7 @@ import seedu.address.model.event.Event;
 import seedu.address.model.event.EventDate;
 import seedu.address.model.event.EventName;
 import seedu.address.model.event.EventTime;
+import seedu.address.model.person.Budget;
 
 /**
  * Jackson-friendly version of {@link Event}.
@@ -22,6 +23,8 @@ class JsonAdaptedEvent {
     private final String name;
     private final String date;
     private final String time;
+    private final String initialBudget;
+    private final String remainingBudget;
     private final List<String> participants;
 
     /**
@@ -29,11 +32,16 @@ class JsonAdaptedEvent {
      */
     @JsonCreator
     public JsonAdaptedEvent(@JsonProperty("name") String name, @JsonProperty("date") String date,
-            @JsonProperty("time") String time, @JsonProperty("participants") List<String> participants) {
+            @JsonProperty("time") String time,
+            @JsonProperty("participants") List<String> participants,
+            @JsonProperty("initialBudget") String initialBudget,
+            @JsonProperty("remainingBudget") String remainingBudget) {
         this.name = name;
         this.date = date;
         this.time = time;
         this.participants = participants != null ? participants : new ArrayList<>();
+        this.initialBudget = initialBudget;
+        this.remainingBudget = remainingBudget;
     }
 
     /**
@@ -46,6 +54,8 @@ class JsonAdaptedEvent {
         participants = source.getParticipants().stream()
                 .map(Object::toString)
                 .collect(java.util.stream.Collectors.toList());
+        initialBudget = source.getInitialBudget().value;
+        remainingBudget = source.getRemainingBudget().value;
     }
 
     /**
@@ -69,13 +79,34 @@ class JsonAdaptedEvent {
         final EventName modelName = new EventName(name);
         final EventDate modelDate = new EventDate(date);
         final EventTime modelTime = new EventTime(time);
+
+        final Budget modelInitialBudget;
+        if (initialBudget == null) {
+            modelInitialBudget = new Budget("0");
+        } else {
+            if (!Budget.isValidBudget(initialBudget)) {
+                throw new IllegalValueException(Budget.MESSAGE_CONSTRAINTS);
+            }
+            modelInitialBudget = new Budget(initialBudget);
+        }
+
+        final Budget modelRemainingBudget;
+        if (remainingBudget == null) {
+            modelRemainingBudget = new Budget("0");
+        } else {
+            if (!Budget.isValidBudget(remainingBudget)) {
+                throw new IllegalValueException(Budget.MESSAGE_CONSTRAINTS);
+            }
+            modelRemainingBudget = new Budget(remainingBudget);
+        }
+
         final List<seedu.address.model.person.PersonId> modelParticipants = new ArrayList<>();
         if (participants != null) {
             for (String id : participants) {
                 modelParticipants.add(new seedu.address.model.person.PersonId(id));
             }
         }
-        return new Event(modelName, modelDate, modelTime, modelParticipants);
+        return new Event(modelName, modelDate, modelTime, modelParticipants, modelInitialBudget, modelRemainingBudget);
     }
 
 }

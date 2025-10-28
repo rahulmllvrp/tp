@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import seedu.address.model.person.Budget;
 import seedu.address.model.person.PersonId;
 
 /**
@@ -16,25 +17,32 @@ public class Event {
     private final EventDate eventDate;
     private final EventTime eventTime;
     private final List<PersonId> participants;
+    private final Budget initialBudget;
+    private final Budget remainingBudget;
 
     /**
      * Initialize with empty participants list
      */
-    public Event(EventName eventName, EventDate eventDate, EventTime eventTime) {
+    public Event(EventName eventName, EventDate eventDate, EventTime eventTime, Budget budget) {
         this.eventName = eventName;
         this.eventDate = eventDate;
         this.eventTime = eventTime;
         this.participants = new ArrayList<>();
+        this.initialBudget = budget;
+        this.remainingBudget = budget;
     }
 
     /**
      * Initialize with participants list
      */
-    public Event(EventName eventName, EventDate eventDate, EventTime eventTime, List<PersonId> participants) {
+    public Event(EventName eventName, EventDate eventDate, EventTime eventTime, List<PersonId> participants,
+            Budget initialBudget, Budget remainingBudget) {
         this.eventName = eventName;
         this.eventDate = eventDate;
         this.eventTime = eventTime;
-        this.participants = participants;
+        this.participants = new ArrayList<>(participants); // Defensive copy
+        this.initialBudget = initialBudget;
+        this.remainingBudget = remainingBudget;
     }
 
     public EventName getName() {
@@ -51,6 +59,14 @@ public class Event {
 
     public List<PersonId> getParticipants() {
         return participants;
+    }
+
+    public Budget getInitialBudget() {
+        return initialBudget;
+    }
+
+    public Budget getRemainingBudget() {
+        return remainingBudget;
     }
 
     /**
@@ -76,11 +92,24 @@ public class Event {
         return this.eventName.equals(other.eventName)
                 && this.eventDate.equals(other.eventDate)
                 && this.eventTime.equals(other.eventTime)
-                && this.participants.equals(other.participants);
+                && this.participants.equals(other.participants)
+                && this.initialBudget.equals(other.initialBudget)
+                && this.remainingBudget.equals(other.remainingBudget);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(eventName, eventDate, eventTime, participants);
+        return Objects.hash(eventName, eventDate, eventTime, participants, initialBudget, remainingBudget);
+    }
+
+    @Override
+    public String toString() {
+        return "Event{" + "eventName=" + eventName
+                + ", eventDate=" + eventDate
+                + ", eventTime=" + eventTime
+                + ", participants=" + participants
+                + ", initialBudget=" + initialBudget
+                + ", remainingBudget=" + remainingBudget
+                + '}';
     }
 }

@@ -3,9 +3,11 @@ package seedu.address.testutil;
 import java.util.HashSet;
 import java.util.Set;
 
+import seedu.address.model.person.Budget;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
+import seedu.address.model.person.PersonId;
 import seedu.address.model.person.Phone;
 import seedu.address.model.person.Website;
 import seedu.address.model.tag.Tag;
@@ -20,12 +22,15 @@ public class PersonBuilder {
     public static final String DEFAULT_PHONE = "85355255";
     public static final String DEFAULT_EMAIL = "amy@gmail.com";
     public static final String DEFAULT_WEBSITE = "https://www.example.com";
+    public static final String DEFAULT_BUDGET = "100";
 
     private Name name;
     private Phone phone;
     private Email email;
     private Website website;
     private Set<Tag> tags;
+    private Budget budget;
+    private PersonId id;
 
     /**
      * Creates a {@code PersonBuilder} with the default details.
@@ -36,17 +41,21 @@ public class PersonBuilder {
         email = new Email(DEFAULT_EMAIL);
         website = new Website(DEFAULT_WEBSITE);
         tags = new HashSet<>();
+        budget = new Budget(DEFAULT_BUDGET);
+        id = new PersonId();
     }
 
     /**
      * Initializes the PersonBuilder with the data of {@code personToCopy}.
      */
     public PersonBuilder(Person personToCopy) {
+        id = personToCopy.getId();
         name = personToCopy.getName();
         phone = personToCopy.getPhone();
         email = personToCopy.getEmail();
         website = personToCopy.getWebsite();
         tags = new HashSet<>(personToCopy.getTags());
+        budget = personToCopy.getBudget();
     }
 
     /**
@@ -89,8 +98,24 @@ public class PersonBuilder {
         return this;
     }
 
+    /**
+     * Sets the {@code Budget} of the {@code Person} that we are building.
+     */
+    public PersonBuilder withBudget(String budget) {
+        this.budget = new Budget(budget);
+        return this;
+    }
+
+    /**
+     * Sets the {@code PersonId} of the {@code Person} that we are building.
+     */
+    public PersonBuilder withId(PersonId id) {
+        this.id = id;
+        return this;
+    }
+
     public Person build() {
-        return new Person(name, phone, email, website, tags);
+        return new Person(id, name, phone, email, website, tags, budget);
     }
 
 }

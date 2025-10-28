@@ -22,6 +22,9 @@ checkstyle {
 
 test {
     useJUnitPlatform()
+    testLogging {
+        showStandardStreams = true
+    }
     finalizedBy jacocoTestReport
 }
 

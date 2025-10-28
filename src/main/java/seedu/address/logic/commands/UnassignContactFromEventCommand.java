@@ -7,12 +7,15 @@ import static seedu.address.logic.parser.ParserUtil.parsePersonListToString;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Logger;
 
+import seedu.address.commons.core.LogsCenter;
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.event.Event;
+import seedu.address.model.person.Budget;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.PersonId;
 
@@ -32,6 +35,8 @@ public class UnassignContactFromEventCommand extends Command {
     public static final String MESSAGE_UNASSIGN_FROM_EVENT_SUCCESS =
             "Unassigned the following people from %1$s's party: %2$s";
 
+    private static final Logger logger = LogsCenter.getLogger(UnassignContactFromEventCommand.class);
+
     private final Index targetEventIndex;
     private final Set<Index> unassignedPersonIndexList;
 
@@ -44,6 +49,7 @@ public class UnassignContactFromEventCommand extends Command {
     public UnassignContactFromEventCommand(Index targetEventIndex, Set<Index> unassignedPersonIndexList) {
         this.targetEventIndex = targetEventIndex;
         this.unassignedPersonIndexList = unassignedPersonIndexList;
+        assert this.unassignedPersonIndexList != null : "unassignedPersonIndexList should not be null";
     }
 
     /**
@@ -56,36 +62,58 @@ public class UnassignContactFromEventCommand extends Command {
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
+        logger.fine(() -> "Executing UnassignContactFromEventCommand for event index " + targetEventIndex);
         model.saveStateForUndo("unassign from party " + targetEventIndex.getOneBased());
         List<Event> lastShownEventList = model.getFilteredEventList();
         if (targetEventIndex.getZeroBased() >= lastShownEventList.size()) {
             throw new CommandException(Messages.MESSAGE_INVALID_EVENT_DISPLAYED_INDEX);
         }
         Event eventToModify = lastShownEventList.get(targetEventIndex.getZeroBased());
-        ArrayList<Person> contactsToUnassign = new ArrayList<>();
+        double eventBudget = parseBudgetSafe(eventToModify.getRemainingBudget().value);
         List<Person> lastShownList = model.getFilteredPersonList();
+
+        List<Person> contactsToUnassign = collectPersonsToUnassign(lastShownList);
+
+        List<PersonId> updatedParticipantIds = new ArrayList<>(eventToModify.getParticipants());
+        for (Person p : contactsToUnassign) {
+            if (!updatedParticipantIds.contains(p.getId())) {
+                throw new CommandException(p.getName().toString() + " is not assigned to this party.");
+            }
+            updatedParticipantIds.remove(p.getId());
+            // add back to budget
+            eventBudget += parseBudgetSafe(p.getBudget().value);
+            // cap at initial budget
+            eventBudget = Math.min(eventBudget, parseBudgetSafe(eventToModify.getInitialBudget().value));
+        }
+
+        Event newEvent = new Event(eventToModify.getName(), eventToModify.getDate(), eventToModify.getTime(),
+                updatedParticipantIds, eventToModify.getInitialBudget(), new Budget(String.valueOf(eventBudget)));
+        model.setEvent(eventToModify, newEvent);
+        String unassignedPersonNames = parsePersonListToString(contactsToUnassign);
+        logger.info(() -> String.format("Unassigned %s from event %s", unassignedPersonNames, eventToModify.getName()));
+        return new CommandResult(String.format(MESSAGE_UNASSIGN_FROM_EVENT_SUCCESS,
+                eventToModify.getName().toString(), unassignedPersonNames));
+    }
+
+    private double parseBudgetSafe(String budgetString) throws CommandException {
+        try {
+            return Double.parseDouble(budgetString);
+        } catch (NumberFormatException e) {
+            throw new CommandException("Invalid budget value encountered: " + budgetString);
+        }
+    }
+
+    private List<Person> collectPersonsToUnassign(List<Person> lastShownList)
+            throws CommandException {
+        List<Person> result = new ArrayList<>();
         for (Index i : unassignedPersonIndexList) {
             if (i.getZeroBased() >= lastShownList.size()) {
                 throw new CommandException(Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX + " "
                         + Messages.MESSAGE_TRY_PERSON_LIST_MODE);
-            } else {
-                Person personToRemove = lastShownList.get(i.getZeroBased());
-                contactsToUnassign.add(personToRemove);
             }
+            Person personToRemove = lastShownList.get(i.getZeroBased());
+            result.add(personToRemove);
         }
-        List<PersonId> existingPersonsInEvent = new ArrayList<>(eventToModify.getParticipants());
-        for (Person person : contactsToUnassign) {
-            if (!existingPersonsInEvent.contains(person.getId())) {
-                throw new CommandException(person.getName().toString() + " is not assigned to this party.");
-            } else {
-                existingPersonsInEvent.remove(person.getId());
-            }
-        }
-        Event newEvent = new Event(eventToModify.getName(), eventToModify.getDate(), eventToModify.getTime(),
-                existingPersonsInEvent);
-        model.setEvent(eventToModify, newEvent);
-        String unassignedPersonNames = parsePersonListToString(contactsToUnassign);
-        return new CommandResult(String.format(MESSAGE_UNASSIGN_FROM_EVENT_SUCCESS,
-                eventToModify.getName().toString(), unassignedPersonNames));
+        return result;
     }
 }

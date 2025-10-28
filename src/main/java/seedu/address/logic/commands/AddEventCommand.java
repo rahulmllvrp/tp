@@ -16,6 +16,7 @@ import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.event.Event;
+import seedu.address.model.person.Budget;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.PersonId;
 
@@ -62,6 +63,8 @@ public class AddEventCommand extends Command {
         model.saveStateForUndo("add party " + toAdd.getName().fullName);
         List<Person> lastShownPersonList = model.getFilteredPersonList();
         List<PersonId> assignedPersonIds = new ArrayList<>(toAdd.getParticipants());
+        double currentRemainingBudget = Double.parseDouble(toAdd.getInitialBudget().value);
+
         if (contactIndexes != null && !contactIndexes.isEmpty()) {
             for (Index index : contactIndexes) {
                 if (index.getZeroBased() >= lastShownPersonList.size()) {
@@ -72,11 +75,18 @@ public class AddEventCommand extends Command {
                     throw new CommandException(personToAssign.getName().toString()
                             + " has already been assigned to this party.");
                 }
+                double personBudget = Double.parseDouble(personToAssign.getBudget().value);
+                if (currentRemainingBudget < personBudget) {
+                    throw new CommandException("The budget of " + personToAssign.getName().toString()
+                            + " exceeds the remaining budget of the party.");
+                }
+                currentRemainingBudget -= personBudget;
                 assignedPersonIds.add(personToAssign.getId());
             }
         }
         Event newEvent = new Event(toAdd.getName(), toAdd.getDate(), toAdd.getTime(),
-                new ArrayList<>(assignedPersonIds));
+                new ArrayList<>(assignedPersonIds),
+                toAdd.getInitialBudget(), new Budget(String.valueOf(currentRemainingBudget)));
         model.addEvent(newEvent);
         return new CommandResult(String.format(MESSAGE_SUCCESS, Messages.format(newEvent)));
     }
