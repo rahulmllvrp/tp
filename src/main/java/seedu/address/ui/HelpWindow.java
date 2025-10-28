@@ -80,7 +80,9 @@ public class HelpWindow extends UiPart<Stage> {
      */
     public HelpWindow(Stage root) {
         super(FXML, root);
-        // Set help message without the URL
+        // Basic defensive checks: FXML fields should have been injected.
+        // Use assertions as these should never fail in production if FXML is correct.
+        // This documents the invariant and helps catch configuration problems early.
         String helpText = HELP_MESSAGE.substring(0, HELP_MESSAGE.lastIndexOf("https://"));
         helpMessage.setText(helpText.trim());
         // Set up the hyperlink for the User Guide
@@ -93,6 +95,12 @@ public class HelpWindow extends UiPart<Stage> {
                 logger.warning("Failed to open user guide URL: " + ex.getMessage());
             }
         });
+
+        // Ensure FXML injection worked correctly; these are invariants.
+        assert helpMessage != null : "helpMessage Label not injected: check HelpWindow.fxml";
+        assert userGuideLink != null : "userGuideLink Hyperlink not injected: check HelpWindow.fxml";
+        assert helpScrollPane != null : "helpScrollPane ScrollPane not injected: check HelpWindow.fxml";
+        logger.fine("HelpWindow initialized with help message length=" + helpText.length());
     }
 
     /**
@@ -123,41 +131,43 @@ public class HelpWindow extends UiPart<Stage> {
     public void show() {
         logger.fine("Showing help page about the application.");
         Stage stage = getRoot();
-        // Defensive reset: ensure the help stage is not left in fullscreen/maximized state
-        // (can happen when owner stage was fullscreened previously). This avoids the
-        // glitch where the help window appears full-screen or in a broken layout
-        // after toggling fullscreen on the primary stage.
-        try {
-            if (stage.isFullScreen()) {
-                stage.setFullScreen(false);
-            }
-        } catch (UnsupportedOperationException e) {
-            // Some platforms may not support full screen checks; ignore safely.
-            logger.fine("Platform does not support full screen checks for help window.");
-        }
-        if (stage.isMaximized()) {
-            stage.setMaximized(false);
-        }
-        // Allow resizing so the window can be adjusted and to avoid fixed large sizes
-        // carried over from previous shows.
-        stage.setResizable(true);
+        logger.fine("Help stage state before show: fullScreen=" + stage.isFullScreen() + ", maximized=" + stage.isMaximized());
+         // Defensive reset: ensure the help stage is not left in fullscreen/maximized state
+         // (can happen when owner stage was fullscreened previously). This avoids the
+         // glitch where the help window appears full-screen or in a broken layout
+         // after toggling fullscreen on the primary stage.
+         try {
+             if (stage.isFullScreen()) {
+                 stage.setFullScreen(false);
+             }
+         } catch (UnsupportedOperationException e) {
+             // Some platforms may not support full screen checks; ignore safely.
+             logger.fine("Platform does not support full screen checks for help window.");
+         }
+         if (stage.isMaximized()) {
+             stage.setMaximized(false);
+         }
+         // Allow resizing so the window can be adjusted and to avoid fixed large sizes
+         // carried over from previous shows.
+         stage.setResizable(true);
 
-        stage.show();
-        stage.centerOnScreen();
+         stage.show();
+         stage.centerOnScreen();
 
-        // Ensure the ScrollPane starts scrolled to the top-left when opened.
-        // Use Platform.runLater to reset after the scene graph has been laid out.
-        Platform.runLater(() -> {
-            try {
-                if (helpScrollPane != null) {
-                    helpScrollPane.setVvalue(0.0);
-                    helpScrollPane.setHvalue(0.0);
-                }
-            } catch (Exception e) {
-                logger.fine("Unable to reset help scroll position: " + e.getMessage());
-            }
-        });
-    }
+         // Ensure the ScrollPane starts scrolled to the top-left when opened.
+         // Use Platform.runLater to reset after the scene graph has been laid out.
+         Platform.runLater(() -> {
+             try {
+                 if (helpScrollPane != null) {
+                     helpScrollPane.setVvalue(0.0);
+                     helpScrollPane.setHvalue(0.0);
+                    logger.fine("Help scroll position reset to top-left.");
+                 }
+             } catch (Exception e) {
+                 logger.fine("Unable to reset help scroll position: " + e.getMessage());
+             }
+         });
+     }
 
     /**
      * Returns true if the help window is currently being shown.
