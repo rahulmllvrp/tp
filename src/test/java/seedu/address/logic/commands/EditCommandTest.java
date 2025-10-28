@@ -211,6 +211,9 @@ public class EditCommandTest {
         expectedModel.setPerson(lastPerson, editedPerson);
 
         assertCommandSuccess(editCommand, model, expectedMessage, expectedModel);
+    }
+
+    @Test
     @org.junit.jupiter.api.Disabled("TODO: Fix this test - AddressBook comparison issue")
     public void execute_editPersonBudget_updatesEventBudget() {
         // Setup: Create a person and an event, and assign the person to the event

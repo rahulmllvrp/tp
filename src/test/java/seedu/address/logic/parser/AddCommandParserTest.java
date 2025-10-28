@@ -35,6 +35,7 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_WEBSITE;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
 import static seedu.address.testutil.TypicalPersons.AMY;
+import static seedu.address.testutil.TypicalPersons.BOB;
 
 import org.junit.jupiter.api.Test;
 
@@ -139,23 +140,26 @@ public class AddCommandParserTest {
     public void parse_optionalFieldsMissing_success() {
         // zero tags
         Person expectedPerson = new PersonBuilder(AMY).withTags().build();
-        assertParseSuccess(parser, NAME_DESC_AMY + PHONE_DESC_AMY + EMAIL_DESC_AMY + WEBSITE_DESC_AMY,
-                new AddCommand(expectedPerson));
+        assertParseSuccess(parser, NAME_DESC_AMY + PHONE_DESC_AMY + EMAIL_DESC_AMY + WEBSITE_DESC_AMY
+                + BUDGET_DESC_AMY, new AddCommand(expectedPerson));
 
         // missing website with tags
         expectedPerson = new PersonBuilder(AMY).withWebsite("").build();
-        assertParseSuccess(parser, NAME_DESC_AMY + PHONE_DESC_AMY + EMAIL_DESC_AMY + TAG_DESC_FRIEND,
-                new AddCommand(expectedPerson));
+        assertParseSuccess(parser, NAME_DESC_AMY + PHONE_DESC_AMY + EMAIL_DESC_AMY + BUDGET_DESC_AMY
+                + TAG_DESC_FRIEND, new AddCommand(expectedPerson));
 
         // missing website without tags
         expectedPerson = new PersonBuilder(AMY).withWebsite("").withTags().build();
-        assertParseSuccess(parser, NAME_DESC_AMY + PHONE_DESC_AMY + EMAIL_DESC_AMY,
+        assertParseSuccess(parser, NAME_DESC_AMY + PHONE_DESC_AMY + EMAIL_DESC_AMY + BUDGET_DESC_AMY,
                 new AddCommand(expectedPerson));
 
         // missing both website and tags
         expectedPerson = new PersonBuilder(BOB).withWebsite("").withTags().build();
-        assertParseSuccess(parser, NAME_DESC_BOB + PHONE_DESC_BOB + EMAIL_DESC_BOB,
+        assertParseSuccess(parser, NAME_DESC_BOB + PHONE_DESC_BOB + EMAIL_DESC_BOB + BUDGET_DESC_BOB,
                 new AddCommand(expectedPerson));
+
+        // all fields present
+        expectedPerson = new PersonBuilder(AMY).withTags().build();
         assertParseSuccess(parser, NAME_DESC_AMY + PHONE_DESC_AMY + EMAIL_DESC_AMY + WEBSITE_DESC_AMY
                 + BUDGET_DESC_AMY, new AddCommand(expectedPerson));
     }
