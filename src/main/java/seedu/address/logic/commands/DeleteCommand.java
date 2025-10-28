@@ -25,8 +25,7 @@ public class DeleteCommand extends Command {
 
     public static final String MESSAGE_DELETE_PERSON_SUCCESS = "Deleted Person: %1$s";
 
-    public static final String MESSAGE_CONFIRMATION = "Are you sure you want to delete this person? "
-            + "This action cannot be undone.";
+    public static final String MESSAGE_CONFIRMATION = "Are you sure you want to delete this person?";
 
     private final Index targetIndex;
 

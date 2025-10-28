@@ -1,12 +1,12 @@
 package seedu.address.ui;
 
 import java.util.Optional;
+import seedu.address.logic.commands.Command;
 import java.util.logging.Logger;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
+
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextInputControl;
 import javafx.scene.input.KeyCombination;
@@ -38,6 +38,8 @@ public class MainWindow extends UiPart<Stage> {
     private EventListPanel eventListPanel;
     private ResultDisplay resultDisplay;
     private HelpWindow helpWindow;
+    private Command pendingConfirmationCommand = null;
+    private boolean isAwaitingConfirmation = false;
 
     @FXML
     private StackPane searchBoxPlaceholder;
@@ -190,20 +192,34 @@ public class MainWindow extends UiPart<Stage> {
      */
     private CommandResult executeCommand(String commandText) throws CommandException, ParseException {
         try {
+            if (isAwaitingConfirmation) {
+                if (commandText.equalsIgnoreCase("y")) {
+                    CommandResult confirmedResult = logic.execute(pendingConfirmationCommand);
+                    resultDisplay.setFeedbackToUser(confirmedResult.getFeedbackToUser());
+                    isAwaitingConfirmation = false;
+                    pendingConfirmationCommand = null;
+                    return confirmedResult;
+                } else if (commandText.equalsIgnoreCase("n")) {
+                    resultDisplay.setFeedbackToUser("Command cancelled.");
+                    isAwaitingConfirmation = false;
+                    pendingConfirmationCommand = null;
+                    return new CommandResult("Command cancelled.");
+                } else {
+                    resultDisplay.setFeedbackToUser("Invalid input. Please type 'y' for yes or 'n' for no.");
+                    return new CommandResult("Invalid input. Please type 'y' for yes or 'n' for no.");
+                }
+            }
+
+            // If not awaiting confirmation, execute the new command
             CommandResult commandResult = logic.execute(commandText);
             logger.info("Result: " + commandResult.getFeedbackToUser());
             resultDisplay.setFeedbackToUser(commandResult.getFeedbackToUser());
 
             if (commandResult.isShowConfirmation()) {
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                alert.setTitle("Confirmation");
-                alert.setHeaderText(null);
-                alert.setContentText(commandResult.getFeedbackToUser());
-                Optional<ButtonType> result = alert.showAndWait();
-                if (result.isPresent() && result.get() == ButtonType.OK) {
-                    CommandResult confirmedResult = logic.execute(commandResult.getCommandToExecute());
-                    resultDisplay.setFeedbackToUser(confirmedResult.getFeedbackToUser());
-                }
+                isAwaitingConfirmation = true;
+                pendingConfirmationCommand = commandResult.getCommandToExecute();
+                resultDisplay.setFeedbackToUser(commandResult.getFeedbackToUser() + " (Type 'y' to confirm, 'n' to cancel)");
+                return new CommandResult(commandResult.getFeedbackToUser());
             }
 
             if (commandResult.isShowHelp()) {
