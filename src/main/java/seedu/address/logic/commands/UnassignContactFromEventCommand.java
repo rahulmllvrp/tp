@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import seedu.address.commons.core.index.Index;
 import seedu.address.commons.core.LogsCenter;
+import seedu.address.commons.core.index.Index;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
@@ -72,7 +72,7 @@ public class UnassignContactFromEventCommand extends Command {
         double eventBudget = parseBudgetSafe(eventToModify.getRemainingBudget().value);
         List<Person> lastShownList = model.getFilteredPersonList();
 
-        List<Person> contactsToUnassign = collectPersonsToUnassign(lastShownList, eventToModify);
+        List<Person> contactsToUnassign = collectPersonsToUnassign(lastShownList);
 
         List<PersonId> updatedParticipantIds = new ArrayList<>(eventToModify.getParticipants());
         for (Person p : contactsToUnassign) {
@@ -103,7 +103,7 @@ public class UnassignContactFromEventCommand extends Command {
         }
     }
 
-    private List<Person> collectPersonsToUnassign(List<Person> lastShownList, Event eventToModify)
+    private List<Person> collectPersonsToUnassign(List<Person> lastShownList)
             throws CommandException {
         List<Person> result = new ArrayList<>();
         for (Index i : unassignedPersonIndexList) {
