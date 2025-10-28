@@ -104,6 +104,10 @@ public class UniqueEventList implements Iterable<Event> {
         return internalUnmodifiableList;
     }
 
+    public ObservableList<Event> getInternalList() {
+        return internalList;
+    }
+
     @Override
     public Iterator<Event> iterator() {
         return internalList.iterator();

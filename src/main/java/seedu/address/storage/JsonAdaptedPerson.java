@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import seedu.address.commons.exceptions.IllegalValueException;
+import seedu.address.model.person.Budget;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
@@ -30,6 +31,7 @@ class JsonAdaptedPerson {
     private final String phone;
     private final String email;
     private final String website;
+    private final String budget;
     private final List<JsonAdaptedTag> tags = new ArrayList<>();
 
     /**
@@ -38,7 +40,8 @@ class JsonAdaptedPerson {
     @JsonCreator
     public JsonAdaptedPerson(@JsonProperty("id") String id, @JsonProperty("name") String name,
             @JsonProperty("phone") String phone, @JsonProperty("email") String email,
-            @JsonProperty("website") String website, @JsonProperty("tags") List<JsonAdaptedTag> tags) {
+            @JsonProperty("website") String website, @JsonProperty("tags") List<JsonAdaptedTag> tags,
+            @JsonProperty("budget") String budget) {
         this.id = id;
         this.name = name;
         this.phone = phone;
@@ -47,14 +50,7 @@ class JsonAdaptedPerson {
         if (tags != null) {
             this.tags.addAll(tags);
         }
-    }
-
-    /**
-     * Backward-compatible constructor used by tests and older code that do not supply an id.
-     */
-    public JsonAdaptedPerson(String name, String phone, String email, String website,
-            List<JsonAdaptedTag> tags) {
-        this(null, name, phone, email, website, tags);
+        this.budget = budget;
     }
 
     /**
@@ -69,6 +65,7 @@ class JsonAdaptedPerson {
         tags.addAll(source.getTags().stream()
                 .map(JsonAdaptedTag::new)
                 .collect(Collectors.toList()));
+        budget = source.getBudget().value;
     }
 
     /**
@@ -108,14 +105,24 @@ class JsonAdaptedPerson {
 
         final Website modelWebsite = (website == null || website.isEmpty()) ? new Website("") : new Website(website);
 
+        final Budget modelBudget;
+        if (budget == null) {
+            modelBudget = new Budget("0");
+        } else {
+            if (!Budget.isValidBudget(budget)) {
+                throw new IllegalValueException(Budget.MESSAGE_CONSTRAINTS);
+            }
+            modelBudget = new Budget(budget);
+        }
+
         final Set<Tag> modelTags = new HashSet<>(personTags);
 
         // If id was not present in JSON (older files), create a new Person with a generated id.
         if (id == null || id.isEmpty()) {
-            return new Person(modelName, modelPhone, modelEmail, modelWebsite, modelTags);
+            return new Person(modelName, modelPhone, modelEmail, modelWebsite, modelTags, modelBudget);
         } else {
             final PersonId modelId = new PersonId(id);
-            return new Person(modelId, modelName, modelPhone, modelEmail, modelWebsite, modelTags);
+            return new Person(modelId, modelName, modelPhone, modelEmail, modelWebsite, modelTags, modelBudget);
         }
     }
 

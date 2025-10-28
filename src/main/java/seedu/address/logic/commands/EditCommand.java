@@ -1,6 +1,7 @@
 package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_BUDGET;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
@@ -21,6 +22,7 @@ import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
+import seedu.address.model.person.Budget;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
@@ -43,7 +45,8 @@ public class EditCommand extends Command {
             + "[" + PREFIX_PHONE + "PHONE] "
             + "[" + PREFIX_EMAIL + "EMAIL] "
             + "[" + PREFIX_WEBSITE + "WEBSITE] "
-            + "[" + PREFIX_TAG + "TAG]...\n"
+            + "[" + PREFIX_TAG + "TAG]... "
+            + "[" + PREFIX_BUDGET + "BUDGET]\n"
             + "Example: " + COMMAND_WORD + " 1 "
             + PREFIX_PHONE + "91234567 "
             + PREFIX_EMAIL + "johndoe@example.com";
@@ -85,6 +88,35 @@ public class EditCommand extends Command {
 
         model.saveStateForUndo("edit " + personToEdit.getName().fullName);
         model.setPerson(personToEdit, editedPerson);
+
+        // Check if budget has changed and update associated events
+        if (!personToEdit.getBudget().equals(editedPerson.getBudget())) {
+            // Calculate the budget difference
+            double oldBudget = Double.parseDouble(personToEdit.getBudget().value);
+            double newBudget = Double.parseDouble(editedPerson.getBudget().value);
+            double budgetDifference = newBudget - oldBudget;
+
+            List<seedu.address.model.event.Event> allEvents = model.getAddressBook().getEventList();
+            for (seedu.address.model.event.Event event : allEvents) {
+                // Check if the edited person is a participant in this event
+                boolean isParticipant = event.getParticipants().contains(personToEdit.getId());
+
+                if (isParticipant) {
+                    // Update the remaining budget of the event
+                    double currentRemainingBudget = Double.parseDouble(event.getRemainingBudget().value);
+                    double newRemainingBudget = currentRemainingBudget - budgetDifference;
+
+
+
+                    // Create a new event with the updated remaining budget
+                    seedu.address.model.event.Event updatedEvent = new seedu.address.model.event.Event(
+                            event.getName(), event.getDate(), event.getTime(),
+                            event.getParticipants(), event.getInitialBudget(),
+                            new Budget(String.valueOf(newRemainingBudget)));
+                    model.setEvent(event, updatedEvent); // Update the event in the model
+                }
+            }
+        }
         model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
         return new CommandResult(String.format(MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson)));
     }
@@ -101,8 +133,10 @@ public class EditCommand extends Command {
         Email updatedEmail = editPersonDescriptor.getEmail().orElse(personToEdit.getEmail());
         Website updatedWebsite = editPersonDescriptor.getWebsite().orElse(personToEdit.getWebsite());
         Set<Tag> updatedTags = editPersonDescriptor.getTags().orElse(personToEdit.getTags());
+        Budget updatedBudget = editPersonDescriptor.getBudget().orElse(personToEdit.getBudget());
 
-        return new Person(updatedName, updatedPhone, updatedEmail, updatedWebsite, updatedTags);
+        return new Person(personToEdit.getId(), updatedName, updatedPhone, updatedEmail, updatedWebsite,
+                updatedTags, updatedBudget);
     }
 
     @Override
@@ -139,6 +173,7 @@ public class EditCommand extends Command {
         private Email email;
         private Website website;
         private Set<Tag> tags;
+        private Budget budget;
 
         public EditPersonDescriptor() {}
 
@@ -152,13 +187,14 @@ public class EditCommand extends Command {
             setEmail(toCopy.email);
             setWebsite(toCopy.website);
             setTags(toCopy.tags);
+            setBudget(toCopy.budget);
         }
 
         /**
          * Returns true if at least one field is edited.
          */
         public boolean isAnyFieldEdited() {
-            return CollectionUtil.isAnyNonNull(name, phone, email, website, tags);
+            return CollectionUtil.isAnyNonNull(name, phone, email, website, tags, budget);
         }
 
         public void setName(Name name) {
@@ -191,6 +227,14 @@ public class EditCommand extends Command {
 
         public Optional<Website> getWebsite() {
             return Optional.ofNullable(website);
+        }
+
+        public void setBudget(Budget budget) {
+            this.budget = budget;
+        }
+
+        public Optional<Budget> getBudget() {
+            return Optional.ofNullable(budget);
         }
 
         /**
@@ -226,7 +270,8 @@ public class EditCommand extends Command {
                     && Objects.equals(phone, otherEditPersonDescriptor.phone)
                     && Objects.equals(email, otherEditPersonDescriptor.email)
                     && Objects.equals(website, otherEditPersonDescriptor.website)
-                    && Objects.equals(tags, otherEditPersonDescriptor.tags);
+                    && Objects.equals(tags, otherEditPersonDescriptor.tags)
+                    && Objects.equals(budget, otherEditPersonDescriptor.budget);
         }
 
         @Override
@@ -237,6 +282,7 @@ public class EditCommand extends Command {
                     .add("email", email)
                     .add("website", website)
                     .add("tags", tags)
+                    .add("budget", budget)
                     .toString();
         }
     }

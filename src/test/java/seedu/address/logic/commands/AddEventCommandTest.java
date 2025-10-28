@@ -10,12 +10,15 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Predicate;
 
 import org.junit.jupiter.api.Test;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seedu.address.commons.core.GuiSettings;
+import seedu.address.commons.core.index.Index;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.AddressBook;
@@ -23,10 +26,10 @@ import seedu.address.model.Model;
 import seedu.address.model.ReadOnlyAddressBook;
 import seedu.address.model.ReadOnlyUserPrefs;
 import seedu.address.model.event.Event;
-import seedu.address.model.event.EventDate;
-import seedu.address.model.event.EventName;
-import seedu.address.model.event.EventTime;
+import seedu.address.model.person.Budget;
 import seedu.address.model.person.Person;
+import seedu.address.testutil.EventBuilder;
+import seedu.address.testutil.PersonBuilder;
 
 public class AddEventCommandTest {
 
@@ -38,18 +41,33 @@ public class AddEventCommandTest {
     @Test
     public void execute_eventAcceptedByModel_addSuccessful() throws Exception {
         ModelStubAcceptingEventAdded modelStub = new ModelStubAcceptingEventAdded();
-        Event validEvent = new Event(new EventName("Test Event"), new EventDate("01-01-2025"), new EventTime("10:00"));
+        Person personToAssign = new PersonBuilder().withBudget("50").build(); // Example person with budget
+        modelStub.addPerson(personToAssign);
 
-        CommandResult commandResult = new AddEventCommand(validEvent, new HashSet<>()).execute(modelStub);
+        Event validEvent = new EventBuilder().withBudget("1000").build(); // Example event with initial budget
 
-        assertEquals(String.format(AddEventCommand.MESSAGE_SUCCESS, Messages.format(validEvent)),
+        Set<Index> contactIndexes = new HashSet<>();
+        contactIndexes.add(Index.fromOneBased(1)); // Assign the first person
+
+        double initialBudget = Double.parseDouble(validEvent.getInitialBudget().value);
+        double personBudget = Double.parseDouble(personToAssign.getBudget().value);
+        double expectedRemainingBudget = initialBudget - personBudget;
+
+        // Create the expected Event AFTER budget deduction
+        Event expectedEvent = new Event(validEvent.getName(), validEvent.getDate(), validEvent.getTime(),
+                Arrays.asList(personToAssign.getId()), validEvent.getInitialBudget(),
+                new Budget(String.valueOf(expectedRemainingBudget)));
+
+        CommandResult commandResult = new AddEventCommand(validEvent, contactIndexes).execute(modelStub);
+
+        assertEquals(String.format(AddEventCommand.MESSAGE_SUCCESS, Messages.format(expectedEvent)),
                 commandResult.getFeedbackToUser());
-        assertEquals(Arrays.asList(validEvent), modelStub.eventsAdded);
+        assertEquals(Arrays.asList(expectedEvent), modelStub.eventsAdded);
     }
 
     @Test
     public void execute_duplicateEvent_throwsCommandException() {
-        Event validEvent = new Event(new EventName("Test Event"), new EventDate("01-01-2025"), new EventTime("10:00"));
+        Event validEvent = new EventBuilder().build();
         AddEventCommand addEventCommand = new AddEventCommand(validEvent, new HashSet<>());
         ModelStubWithEvent modelStub = new ModelStubWithEvent(validEvent);
 
@@ -59,10 +77,8 @@ public class AddEventCommandTest {
 
     @Test
     public void equals() {
-        Event event1 = new Event(
-                new EventName("Event 1"), new EventDate("01-01-2025"), new EventTime("10:00"));
-        Event event2 = new Event(
-                new EventName("Event 2"), new EventDate("02-01-2025"), new EventTime("11:00"));
+        Event event1 = new EventBuilder().withName("Event 1").build();
+        Event event2 = new EventBuilder().withName("Event 2").build();
         AddEventCommand addEvent1Command = new AddEventCommand(event1, new HashSet<>());
         AddEventCommand addEvent2Command = new AddEventCommand(event2, new HashSet<>());
 
@@ -85,7 +101,7 @@ public class AddEventCommandTest {
 
     @Test
     public void toStringMethod() {
-        Event event = new Event(new EventName("Test Event"), new EventDate("01-01-2025"), new EventTime("10:00"));
+        Event event = new EventBuilder().build();
         AddEventCommand addEventCommand = new AddEventCommand(event, new HashSet<>());
         String expected = AddEventCommand.class.getCanonicalName() + "{toAdd=" + event + "}";
         assertEquals(expected, addEventCommand.toString());
@@ -209,6 +225,12 @@ public class AddEventCommandTest {
         public void updateFilteredEventList(Predicate<Event> predicate) {
             throw new AssertionError("This method should not be called.");
         }
+
+        @Override
+        public java.util.Optional<seedu.address.model.person.Person> getPersonById(
+                seedu.address.model.person.PersonId personId) {
+            throw new AssertionError("This method should not be called.");
+        }
     }
 
     /**
@@ -230,7 +252,7 @@ public class AddEventCommandTest {
 
         @Override
         public ObservableList<Person> getFilteredPersonList() {
-            return new AddressBook().getPersonList();
+            return FXCollections.observableArrayList();
         }
     }
 
@@ -239,6 +261,7 @@ public class AddEventCommandTest {
      */
     private class ModelStubAcceptingEventAdded extends ModelStub {
         final ArrayList<Event> eventsAdded = new ArrayList<>();
+        final ArrayList<Person> personsAdded = new ArrayList<>();
 
         @Override
         public boolean hasEvent(Event event) {
@@ -253,6 +276,15 @@ public class AddEventCommandTest {
         }
 
         @Override
+        public ObservableList<Person> getFilteredPersonList() {
+            return FXCollections.observableArrayList(personsAdded);
+        }
+
+        public void addPerson(Person person) {
+            personsAdded.add(person);
+        }
+
+        @Override
         public ReadOnlyAddressBook getAddressBook() {
             return new AddressBook();
         }
@@ -262,9 +294,6 @@ public class AddEventCommandTest {
             // Do nothing for test
         }
 
-        @Override
-        public ObservableList<Person> getFilteredPersonList() {
-            return new AddressBook().getPersonList();
-        }
+
     }
 }

@@ -14,8 +14,30 @@
     -fx-background-color: darkgray;
 }
 
+/* Make the overall window background dark so no white shows through */
+.root {
+    -fx-background-color: #1d1d1d; /* match helpMessageContainer base */
+}
+
+/* Remove ScrollPane white background and borders */
+#helpScrollPane {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0; /* remove inner padding that can show background */
+}
+
+/* The viewport is the visible area inside the ScrollPane */
+#helpScrollPane .viewport {
+    -fx-background-color: transparent;
+}
+
 #helpMessageContainer {
-    -fx-background-color: derive(#1d1d1d, 20%);
+    -fx-background-color: transparent; /* let the root define the background */
+    -fx-padding: 12;
+}
+
+#helpMessage {
+    -fx-text-fill: white; /* ensure label text is visible on dark background */
 }
 
 /* Remove dotted focus ring and grey visited color for the Hyperlink */

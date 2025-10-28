@@ -24,31 +24,34 @@ public class Person {
     // Data fields
     private final Website website;
     private final Set<Tag> tags = new HashSet<>();
+    private final Budget budget;
 
     /**
      * Every field must be present and not null. Used for first creation of a person, where id is created.
      */
-    public Person(Name name, Phone phone, Email email, Website website, Set<Tag> tags) {
-        requireAllNonNull(name, phone, email, website, tags);
+    public Person(Name name, Phone phone, Email email, Website website, Set<Tag> tags, Budget budget) {
+        requireAllNonNull(name, phone, email, website, tags, budget);
         this.id = new PersonId();
         this.name = name;
         this.phone = phone;
         this.email = email;
         this.website = website;
         this.tags.addAll(tags);
+        this.budget = budget;
     }
 
     /**
      * Every field must be present and not null. Creates a person object with a given PersonId.
      */
-    public Person(PersonId id, Name name, Phone phone, Email email, Website website, Set<Tag> tags) {
-        requireAllNonNull(id, name, phone, email, website, tags);
+    public Person(PersonId id, Name name, Phone phone, Email email, Website website, Set<Tag> tags, Budget budget) {
+        requireAllNonNull(id, name, phone, email, website, tags, budget);
         this.id = id;
         this.name = name;
         this.phone = phone;
         this.email = email;
         this.website = website;
         this.tags.addAll(tags);
+        this.budget = budget;
     }
 
     public PersonId getId() {
@@ -69,6 +72,10 @@ public class Person {
 
     public Website getWebsite() {
         return website;
+    }
+
+    public Budget getBudget() {
+        return budget;
     }
 
     /**
@@ -111,13 +118,14 @@ public class Person {
                 && phone.equals(otherPerson.phone)
                 && email.equals(otherPerson.email)
                 && website.equals(otherPerson.website)
-                && tags.equals(otherPerson.tags);
+                && tags.equals(otherPerson.tags)
+                && budget.equals(otherPerson.budget);
     }
 
     @Override
     public int hashCode() {
         // use this method for custom fields hashing instead of implementing your own
-        return Objects.hash(name, phone, email, website, tags);
+        return Objects.hash(name, phone, email, website, tags, budget);
     }
 
     @Override
@@ -126,6 +134,7 @@ public class Person {
                 + ", phone=" + phone
                 + ", email=" + email
                 + ", website=" + website
-                + ", tags=" + tags + "}";
+                + ", tags=" + tags
+                + ", budget=" + budget + "}";
     }
 }
