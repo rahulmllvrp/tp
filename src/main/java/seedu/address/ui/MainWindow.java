@@ -75,7 +75,11 @@ public class MainWindow extends UiPart<Stage> {
 
         setAccelerators();
 
-        helpWindow = new HelpWindow();
+        // Create the help window with the primary stage as its owner to avoid
+        // fullscreen/size inheritance issues when the primary stage toggles fullscreen.
+        javafx.stage.Stage helpStage = new javafx.stage.Stage();
+        helpStage.initOwner(primaryStage);
+        helpWindow = new HelpWindow(helpStage);
     }
 
     public Stage getPrimaryStage() {

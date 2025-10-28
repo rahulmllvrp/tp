@@ -4,10 +4,12 @@ import java.awt.Desktop;
 import java.net.URI;
 import java.util.logging.Logger;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.stage.Stage;
 import seedu.address.commons.core.LogsCenter;
 
@@ -56,13 +58,20 @@ public class HelpWindow extends UiPart<Stage> {
     private static final String FXML = "HelpWindow.fxml";
 
     @FXML
+    @SuppressWarnings("unused")
     private Button copyButton;
 
     @FXML
+    @SuppressWarnings("unused")
     private Label helpMessage;
 
     @FXML
+    @SuppressWarnings("unused")
     private Hyperlink userGuideLink;
+
+    @FXML
+    @SuppressWarnings("unused")
+    private ScrollPane helpScrollPane;
 
     /**
      * Creates a new HelpWindow.
@@ -81,7 +90,7 @@ public class HelpWindow extends UiPart<Stage> {
             try {
                 Desktop.getDesktop().browse(new URI(userGuideUrl));
             } catch (Exception ex) {
-                ex.printStackTrace();
+                logger.warning("Failed to open user guide URL: " + ex.getMessage());
             }
         });
     }
@@ -113,8 +122,41 @@ public class HelpWindow extends UiPart<Stage> {
      */
     public void show() {
         logger.fine("Showing help page about the application.");
-        getRoot().show();
-        getRoot().centerOnScreen();
+        Stage stage = getRoot();
+        // Defensive reset: ensure the help stage is not left in fullscreen/maximized state
+        // (can happen when owner stage was fullscreened previously). This avoids the
+        // glitch where the help window appears full-screen or in a broken layout
+        // after toggling fullscreen on the primary stage.
+        try {
+            if (stage.isFullScreen()) {
+                stage.setFullScreen(false);
+            }
+        } catch (UnsupportedOperationException e) {
+            // Some platforms may not support full screen checks; ignore safely.
+            logger.fine("Platform does not support full screen checks for help window.");
+        }
+        if (stage.isMaximized()) {
+            stage.setMaximized(false);
+        }
+        // Allow resizing so the window can be adjusted and to avoid fixed large sizes
+        // carried over from previous shows.
+        stage.setResizable(true);
+
+        stage.show();
+        stage.centerOnScreen();
+
+        // Ensure the ScrollPane starts scrolled to the top-left when opened.
+        // Use Platform.runLater to reset after the scene graph has been laid out.
+        Platform.runLater(() -> {
+            try {
+                if (helpScrollPane != null) {
+                    helpScrollPane.setVvalue(0.0);
+                    helpScrollPane.setHvalue(0.0);
+                }
+            } catch (Exception e) {
+                logger.fine("Unable to reset help scroll position: " + e.getMessage());
+            }
+        });
     }
 
     /**
