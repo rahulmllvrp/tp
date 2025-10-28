@@ -18,10 +18,8 @@ import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.event.Event;
-import seedu.address.model.event.EventDate;
-import seedu.address.model.event.EventName;
-import seedu.address.model.event.EventTime;
 import seedu.address.model.person.Person;
+import seedu.address.testutil.EventBuilder;
 import seedu.address.testutil.TypicalPersons;
 
 /**
@@ -37,10 +35,10 @@ public class AssignContactToEventCommandTest {
         model = new ModelManager();
 
         // create two events
-        eventOne = new Event(new EventName("John's Party"), new EventDate("01-01-2024"),
-                new EventTime("12:00"));
-        Event eventTwo = new Event(new EventName("Jane's Party"), new EventDate("02-02-2024"),
-                new EventTime("18:00"));
+        eventOne = new EventBuilder().withName("John's Party").withDate("01-01-2024")
+                .withTime("12:00").withBudget("1000").build();
+        Event eventTwo = new EventBuilder().withName("Jane's Party").withDate("02-02-2024")
+                .withTime("18:00").withBudget("500").build();
 
         model.addEvent(eventOne);
         model.addEvent(eventTwo);

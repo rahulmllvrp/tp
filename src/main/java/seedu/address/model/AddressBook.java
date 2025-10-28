@@ -2,6 +2,7 @@ package seedu.address.model;
 
 import static java.util.Objects.requireNonNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javafx.collections.ObservableList;
@@ -57,8 +58,21 @@ public class AddressBook implements ReadOnlyAddressBook {
     public void resetData(ReadOnlyAddressBook newData) {
         requireNonNull(newData);
 
-        setPersons(newData.getPersonList());
-        setEvents(newData.getEventList());
+        // Deep copy persons
+        List<Person> newPersons = new ArrayList<>();
+        for (Person p : newData.getPersonList()) {
+            newPersons.add(new Person(p.getId(), p.getName(), p.getPhone(), p.getEmail(),
+                    p.getWebsite(), p.getTags(), p.getBudget()));
+        }
+        setPersons(newPersons);
+
+        // Deep copy events
+        List<seedu.address.model.event.Event> newEvents = new ArrayList<>();
+        for (seedu.address.model.event.Event e : newData.getEventList()) {
+            newEvents.add(new seedu.address.model.event.Event(e.getName(), e.getDate(), e.getTime(),
+                    e.getParticipants(), e.getInitialBudget(), e.getRemainingBudget()));
+        }
+        setEvents(newEvents);
     }
 
     /**
@@ -150,6 +164,14 @@ public class AddressBook implements ReadOnlyAddressBook {
         return new ToStringBuilder(this)
                 .add("persons", persons)
                 .toString();
+    }
+
+    public UniquePersonList getModifiablePersonList() {
+        return persons;
+    }
+
+    public UniqueEventList getModifiableEventList() {
+        return events;
     }
 
     @Override

@@ -4,11 +4,13 @@
     "phone": "94351253",
     "email": "alice@example.com",
     "website": "https://www.example.com",
+    "budget": "100",
     "tags": [ "friends" ]
   }, {
     "name": "Alice Pauline",
     "phone": "94351253",
     "email": "pauline@example.com",
-    "website": "https://www.example.com"
+    "website": "https://www.example.com",
+    "budget": "100"
   } ]
 }

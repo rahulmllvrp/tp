@@ -31,6 +31,7 @@
       <Label fx:id="phone" styleClass="cell_small_label" text="\$phone" />
       <Label fx:id="website" styleClass="cell_small_label" text="\$website" />
       <Label fx:id="email" styleClass="cell_small_label" text="\$email" />
+      <Label fx:id="budget" styleClass="cell_small_label" text="\$budget" />
     </VBox>
     <FlowPane fx:id="tags" alignment="CENTER_RIGHT" hgap="5" vgap="5" GridPane.columnIndex="1">
       <padding>

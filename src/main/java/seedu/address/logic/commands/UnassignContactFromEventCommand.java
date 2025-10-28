@@ -13,6 +13,7 @@ import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.event.Event;
+import seedu.address.model.person.Budget;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.PersonId;
 
@@ -62,6 +63,7 @@ public class UnassignContactFromEventCommand extends Command {
             throw new CommandException(Messages.MESSAGE_INVALID_EVENT_DISPLAYED_INDEX);
         }
         Event eventToModify = lastShownEventList.get(targetEventIndex.getZeroBased());
+        double eventBudget = Double.parseDouble(eventToModify.getRemainingBudget().value);
         ArrayList<Person> contactsToUnassign = new ArrayList<>();
         List<Person> lastShownList = model.getFilteredPersonList();
         for (Index i : unassignedPersonIndexList) {
@@ -70,6 +72,9 @@ public class UnassignContactFromEventCommand extends Command {
                         + Messages.MESSAGE_TRY_PERSON_LIST_MODE);
             } else {
                 Person personToRemove = lastShownList.get(i.getZeroBased());
+                double personBudget = Double.parseDouble(personToRemove.getBudget().value);
+                eventBudget += personBudget;
+                eventBudget = Math.min(eventBudget, Double.parseDouble(eventToModify.getInitialBudget().value));
                 contactsToUnassign.add(personToRemove);
             }
         }
@@ -82,7 +87,7 @@ public class UnassignContactFromEventCommand extends Command {
             }
         }
         Event newEvent = new Event(eventToModify.getName(), eventToModify.getDate(), eventToModify.getTime(),
-                existingPersonsInEvent);
+                existingPersonsInEvent, eventToModify.getInitialBudget(), new Budget(String.valueOf(eventBudget)));
         model.setEvent(eventToModify, newEvent);
         String unassignedPersonNames = parsePersonListToString(contactsToUnassign);
         return new CommandResult(String.format(MESSAGE_UNASSIGN_FROM_EVENT_SUCCESS,

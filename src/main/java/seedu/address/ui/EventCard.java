@@ -25,6 +25,8 @@ public class EventCard extends UiPart<Region> {
     private Label date;
     @FXML
     private Label time;
+    @FXML
+    private Label budget;
 
     /**
      * Creates a {@code EventCard} with the given {@code Event} and index to display.
@@ -36,5 +38,6 @@ public class EventCard extends UiPart<Region> {
         name.setText(event.getName().fullName);
         date.setText(event.getDate().value);
         time.setText(event.getTime().value);
+        budget.setText("Budget: $" + event.getRemainingBudget().value + " / $" + event.getInitialBudget().value);
     }
 }
