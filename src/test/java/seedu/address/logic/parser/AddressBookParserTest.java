@@ -55,9 +55,12 @@ public class AddressBookParserTest {
 
     @Test
     public void parseCommand_deletep() throws Exception {
-        seedu.address.logic.commands.DeleteEventCommand command = (seedu.address.logic.commands.DeleteEventCommand) parser.parseCommand(
-                seedu.address.logic.commands.DeleteEventCommand.COMMAND_WORD + " " + seedu.address.testutil.TypicalIndexes.INDEX_FIRST_EVENT.getOneBased());
-        assertEquals(new seedu.address.logic.commands.DeleteEventCommand(seedu.address.testutil.TypicalIndexes.INDEX_FIRST_EVENT), command);
+        seedu.address.logic.commands.DeleteEventCommand command =
+                (seedu.address.logic.commands.DeleteEventCommand) parser.parseCommand(
+                        seedu.address.logic.commands.DeleteEventCommand.COMMAND_WORD + " "
+                                + seedu.address.testutil.TypicalIndexes.INDEX_FIRST_EVENT.getOneBased());
+        assertEquals(new seedu.address.logic.commands.DeleteEventCommand(
+                seedu.address.testutil.TypicalIndexes.INDEX_FIRST_EVENT), command);
     }
 
     @Test

@@ -1,12 +1,9 @@
 package seedu.address.ui;
 
-import java.util.Optional;
-import seedu.address.logic.commands.Command;
 import java.util.logging.Logger;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextInputControl;
 import javafx.scene.input.KeyCombination;
@@ -16,6 +13,7 @@ import javafx.stage.Stage;
 import seedu.address.commons.core.GuiSettings;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.logic.Logic;
+import seedu.address.logic.commands.Command;
 import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.exceptions.ParseException;
@@ -218,7 +216,8 @@ public class MainWindow extends UiPart<Stage> {
             if (commandResult.isShowConfirmation()) {
                 isAwaitingConfirmation = true;
                 pendingConfirmationCommand = commandResult.getCommandToExecute();
-                resultDisplay.setFeedbackToUser(commandResult.getFeedbackToUser() + " (Type 'y' to confirm, 'n' to cancel)");
+                resultDisplay.setFeedbackToUser(commandResult.getFeedbackToUser()
+                        + " (Type 'y' to confirm, 'n' to cancel)");
                 return new CommandResult(commandResult.getFeedbackToUser());
             }
 
