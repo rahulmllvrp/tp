@@ -14,35 +14,103 @@ public class WebsiteTest {
     }
 
     @Test
+    public void constructor_invalidWebsite_throwsIllegalArgumentException() {
+        String invalidWebsite = " ";
+        assertThrows(IllegalArgumentException.class, () -> new Website(invalidWebsite));
+    }
+
+    @Test
     public void isValidWebsite() {
         // null website
         assertThrows(NullPointerException.class, () -> Website.isValidWebsite(null));
 
-        // valid websites
-        assertTrue(Website.isValidWebsite("")); // empty string
+        // invalid websites - those that start with whitespace or are blank
         assertFalse(Website.isValidWebsite(" ")); // spaces only
+        assertFalse(Website.isValidWebsite("  abc")); // starts with whitespace
+        assertFalse(Website.isValidWebsite("  example.com")); // starts with space
+        assertFalse(Website.isValidWebsite(" example.com ")); // starts and ends with space
+        assertFalse(Website.isValidWebsite("   ")); // multiple spaces only
+        assertFalse(Website.isValidWebsite("    a")); // multiple spaces before content
+
+        // valid websites - empty string (for optional website)
+        assertTrue(Website.isValidWebsite("")); // empty string is valid for optional field
+
+        // valid websites - various URL formats
         assertTrue(Website.isValidWebsite("https://www.google.com"));
-        assertTrue(Website.isValidWebsite("https://www.example.com"));
+        assertTrue(Website.isValidWebsite("http://example.com"));
         assertTrue(Website.isValidWebsite("example.com"));
+        assertTrue(Website.isValidWebsite("www.example.com"));
+        assertTrue(Website.isValidWebsite("https://example.com/path"));
+        assertTrue(Website.isValidWebsite("https://example.com/path?query=value"));
+        assertTrue(Website.isValidWebsite("https://subdomain.example.com"));
+        assertTrue(Website.isValidWebsite("ftp://files.example.com"));
+        assertTrue(Website.isValidWebsite("localhost:8080"));
+        assertTrue(Website.isValidWebsite("192.168.1.1"));
+        assertTrue(Website.isValidWebsite("a")); // single character is valid
     }
 
     @Test
     public void equals() {
-        Website website = new Website("https://www.example.com");
-
-        // same values -> returns true
-        assertTrue(website.equals(new Website("https://www.example.com")));
+        Website website = new Website("valid.com");
 
         // same object -> returns true
         assertTrue(website.equals(website));
 
+        // same values -> returns true
+        Website websiteCopy = new Website("valid.com");
+        assertTrue(website.equals(websiteCopy));
+
+        // different values -> returns false
+        assertFalse(website.equals(new Website("other.com")));
+
+        // different types -> returns false
+        assertFalse(website.equals(1));
+
         // null -> returns false
         assertFalse(website.equals(null));
 
-        // different types -> returns false
-        assertFalse(website.equals(5.0f));
+        // empty string websites are equal
+        Website emptyWebsite1 = new Website("");
+        Website emptyWebsite2 = new Website("");
+        assertTrue(emptyWebsite1.equals(emptyWebsite2));
 
-        // different values -> returns false
-        assertFalse(website.equals(new Website("https://www.google.com")));
+        // empty vs non-empty -> returns false
+        assertFalse(website.equals(emptyWebsite1));
+        assertFalse(emptyWebsite1.equals(website));
+    }
+
+    @Test
+    public void hashCodeTest() {
+        Website website = new Website("valid.com");
+
+        // same value -> same hashcode
+        Website websiteCopy = new Website("valid.com");
+        assertTrue(website.hashCode() == websiteCopy.hashCode());
+
+        // different value -> different hashcode
+        assertFalse(website.hashCode() == new Website("other.com").hashCode());
+
+        // empty websites have same hashcode
+        Website emptyWebsite1 = new Website("");
+        Website emptyWebsite2 = new Website("");
+        assertTrue(emptyWebsite1.hashCode() == emptyWebsite2.hashCode());
+    }
+
+    @Test
+    public void constructor_emptyString_success() {
+        // empty string is valid for optional website field
+        Website emptyWebsite = new Website("");
+        assertTrue(emptyWebsite.equals(new Website("")));
+    }
+
+    @Test
+    public void toStringTest() {
+        // non-empty website
+        Website website = new Website("https://www.example.com");
+        assertTrue(website.toString().equals("https://www.example.com"));
+
+        // empty website
+        Website emptyWebsite = new Website("");
+        assertTrue(emptyWebsite.toString().equals(""));
     }
 }
