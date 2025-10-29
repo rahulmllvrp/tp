@@ -39,8 +39,6 @@ public class MainWindow extends UiPart<Stage> {
     private Command pendingConfirmationCommand = null;
     private boolean isAwaitingConfirmation = false;
 
-    @FXML
-    private StackPane searchBoxPlaceholder;
 
     @FXML
     private StackPane commandBoxPlaceholder;
@@ -136,8 +134,6 @@ public class MainWindow extends UiPart<Stage> {
         StatusBarFooter statusBarFooter = new StatusBarFooter(logic.getAddressBookFilePath());
         statusbarPlaceholder.getChildren().add(statusBarFooter.getRoot());
 
-        SearchBox searchBox = new SearchBox(logic);
-        searchBoxPlaceholder.getChildren().add(searchBox.getRoot());
 
         CommandBox commandBox = new CommandBox(this::executeCommand);
         commandBoxPlaceholder.getChildren().add(commandBox.getRoot());

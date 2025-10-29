@@ -187,8 +187,7 @@ public interface Model {
      *
      * Examples:
      * - updateFilteredPersonList(person -> true) shows all persons
-     * - updateFilteredPersonList(new NameContainsKeywordsPredicate(keywords)) filters by name
-     * - updateFilteredPersonList(new TagContainsKeywordsPredicate(keywords)) filters by tags
+     * - updateFilteredPersonList(new NameAndTagContainsKeywordsPredicate(keywords)) filters by name and tags
      *
      * The UI will automatically update to show only persons matching the predicate.
      *

@@ -19,58 +19,38 @@ import seedu.address.commons.core.LogsCenter;
 public class HelpWindow extends UiPart<Stage> {
 
     public static final String HELP_MESSAGE =
-            """
-            1. help:
-               Shows a basic help message with a link to the AbsolutSin-ema User Guide.
-
-            2. add n/NAME p/PHONE_NUMBER e/EMAIL w/WEBSITE b/BUDGET [t/TAG TAG2 ...]:
-               Adds a contact with up to 6 tags.
-
-            3. list:
-               Shows all saved contacts and parties.
-
-            4. edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [w/WEBSITE] [b/BUDGET]:
-               Edits a contact’s personal detail(s) at the specified index.
-
-            5. edit INDEX t/TAG1 TAG2 ...:
-               Replaces all tags with the specified tag(s).
-
-            6. edit INDEX t/:
-               Removes all tags from the contact.
-
-            7. find KEYWORD1 [KEYWORD2 ...]:
-               Finds contacts whose names contain any of the given keywords (case-insensitive).
-
-            8. delete INDEX:
-               Deletes the contact in the specified index.
-
-            9. clear:
-               Clears all contacts (after a confirmation message).
-
-            10. exit:
-                Exits the program.
-
-            11. addp n/NAME d/DATE t/TIME b/BUDGET [c/CONTACT_INDEX ...]:
-                Adds a party to the party list.
-
-            12. editp INDEX [n/NAME] [d/DATE] [t/TIME] [b/BUDGET]:
-                Edits a party’s details at the specified index.
-
-            13. deletep INDEX:
-                Deletes the party at the specified index.
-
-            14. assign INDEX c/CONTACT_INDEX[,CONTACT_INDEX ...]:
-                Assigns contacts to a specific party. E.g. assign 1 c/1,2
-
-            15. unassign INDEX c/CONTACT_INDEX[,CONTACT_INDEX ...]:
-                Unassigns contacts from a specific party. E.g. unassign 1 c/1,2
-
-            16. view INDEX:
-                Views all people assigned to a party at the given index.
-
-            For more detailed help, refer to the AbsolutSin-ema User Guide.
-            https://ay2526s1-cs2103t-t12-4.github.io/tp/UserGuide.html
-            """;
+            "1. help:\n"
+            + "   Shows a basic help message with a link to the AbsolutSin-ema User Guide.\n\n"
+            + "2. add n/NAME p/PHONE_NUMBER e/EMAIL w/WEBSITE [t/TAG t/TAG2 ...]:\n"
+            + "   Adds a contact with up to 6 tags.\n\n"
+            + "3. list:\n"
+            + "   Shows all saved contacts and parties.\n\n"
+            + "4. edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [w/WEBSITE] [t/TAG]:\n"
+            + "   Edits a contact’s personal detail(s) at the specified index.\n\n"
+            + "6. edit INDEX t/:\n"
+            + "   Removes all tags from the contact.\n\n"
+            + "7. find KEYWORD1 [KEYWORD2 ...]:\n"
+            + "   Finds contacts whose names contain any of the given keywords (case-insensitive).\n\n"
+            + "8. delete INDEX:\n"
+            + "   Deletes the contact in the specified index.\n\n"
+            + "9. clear:\n"
+            + "   Clears all contacts (after a confirmation message).\n\n"
+            + "10. exit:\n"
+            + "    Exits the program.\n\n"
+            + "11. addp n/NAME d/DATE t/TIME [c/CONTACT_INDEX ...]:\n"
+            + "    Adds a party to the party list.\n\n"
+            + "12. editp INDEX [n/NAME] [d/DATE] [t/TIME]:\n"
+            + "    Edits a party’s details at the specified index.\n\n"
+            + "13. deletep INDEX:\n"
+            + "    Deletes the party at the specified index.\n\n"
+            + "14. assign INDEX c/CONTACT_INDEX[,CONTACT_INDEX ...]:\n"
+            + "    Assigns contacts to a specific party. E.g. assign 1 c/1,2\n\n"
+            + "15. unassign INDEX c/CONTACT_INDEX[,CONTACT_INDEX ...]:\n"
+            + "    Unassigns contacts from a specific party. E.g. unassign 1 c/1,2\n\n"
+            + "16. view INDEX:\n"
+            + "    Views all people assigned to a party at the given index.\n\n"
+            + "For more detailed help, refer to the AbsolutSin-ema User Guide.\n"
+            + "https://ay2526s1-cs2103t-t12-4.github.io/tp/UserGuide.html";
 
     private static final Logger logger = LogsCenter.getLogger(HelpWindow.class);
     private static final String FXML = "HelpWindow.fxml";
@@ -130,10 +110,12 @@ public class HelpWindow extends UiPart<Stage> {
 
     /**
      * Shows the help window.
+     *
      * @throws IllegalStateException
      *     <ul>
      *         <li>
-     *             if this method is called on a thread other than the JavaFX Application Thread.
+     *             if this method is called on a thread other than the JavaFX Application
+     *             Thread.
      *         </li>
      *         <li>
      *             if this method is called during animation or layout processing.
