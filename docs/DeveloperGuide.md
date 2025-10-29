@@ -38,213 +38,329 @@ Refer to the guide [_Setting up and getting started_](SettingUp.md).
 
 <img src="images/ArchitectureDiagram.png" width="280" />
 
-The ***Architecture Diagram*** given above explains the high-level design of AbsolutSin-ema.
+The ***Architecture Diagram*** given above explains the high-level design of **AbsolutSin-ema**, a specialized contact management application designed for party planners to manage vendors, clients, and events efficiently.
 
-Given below is a quick overview of main components and how they interact with each other.
+**AbsolutSin-ema** is built on a **dual-entity system** that manages both **Persons** (vendors/clients) and **Events** (parties) with sophisticated relationship management, budget tracking, and assignment capabilities.
 
-**Main components of the architecture**
+### Core Design Principles
 
-**`Main`** (consisting of classes [`Main`](https://github.com/AY2526S1-CS2103T-T12-4/tp/tree/master/src/main/java/seedu/address/Main.java) and [`MainApp`](https://github.com/AY2526S1-CS2103T-T12-4/tp/tree/master/src/main/java/seedu/address/MainApp.java)) is in charge of AbsolutSin-ema's launch and shut down.
-* At app launch, it initializes the other components in the correct sequence, and connects them up with each other.
-* At shut down, it shuts down the other components and invokes cleanup methods where necessary.
+1. **Domain-Specific Design**: Built specifically for party planning with vendor management, budget tracking, and event-person assignments
+2. **Dual-Entity Architecture**: Separate but interconnected management of Persons and Events
+3. **Budget-Aware Operations**: All assignments and operations consider budget constraints
+4. **Robust Relationship Management**: PersonId system ensures data integrity across relationships
+5. **Command-Driven Workflow**: CLI-first design optimized for power users
 
-The bulk of AbsolutSin-ema's work is done by the following four components:
+### Main Components
 
-* [**`UI`**](#ui-component): The UI of AbsolutSin-ema.
-* [**`Logic`**](#logic-component): The command executor.
-* [**`Model`**](#model-component): Holds the data of AbsolutSin-ema in memory.
-* [**`Storage`**](#storage-component): Reads data from, and writes data to, the hard disk.
+**`Main`** (consisting of classes [`Main`](https://github.com/AY2526S1-CS2103T-T12-4/tp/tree/master/src/main/java/seedu/address/Main.java) and [`MainApp`](https://github.com/AY2526S1-CS2103T-T12-4/tp/tree/master/src/main/java/seedu/address/MainApp.java)) handles app launch and shutdown:
+* Initializes components in correct sequence and connects them
+* Manages application lifecycle and graceful shutdown
+* Handles configuration and logging initialization
 
-[**`Commons`**](#common-classes) represents a collection of classes used by multiple other components.
+The application's core functionality is delivered through four main components:
 
-**How the architecture components interact with each other**
+* [**`UI`**](#ui-component): The user interface layer
+* [**`Logic`**](#logic-component): Command processing and business logic
+* [**`Model`**](#model-component): Data models and business rules
+* [**`Storage`**](#storage-component): Data persistence and retrieval
 
-The *Sequence Diagram* below shows how the components interact with each other for the scenario where the user issues the command `delete 1`.
+[**`Commons`**](#common-classes) provides shared utilities used across components.
+
+### Component Interaction
+
+The *Sequence Diagram* below shows how the components interact for the command `assign 1 c/2,3` (assigning contacts 2 and 3 to event 1):
 
 <img src="images/ArchitectureSequenceDiagram.png" width="574" />
 
-Each of the four main components (also shown in the diagram above),
-
-* defines its *API* in an `interface` with the same name as the Component.
-* implements its functionality using a concrete `{Component Name}Manager` class (which follows the corresponding API `interface` mentioned in the previous point.
-
-For example, the `Logic` component defines its API in the `Logic.java` interface and implements its functionality using the `LogicManager.java` class which follows the `Logic` interface. Other components interact with a given component through its interface rather than the concrete class (reason: to prevent outside component's being coupled to the implementation of a component), as illustrated in the (partial) class diagram below.
+Each component:
+* Defines its API in an `interface` with the same name as the Component
+* Implements functionality using a concrete `{Component Name}Manager` class
+* Interacts with other components through interfaces to maintain loose coupling
 
 <img src="images/ComponentManagers.png" width="300" />
 
-The sections below give more details of each component.
+--------------------------------------------------------------------------------------------------------------------
 
-### UI component
+## **Component Details**
 
-The **API** of this component is specified in [`Ui.java`](https://github.com/AY2526S1-CS2103T-T12-4/tp/tree/master/src/main/java/seedu/address/ui/Ui.java)
+### UI Component
+
+**API**: [`Ui.java`](https://github.com/AY2526S1-CS2103T-T12-4/tp/tree/master/src/main/java/seedu/address/ui/Ui.java)
 
 ![Structure of the UI Component](images/UiClassDiagram.png)
 
-The UI consists of a `MainWindow` that is made up of parts e.g.`CommandBox`, `ResultDisplay`, `PersonListPanel`, `EventListPanel`, `StatusBarFooter` etc. All these, including the `MainWindow`, inherit from the abstract `UiPart` class which captures the commonalities between classes that represent parts of the visible GUI.
+The UI consists of a `MainWindow` containing specialized components:
 
-The UI displays two main lists:
-* `PersonListPanel` - Shows all contacts (vendors/clients) with their details
-* `EventListPanel` - Shows all events (parties) with their details including budgets
+**Core UI Components:**
+* `CommandBox`: Handles CLI input with validation and auto-completion hints
+* `ResultDisplay`: Shows command results and error messages
+* `PersonListPanel`: Displays vendor/client contacts with tags and budget info
+* `EventListPanel`: Shows events/parties with participant counts and budget status
+* `StatusBarFooter`: Displays application state and file save status
+* `HelpWindow`: Comprehensive help system with scrollable command reference
 
-The `UI` component uses the JavaFx UI framework. The layout of these UI parts are defined in matching `.fxml` files that are in the `src/main/resources/view` folder. For example, the layout of the [`MainWindow`](https://github.com/AY2526S1-CS2103T-T12-4/tp/tree/master/src/main/java/seedu/address/ui/MainWindow.java) is specified in [`MainWindow.fxml`](https://github.com/AY2526S1-CS2103T-T12-4/tp/tree/master/src/main/resources/view/MainWindow.fxml)
+**Key UI Features:**
+* **Dual-panel design**: Separate views for persons and events
+* **Budget visualization**: Color-coded budget indicators in both panels
+* **Tag-based filtering**: Visual tag representation for quick identification
+* **Real-time updates**: Observable list bindings ensure immediate UI updates
+* **Responsive layout**: Adapts to different screen sizes and window states
 
-The `UI` component,
+The UI uses JavaFX framework with FXML layouts stored in `src/main/resources/view`. Each UI component inherits from `UiPart<T>` which provides common functionality for GUI elements.
 
-* executes user commands using the `Logic` component.
-* listens for changes to `Model` data so that the UI can be updated with the modified data.
-* keeps a reference to the `Logic` component, because the `UI` relies on the `Logic` to execute commands.
-* depends on some classes in the `Model` component, as it displays `Person` and `Event` objects residing in the `Model`.
-
-### Logic component
+### Logic Component
 
 **API** : [`Logic.java`](https://github.com/AY2526S1-CS2103T-T12-4/tp/tree/master/src/main/java/seedu/address/logic/Logic.java)
 
-Here's a (partial) class diagram of the `Logic` component:
+Here's the class diagram of the `Logic` component:
 
 <img src="images/LogicClassDiagram.png" width="550"/>
 
-The sequence diagram below illustrates the interactions within the `Logic` component, taking `execute("delete 1")` API call as an example.
+**Command Processing Flow:**
 
-![Interactions Inside the Logic Component for the `delete 1` Command](images/DeleteSequenceDiagram.png)
+1. `LogicManager` receives user input and delegates to `AddressBookParser`
+2. `AddressBookParser` creates appropriate `XYZCommandParser` based on command word
+3. Parser validates input and creates `XYZCommand` object
+4. `LogicManager` executes command with `Model` interaction
+5. Command returns `CommandResult` with success/error information
 
-<div markdown="span" class="alert alert-info">:information_source: **Note:** The lifeline for `DeleteCommandParser` should end at the destroy marker (X) but due to a limitation of PlantUML, the lifeline continues till the end of diagram.
-</div>
+**Specialized Parsers:**
 
-How the `Logic` component works:
+* `AddEventCommandParser`: Handles complex event creation with optional contact assignments
+* `AssignContactToEventCommandParser`: Manages bulk contact-to-event assignments with budget validation
+* `FindCommandParser`: Supports both name and tag-based searching
+* `EditCommandParser` / `EditEventCommandParser`: Handle partial updates with validation
 
-1. When `Logic` is called upon to execute a command, it is passed to an `AddressBookParser` object which in turn creates a parser that matches the command (e.g., `DeleteCommandParser`) and uses it to parse the command.
-1. This results in a `Command` object (more precisely, an object of one of its subclasses e.g., `DeleteCommand`) which is executed by the `LogicManager`.
-1. The command can communicate with the `Model` when it is executed (e.g. to delete a person).<br>
-   Note that although this is shown as a single step in the diagram above (for simplicity), in the code it can take several interactions (between the command object and the `Model`) to achieve.
-1. The result of the command execution is encapsulated as a `CommandResult` object which is returned back from `Logic`.
-
-Here are the other classes in `Logic` (omitted from the class diagram above) that are used for parsing a user command:
+**Advanced Features:**
+* **Budget validation**: Commands validate budget constraints before execution
+* **Undo system**: Commands save state for undo functionality via `model.saveStateForUndo()`
+* **Index validation**: Robust checking of user-provided indexes against current filtered lists
+* **Confirmation flows**: Multi-step commands like `clear` require confirmation
 
 <img src="images/ParserClasses.png" width="600"/>
 
-How the parsing works:
-* When called upon to parse a user command, the `AddressBookParser` class creates an `XYZCommandParser` (`XYZ` is a placeholder for the specific command name e.g., `AddCommandParser`) which uses the other classes shown above to parse the user command and create a `XYZCommand` object (e.g., `AddCommand`) which the `AddressBookParser` returns back as a `Command` object.
-* All `XYZCommandParser` classes (e.g., `AddCommandParser`, `DeleteCommandParser`, ...) inherit from the `Parser` interface so that they can be treated similarly where possible e.g, during testing.
+### Model Component
 
-### Model component
-**API** : [`Model.java`](https://github.com/AY2526S1-CS2103T-T12-4/tp/tree/master/src/main/java/seedu/address/model/Model.java)
+**API**: [`Model.java`](https://github.com/AY2526S1-CS2103T-T12-4/tp/tree/master/src/main/java/seedu/address/model/Model.java)
 
 <img src="images/ModelClassDiagram.png" width="450" />
 
+**Core Model Classes:**
 
-The `Model` component,
+**`AddressBook`**: Central data container managing both persons and events
+* `UniquePersonList`: Maintains person data with duplicate prevention
+* `UniqueEventList`: Manages events with name-based uniqueness checking
+* Deep copying mechanisms for undo functionality
 
-* stores the address book data i.e., all `Person` objects (which are contained in a `UniquePersonList` object) and all `Event` objects (which are contained in a `UniqueEventList` object).
-* each `Person` has the following fields: `Name`, `Phone`, `Email`, `Website`, `Budget`, `PersonId` (unique identifier), and a set of `Tag` objects.
-* each `Event` has the following fields: `EventName`, `EventDate`, `EventTime`, `initialBudget`, `remainingBudget`, and a list of `PersonId` representing participants.
-* stores the currently 'selected' `Person` and `Event` objects (e.g., results of a search query) as separate _filtered_ lists which are exposed to outsiders as unmodifiable `ObservableList<Person>` and `ObservableList<Event>` that can be 'observed' e.g. the UI can be bound to these lists so that the UI automatically updates when the data in the lists change.
-* stores a `UserPref` object that represents the user's preferences. This is exposed to the outside as a `ReadOnlyUserPref` objects.
-* does not depend on any of the other three components (as the `Model` represents data entities of the domain, they should make sense on their own without depending on other components)
+**`Person`**: Represents vendors/clients with specialized fields
+* `PersonId`: Unique identifier for relationship management
+* `Name`, `Phone`, `Email`: Standard contact information
+* `Website`: Vendor-specific field for online presence
+* `Budget`: Vendor service cost for budget calculations
+* `Set<Tag>`: Flexible categorization system
 
-<div markdown="span" class="alert alert-info">:information_source: **Note:** An alternative (arguably, a more OOP) model is given below. It has a `Tag` list in the `AddressBook`, which `Person` references. This allows `AddressBook` to only require one `Tag` object per unique tag, instead of each `Person` needing their own `Tag` objects.<br>
+**`Event`**: Represents parties/gatherings with comprehensive management
+* `EventName`, `EventDate`, `EventTime`: Basic event information
+* `List<PersonId>`: Participants assigned to the event
+* `Budget initialBudget`: Total budget allocated for the event
+* `Budget remainingBudget`: Budget remaining after assignments
 
-<img src="images/BetterModelClassDiagram.png" width="450" />
+**Advanced Model Features:**
 
-</div>
+1. **Budget Management System:**
+   ```java
+   // Budget validation during assignment
+   if (eventBudget < personBudget) {
+       throw new CommandException("Budget exceeded");
+   }
+   remainingBudget = eventBudget - personBudget;
+   ```
 
+2. **Relationship Integrity:**
+   ```java
+   // PersonId ensures referential integrity
+   List<PersonId> participants = event.getParticipants();
+   // Relationships persist across person edits
+   ```
 
-### Storage component
+3. **Observable Lists:**
+   ```java
+   ObservableList<Person> getFilteredPersonList();
+   ObservableList<Event> getFilteredEventList();
+   // UI automatically updates when data changes
+   ```
 
-**API** : [`Storage.java`](https://github.com/AY2526S1-CS2103T-T12-4/tp/tree/master/src/main/java/seedu/address/storage/Storage.java)
+The Model is completely independent of UI and Storage components, following clean architecture principles.
+
+### Storage Component
+
+**API**: [`Storage.java`](https://github.com/AY2526S1-CS2103T-T12-4/tp/tree/master/src/main/java/seedu/address/storage/Storage.java)
 
 <img src="images/StorageClassDiagram.png" width="550" />
 
-The `Storage` component,
-* can save both AbsolutSin-ema's data (contacts and events) and user preference data in JSON format, and read them back into corresponding objects.
-* inherits from both `AddressBookStorage` and `UserPrefStorage`, which means it can be treated as either one (if only the functionality of only one is needed).
-* depends on some classes in the `Model` component (because the `Storage` component's job is to save/retrieve objects that belong to the `Model`)
+**Storage Architecture:**
 
-### Common classes
+* `StorageManager`: Coordinates between AddressBook and UserPrefs storage
+* `JsonAddressBookStorage`: Persists dual-entity data in JSON format
+* `JsonUserPrefsStorage`: Manages user preferences and settings
 
-Classes used by multiple components are in the `seedu.address.commons` package.
+**JSON Adapters:**
+* `JsonAdaptedPerson`: Serializes Person objects with PersonId preservation
+* `JsonAdaptedEvent`: Handles Event serialization with participant relationships
+* `JsonAdaptedTag`: Manages tag serialization
+* `JsonSerializableAddressBook`: Root container for complete data export/import
+
+**Key Storage Features:**
+
+1. **Automatic Saving**: Data persists after every state-changing command
+2. **Graceful Recovery**: Handles corrupted files by reverting to sample data
+3. **Relationship Preservation**: PersonId references maintained across sessions
+4. **User Preferences**: Window size, position, and view preferences saved
 
 --------------------------------------------------------------------------------------------------------------------
 
 ## **Implementation**
 
-This section describes some noteworthy details on how certain features are implemented.
+This section describes noteworthy implementation details of key features.
 
-### Undo feature
+### Budget Management System
+
+#### Overview
+
+AbsolutSin-ema implements sophisticated budget tracking for both individual vendors and events. This system ensures financial constraints are respected when assigning vendors to events.
 
 #### Implementation
 
-The undo mechanism is facilitated by `AddressBookSnapshot`. The application stores snapshots of the address book state before each modifying command. The system implements the following operations:
+**Budget Components:**
+* `Budget` class: Validates and stores monetary values
+* Event budget tracking: Initial vs. remaining budget separation
+* Person budget: Service cost for vendor assignments
 
-* `VersionedAddressBook#commit()` — Saves the current address book state in its history.
-* `VersionedAddressBook#undo()` — Restores the previous address book state from its history.
-* `VersionedAddressBook#redo()` — Restores a previously undone address book state from its history.
+**Budget Validation Algorithm:**
+```java
+public void validateAssignment(Person person, Event event) {
+    double personCost = Double.parseDouble(person.getBudget().value);
+    double remainingBudget = Double.parseDouble(event.getRemainingBudget().value);
 
-These operations are exposed in the `Model` interface and used by commands that modify the address book data (e.g., `AddCommand`, `DeleteCommand`, `EditCommand`).
+    if (remainingBudget < personCost) {
+        throw new CommandException("Budget exceeded");
+    }
+}
+```
 
-Given below is an example usage scenario and how the undo mechanism behaves at each step.
+**Budget Updates:**
+When assigning contacts to events, the system:
+1. Validates each person's cost against remaining budget
+2. Updates remaining budget after successful assignment
+3. Prevents over-budget assignments
+4. Maintains budget history for undo operations
 
-Step 1. The user launches the application for the first time. The address book starts with no saved states for undo.
+#### Design Considerations
 
-Step 2. The user executes `delete 5` command to delete the 5th person in the address book. Before executing the deletion, the `delete` command calls `Model#saveStateForUndo("delete")`, saving a snapshot of the current address book state.
+**Alternative 1 (current choice):** Real-time budget validation
+* Pros: Immediate feedback, prevents budget violations
+* Cons: More complex assignment logic
 
-![UndoRedoState1](images/UndoRedoState1.png)
+**Alternative 2:** Post-assignment budget checking
+* Pros: Simpler implementation
+* Cons: Could allow budget violations
 
-Step 3. The user executes `add n/David …​` to add a new person. The `add` command also calls `Model#saveStateForUndo("add")` before adding, saving another snapshot.
+### Event-Person Assignment System
 
-<div markdown="span" class="alert alert-info">:information_source: **Note:** If a command fails its execution, it will not call `Model#saveStateForUndo()`, so the address book state will not be saved.
+#### Overview
 
-</div>
+The assignment system manages complex relationships between vendors and events with budget constraints and participant tracking.
 
-Step 4. The user now decides that adding the person was a mistake, and decides to undo that action by executing the `undo` command. The `undo` command calls `Model#undo()`, which restores the address book to the state before the add command was executed.
+#### Implementation
 
-<div markdown="span" class="alert alert-info">:information_source: **Note:** If there are no saved states to restore, the `undo` command uses `Model#canUndo()` to check this. If no undo is possible, it will return an error to the user rather than attempting to perform the undo.
+**Assignment Command Flow:**
+1. `AssignContactToEventCommand` receives event index and person indexes
+2. Validates all indexes against current filtered lists
+3. Checks for existing assignments to prevent duplicates
+4. Validates budget constraints for each assignment
+5. Updates event with new participants and adjusted budget
+6. Saves state for undo functionality
 
-</div>
+**Key Implementation Details:**
 
-The following sequence diagram shows how an undo operation goes through the `Logic` component:
+```java
+// Collect and validate persons with budget checking
+private List<Person> collectAndValidatePersons(List<Person> lastShownList,
+        Event eventToModify, double eventBudget) throws CommandException {
+    List<Person> result = new ArrayList<>();
+    for (Index i : assignedPersonIndexList) {
+        Person personToAdd = lastShownList.get(i.getZeroBased());
+        double personBudget = parseBudgetSafe(personToAdd.getBudget().value);
 
-![UndoSequenceDiagram](images/UndoSequenceDiagram-Logic.png)
+        if (eventBudget < personBudget) {
+            throw new CommandException("Budget exceeded for " + personToAdd.getName());
+        }
+        eventBudget -= personBudget;
+        result.add(personToAdd);
+    }
+    return result;
+}
+```
 
-<div markdown="span" class="alert alert-info">:information_source: **Note:** The lifeline for `UndoCommand` should end at the destroy marker (X) but due to a limitation of PlantUML, the lifeline reaches the end of diagram.
+**Assignment Features:**
+* Bulk assignment: Multiple contacts in single command (`assign 1 c/2,3,4`)
+* Budget validation: Automatic checking during assignment
+* Duplicate prevention: Cannot assign same person multiple times
+* State preservation: Full undo support for assignments
 
-</div>
+### Undo System Implementation
 
-Similarly, how an undo operation goes through the `Model` component is shown below:
+#### Overview
 
-![UndoSequenceDiagram](images/UndoSequenceDiagram-Model.png)
+AbsolutSin-ema implements a state-saving undo system that captures application state before destructive operations.
 
-The `redo` command does the opposite — it calls `Model#redoAddressBook()`, which shifts the `currentStatePointer` once to the right, pointing to the previously undone state, and restores the address book to that state.
+#### Implementation
 
-<div markdown="span" class="alert alert-info">:information_source: **Note:** If the `currentStatePointer` is at index `addressBookStateList.size() - 1`, pointing to the latest address book state, then there are no undone AddressBook states to restore. The `redo` command uses `Model#canRedoAddressBook()` to check if this is the case. If so, it will return an error to the user rather than attempting to perform the redo.
+**State Management:**
+```java
+// Before executing state-changing command
+model.saveStateForUndo("description of operation");
 
-</div>
+// Execute operation
+performOperation();
 
-Step 5. The user then decides to execute the command `list`. Commands that do not modify the address book, such as `list`, will usually not call `Model#commitAddressBook()`, `Model#undoAddressBook()` or `Model#redoAddressBook()`. Thus, the `addressBookStateList` remains unchanged.
+// Undo restores previous state
+model.undo(); // Restores to saved state
+```
 
-![UndoRedoState4](images/UndoRedoState4.png)
+**Undo-Capable Commands:**
+* Person management: `add`, `delete`, `edit`, `clear`
+* Event management: `addp`, `deletep`, `editp`
+* Assignments: `assign`, `unassign`
 
-Step 6. The user executes `clear`, which calls `Model#commitAddressBook()`. Since the `currentStatePointer` is not pointing at the end of the `addressBookStateList`, all address book states after the `currentStatePointer` will be purged. Reason: It no longer makes sense to redo the `add n/David …​` command. This is the behavior that most modern desktop applications follow.
+**State Saving Strategy:**
+* Deep copy of entire AddressBook before modification
+* Operation description for user feedback
+* Single-level undo (most recent operation only)
 
-![UndoRedoState5](images/UndoRedoState5.png)
+#### Design Considerations
 
-The following activity diagram summarizes what happens when a user executes a new command:
+**Current Implementation:**
+* Pros: Simple and reliable
+* Cons: Memory intensive for large datasets
 
-<img src="images/CommitActivityDiagram.png" width="250" />
+**Alternative Approach:** Command-specific undo
+* Pros: Memory efficient
+* Cons: Complex implementation, higher error potential
 
-#### Design considerations:
+### Search and Filter System
 
-**Aspect: How undo & redo executes:**
+#### Overview
 
-* **Alternative 1 (current choice):** Saves the entire address book.
-  * Pros: Easy to implement.
-  * Cons: May have performance issues in terms of memory usage.
+Advanced search capabilities supporting both name-based and tag-based filtering across persons and events.
 
-* **Alternative 2:** Individual command knows how to undo/redo by
-  itself.
-  * Pros: Will use less memory (e.g. for `delete`, just save the person being deleted).
-  * Cons: We must ensure that the implementation of each individual command are correct.
+#### Implementation
 
-_{more aspects and alternatives to be added}_
+**Search Components:**
+* `FindCommand`: Unified search across name and tag fields
+* `NameAndTagContainsKeywordsPredicate`: Advanced filtering logic
+* Real-time result updates in UI
+
 
 ### Event Management System
 
@@ -319,8 +435,30 @@ To prevent accidental data loss, the application implements a confirmation syste
 
 ### \[Proposed\] Data archiving
 
-_{Explain here how the data archiving feature will be implemented}_
+**Search Algorithm:**
+```java
+public boolean test(Person person) {
+    // Name matching (case-insensitive)
+    boolean nameMatch = keywords.stream()
+        .anyMatch(keyword -> StringUtil.containsWordIgnoreCase(
+            person.getName().fullName, keyword));
 
+    // Tag matching
+    boolean tagMatch = person.getTags().stream()
+        .anyMatch(tag -> keywords.stream()
+            .anyMatch(keyword -> StringUtil.containsWordIgnoreCase(
+                tag.tagName, keyword)));
+
+    return nameMatch || tagMatch;
+}
+```
+
+**Search Features:**
+* Multi-keyword support: `find john caterer` matches name OR tag
+* Case-insensitive matching
+* Partial word matching
+* Tag-specific searching: `find caterer` shows all caterers
+* Real-time filtering with immediate UI updates
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -338,191 +476,437 @@ _{Explain here how the data archiving feature will be implemented}_
 
 ### Product scope
 
-
 **Target user profile**:
 
-* Party planners who organize birthdays, anniversaries, and social gatherings
-* Need to manage multiple vendor contacts (caterers, decorators, entertainers, venues)
-* Track client information and party preferences
-* Coordinate with various service providers for each party
-* Handle multiple parties simultaneously
-* Prefer desktop applications for quick data entry and retrieval
-* Are reasonably comfortable with CLI commands for efficiency
+AbsolutSin-ema targets **professional party planners** who:
+* Organize multiple events simultaneously (birthdays, anniversaries, corporate events)
+* Manage extensive vendor networks (caterers, decorators, entertainers, venues)
+* Track budgets across multiple projects
+* Need quick access to vendor information during planning
+* Prefer efficient CLI tools over slower GUI applications
+* Handle time-sensitive vendor assignments and budget allocations
 
 **Value proposition**: **AbsolutSin-ema** helps party planners manage their contacts more efficiently than generic contact management apps by:
 
-* Organizing vendor contacts by party type (birthday, anniversary, corporate, kids' parties)
-* Quick filtering by vendor category (caterer, decorator, DJ, venue, photographer)
-* Tracking vendor specialties (e.g., balloon artist, vegan caterer)
-* Fast CLI-based access for busy planners juggling multiple events
-* Tagging system for organizing by theme, budget tier, or reliability
+AbsolutSin-ema provides party planners with:
+* **Specialized vendor management**: Custom fields (website, budget) for vendor-specific needs
+* **Integrated event planning**: Connect vendors to specific events with budget tracking
+* **Budget control**: Real-time budget validation prevents overspending
+* **Efficient workflow**: CLI commands optimized for rapid data entry and retrieval
+* **Relationship management**: Track which vendors work on which events
+* **Professional organization**: Tag-based categorization for vendor specialties
 
 ---
+
 ### User stories
 
 Priorities: High (must have) - `* * *`, Medium (should have) - `* *`, Low (nice to have) - `*`
 
-| Priority | As a …​               | I want to …​                      | So that I can…​                                      |
-| -------- | ---------------------- | --------------------------------- | ---------------------------------------------------- |
-| `* * *`  | user                   | add new contacts                  | expand my event planner network                      |
-| `* * *`  | user                   | delete contacts                   | remove unneeded or completed events                  |
-| `* * *`  | user                   | tag/untag contacts                | organise my contacts effectively                     |
-| `* * *`  | user                   | view a list of all contacts       | retrieve contact information quickly                 |
-| `* *`    | user                   | edit contacts                     | update information upon changes                      |
-| `* *`    | user                   | filter contacts by tag            | find specific profiles of interest                   |
-| `* *`    | user                   | see a confirmation before delete  | avoid accidental data loss                           |
-| `* *`    | first-time user        | see help messages                 | learn how to use the app                             |
-| `*`      | user                   | archive contacts                  | prevent clutter without deleting                     |
-| `*`      | user                   | sort contacts alphabetically      | organise and access easily                           |
-| `*`      | user                   | undo latest action                | recover from mistakes                                |
-| `*`      | user                   | import/export contacts (CSV)      | transfer or back up contacts                         |
-| `*`      | user                   | add notes to contacts             | record extra details                                 |
-| `*`      | user                   | set reminders                     | remember to communicate with vendors                 |
-| `*`      | user                   | schedule calls                    | keep track of vendor follow-ups                      |
-| `*`      | user                   | create events with associated contacts | manage all vendors for one event together        |
-| `*`      | user                   | create todo lists for events      | manage tasks efficiently                             |
-| `*`      | user                   | share contacts with colleagues    | allow team collaboration                             |
-| `*`      | user                   | view statistics                   | monitor number of contacts and growth                |
+| Priority | As a…                  | I want to…                                      | So that I can…                                           |
+| -------- | ---------------------- | ----------------------------------------------- | -------------------------------------------------------- |
+| `* * *`  | party planner          | add vendor contacts with budget info           | track service costs for budget planning                 |
+| `* * *`  | party planner          | create events with budgets                      | manage individual party finances                         |
+| `* * *`  | party planner          | assign vendors to specific events               | organize who's working on each party                     |
+| `* * *`  | party planner          | see budget validation during assignments       | avoid overspending on events                             |
+| `* * *`  | party planner          | view all vendors and events in one app         | have centralized party planning management               |
+| `* *`    | busy party planner     | quickly find vendors by specialty tags         | locate appropriate services for specific party themes   |
+| `* *`    | party planner          | edit vendor and event information              | keep information current as details change               |
+| `* *`    | party planner          | see confirmation before deleting data          | prevent accidental loss of important vendor information  |
+| `* *`    | party planner          | undo recent changes                             | recover from mistakes during rapid data entry           |
+| `* *`    | new user               | access comprehensive help                       | learn the system quickly without external documentation |
+| `*`      | experienced planner    | assign multiple vendors to events at once      | speed up event setup for large parties                  |
+| `*`      | budget-conscious planner| see remaining budget for each event           | make informed vendor selection decisions                 |
+| `*`      | organized planner      | export vendor and event data                    | create reports or backup information                     |
+| `*`      | collaborative planner  | share vendor lists with team members           | coordinate with assistants and partners                  |
 
 ---
 
 ### Use cases
 
-(For all use cases below, the **System** is **AbsolutSin-ema** and the **Actor** is the `Party Planner`.)
+(For all use cases below, the **System** is `AbsolutSin-ema` and the **Actor** is the `Party Planner`)
 
-**Use case UC01: Add a new caterer for kids' birthday parties**
+**Use case UC01: Add specialized vendor with budget**
 
 **MSS**
-1. Planner searches for existing caterer to avoid duplicates
-2. System shows search results (none found)
-3. Planner enters `add n/Happy Foods Catering p/91234567 e/info@happyfoods.sg a/123 Food Street t/caterer t/kids t/halal`
-4. System validates all fields
-5. System adds contact and shows success message
+1. Planner enters `add n/Elite Catering p/91234567 e/info@elite.com w/www.elite.com t/caterer t/halal b/150`
+2. System validates all required fields and budget format
+3. System creates vendor entry with unique PersonId
+4. System displays success message with vendor details
+5. System updates vendor list display
 
 **Extensions**
-* 4a. Duplicate detected → System shows error message, use case ends
-* 4b. Invalid phone format → System shows error, user retries input
+* 2a. Duplicate vendor name detected
+  * 2a1. System shows error message "This person already exists"
+  * 2a2. Use case ends
+* 2b. Invalid budget format
+  * 2b1. System shows "Budget should be a non-negative number"
+  * 2b2. Planner corrects input, use case resumes at step 1
 
-
-
-**Use case UC02: Find DJ for corporate party**
+**Use case UC02: Create event and assign vendors with budget validation**
 
 **MSS**
-1. Planner enters `find dj`
-2. System filters and shows all contacts tagged with `dj`
-3. Planner reviews list
-4. Planner enters `list` to return to full contact list
+1. Planner enters `addp n/Sarah's Birthday d/15-12-2024 t/19:00 b/500 c/1,3,5`
+2. System validates event details and contact indexes
+3. System retrieves vendor costs for contacts 1, 3, and 5
+4. System validates total vendor costs (150+100+75=325) against event budget (500)
+5. System creates event with assigned vendors
+6. System updates event remaining budget to 175 (500-325)
+7. System displays success message with event and assignment details
 
 **Extensions**
-* 2a. No DJs found → System shows "0 contacts listed", use case ends
+* 4a. Vendor costs exceed event budget
+  * 4a1. System shows "Total vendor costs (600) exceed event budget (500)"
+  * 4a2. Use case ends, no event created
+* 3a. Invalid contact index provided
+  * 3a1. System shows "Invalid person index: 10"
+  * 3a2. Use case ends
 
-
-
-**Use case UC03: Update decorator's service tags**
+**Use case UC03: Assign additional vendors to existing event**
 
 **MSS**
-1. Planner views contact list
-2. Planner identifies decorator at index 3
-3. Planner enters `edit 3 t/decorator t/balloons t/elegant t/corporate`
-4. System validates tags
-5. System updates contact
-6. System shows success message with updated info
+1. Planner views event list and identifies target event at index 2
+2. Planner enters `assign 2 c/4,7`
+3. System retrieves event at index 2 and its remaining budget
+4. System validates vendor costs against remaining budget
+5. System checks vendors 4 and 7 are not already assigned
+6. System updates event participant list and adjusts remaining budget
+7. System displays success message with assigned vendor names
+
+**Extensions**
+* 4a. Insufficient remaining budget
+  * 4a1. System shows "Vendor John's Decorations (cost: 200) exceeds remaining budget (150)"
+  * 4a2. Use case ends, no assignments made
+* 5a. Vendor already assigned to event
+  * 5a1. System shows "Alice's Flowers has already been assigned to this party"
+  * 5a2. Use case ends
+
+**Use case UC04: Search vendors by specialty and assign to event**
+
+**MSS**
+1. Planner enters `find photographer` to locate photographers
+2. System filters vendor list showing only vendors tagged with "photographer"
+3. Planner reviews filtered list and identifies suitable vendor at index 2
+4. Planner enters `assign 1 c/2` to assign photographer to event 1
+5. System validates assignment and updates event
+6. Planner enters `list` to return to full vendor view
+
+**Extensions**
+* 2a. No photographers found
+  * 2a1. System shows "0 persons listed"
+  * 2a2. Use case ends
 
 ---
 
 ### Non-Functional Requirements
 
-**Performance**
-1. System should respond to any command within 2 seconds
-2. Contact list should load within 3 seconds even with 1000+ contacts
+**Performance Requirements**
+1. Command execution should complete within 2 seconds on a standard desktop
+2. Application should handle up to 1000 vendors and 100 events without performance degradation
+3. Search results should appear within 1 second for any query
+4. UI updates should be immediate when data changes
 
-**Usability**
-3. CLI users should perform basic operations without referring to docs
-4. Error messages must clearly indicate fixes
-5. Contact info should be easily readable in the GUI
+**Usability Requirements**
+5. New users should successfully create vendors and events within 10 minutes using help
+6. Error messages should clearly indicate the problem and suggest fixes
+7. CLI commands should follow consistent syntax patterns
+8. GUI should be readable on screen resolutions from 1024x768 upward
 
-**Scalability**
-6. Handle at least 1000 vendor contacts without noticeable lag
-7. Support at least 20 tags per contact
+**Reliability Requirements**
+9. Data should auto-save after every successful command
+10. Application should recover gracefully from corrupted data files
+11. Budget calculations should be accurate to 2 decimal places
+12. Undo functionality should reliably restore previous state
 
-**Reliability**
-8. Data auto-saved after each command
-9. Recover gracefully from corrupted data files
+**Compatibility Requirements**
+13. Should run on Windows 10+, macOS 10.15+, and Ubuntu 18.04+
+14. Requires Java 17 or higher
+15. Should work offline without internet connectivity
+16. Data files should be portable across operating systems
 
-**Portability**
-10. Work on Windows, macOS, Linux
-11. Distributed as a single JAR file
-
-**Maintainability**
-12. Code should follow OOP principles for easy extension
-13. New vendor categories should be addable without code changes
+**Maintainability Requirements**
+17. New command types should be addable without modifying existing commands
+18. New vendor fields should be addable through configuration
+19. Code should follow established design patterns for consistency
+20. Component interfaces should remain stable across versions
 
 ---
+
 ### Glossary
 
-| Term           | Definition                                                                 |
-|----------------|----------------------------------------------------------------------------|
-| AbsolutSin-ema | The name of this party planning contact and event management application   |
-| Party Planner  | Professional who organizes and coordinates events                          |
-| Vendor         | Service provider (caterer, decorator, entertainer, venue, etc.)            |
-| Tag            | A label used to categorize contacts (e.g., `caterer`, `kids`, `halal`)     |
-| Contact        | Vendor or client entry with name, phone, email, website, budget, and tags  |
-| Event          | A party or gathering with date, time, budget, and assigned participants    |
-| CLI            | Command Line Interface, text-based commands                                |
-| GUI            | Graphical User Interface, displays contacts and events visually            |
-| Index          | Numerical position of a contact or event in the displayed list             |
-| Service Type   | Category of vendor service (caterer, DJ, venue, etc.)                      |
-| Party Theme    | Style of a party (princess, superhero, elegant, tropical)                  |
-| MVP            | Minimum Viable Product, core features needed for release                   |
+| Term              | Definition                                                                    |
+|-------------------|-------------------------------------------------------------------------------|
+| **AbsolutSin-ema**| The name of this party planning contact and event management application   |
+| **Party Planner** | Professional who organizes and coordinates events and parties                 |
+| **Vendor**        | Service provider such as caterer, decorator, entertainer, venue, photographer |
+| **Event/Party**   | A planned gathering such as birthday, anniversary, wedding, corporate event   |
+| **Assignment**    | The process of allocating vendors to work on specific events                  |
+| **Budget**        | Monetary amount allocated for vendor services or event expenses               |
+| **Tag**           | Label used to categorize vendors by specialty (e.g., caterer, halal, elegant)|
+| **PersonId**      | Unique identifier ensuring data integrity across vendor-event relationships   |
+| **CLI**           | Command Line Interface - text-based commands for rapid data manipulation     |
+| **GUI**           | Graphical User Interface, displays contacts and events visually            |
+| **Index**         | Numerical position of vendor/event in the currently displayed list           |
+| **Service Type**   | Category of vendor service (caterer, DJ, venue, etc.)                      |
+| **Party Theme**    | Style of a party (princess, superhero, elegant, tropical)                  |
+| **MVP**            | Minimum Viable Product, core features needed for release 
+| **Remaining Budget** | Event budget minus already assigned vendor costs                            |
+| **Bulk Assignment** | Assigning multiple vendors to an event in a single command                  |
+
 --------------------------------------------------------------------------------------------------------------------
 
 ## **Appendix: Instructions for manual testing**
 
 Given below are instructions to test AbsolutSin-ema manually.
 
-<div markdown="span" class="alert alert-info">:information_source: **Note:** These instructions only provide a starting point for testers to work on;
-testers are expected to do more *exploratory* testing.
-
+<div markdown="span" class="alert alert-info">:information_source: **Note:** These instructions provide a starting point for testers. Testers are expected to do more *exploratory* testing beyond these scenarios.
 </div>
 
 ### Launch and shutdown
 
-1. Initial launch
-
+1. **Initial launch**
    1. Download the jar file and copy into an empty folder
+   2. Double-click the jar file
+   3. **Expected**: GUI appears with sample vendors and events. Window may not be optimally sized.
 
-   1. Double-click the jar file Expected: Shows the AbsolutSin-ema GUI with a set of sample contacts and events. The window size may not be optimum.
+2. **Saving window preferences**
+   1. Resize window to a comfortable size and move to preferred location
+   2. Close the window
+   3. Re-launch the app by double-clicking the jar file
+   4. **Expected**: Window appears in the same size and location as before closing
 
-1. Saving window preferences
+### Vendor management
 
-   1. Resize the window to an optimum size. Move the window to a different location. Close the window.
+1. **Adding a vendor with all fields**
+   1. Test case: `add n/John's Catering p/98765432 e/john@catering.com w/www.johnscatering.com t/caterer t/halal b/200`
+   2. **Expected**: New vendor appears in list with all specified details. Success message shows vendor details.
 
-   1. Re-launch the app by double-clicking the jar file.<br>
-       Expected: The most recent window size and location is retained.
+   3. Test case: `add n/John's Catering p/91234567 e/different@email.com w/different.com t/caterer b/150`
+   4. **Expected**: Error message indicating vendor already exists (duplicate name detection).
 
-1. _{ more test cases …​ }_
+   5. Test case: `add n/Invalid p/123 e/bad-email w/bad-url t/test b/-50`
+   6. **Expected**: Error messages for invalid phone, email, website, and negative budget.
 
-### Deleting a person
+2. **Editing vendor information**
+   1. Prerequisites: At least one vendor in the list
+   2. Test case: `edit 1 p/87654321 b/250`
+   3. **Expected**: First vendor's phone and budget updated. Success message displays changes.
 
-1. Deleting a person while all persons are being shown
+   4. Test case: `edit 0 n/Invalid Name`
+   5. **Expected**: Error message indicating invalid index.
 
-   1. Prerequisites: List all persons using the `list` command. Multiple persons in the list.
+### Event management
 
-   1. Test case: `delete 1`<br>
-      Expected: First contact is deleted from the list. Details of the deleted contact shown in the status message. Timestamp in the status bar is updated.
+1. **Creating events with budget**
+   1. Test case: `addp n/Birthday Party d/25-12-2024 t/18:00 b/1000`
+   2. **Expected**: New event created with specified budget. Event appears in event list.
 
-   1. Test case: `delete 0`<br>
-      Expected: No person is deleted. Error details shown in the status message. Status bar remains the same.
+   3. Test case: `addp n/Birthday Party d/25-12-2024 t/18:00 b/500`
+   4. **Expected**: Error message indicating duplicate event (same name).
 
-   1. Other incorrect delete commands to try: `delete`, `delete x`, `...` (where x is larger than the list size)<br>
-      Expected: Similar to previous.
+   5. Test case: `addp n/Wedding d/invalid-date t/25:00 b/abc`
+   6. **Expected**: Error messages for invalid date, time, and budget formats.
 
-1. _{ more test cases …​ }_
+2. **Creating events with initial vendor assignments**
+   1. Prerequisites: At least 3 vendors with known budgets
+   2. Test case: `addp n/Corporate Event d/15-01-2025 t/14:00 b/2000 c/1,2,3`
+   3. **Expected**: Event created with vendors 1, 2, 3 assigned. Remaining budget calculated correctly.
 
-### Saving data
+   4. Test case: `addp n/Small Party d/20-01-2025 t/12:00 b/100 c/1,2,3`
+   5. **Expected**: Error if total vendor costs exceed event budget of 100.
 
-1. Dealing with missing/corrupted data files
+### Assignment system
 
-   1. _{explain how to simulate a missing/corrupted file, and the expected behavior}_
+1. **Assigning vendors to events**
+   1. Prerequisites: Events and vendors exist, view current budgets
+   2. Test case: `assign 1 c/2,3`
+   3. **Expected**: Vendors 2 and 3 assigned to event 1. Budget updated correctly. Success message lists assigned vendor names.
 
-1. _{ more test cases …​ }_
+   4. Test case: `assign 1 c/2`
+   5. **Expected**: Error message if vendor 2 already assigned to event 1.
+
+   6. Test case: `assign 1 c/99`
+   7. **Expected**: Error message for invalid vendor index.
+
+2. **Budget validation during assignment**
+   1. Prerequisites: Event with low remaining budget, expensive vendors available
+   2. Test case: `assign 1 c/5` (where vendor 5's cost exceeds event 1's remaining budget)
+   3. **Expected**: Error message indicating budget exceeded, no assignment made.
+
+### Search and filter
+
+1. **Finding vendors by name and tags**
+   1. Test case: `find caterer`
+   2. **Expected**: Shows all vendors tagged with "caterer".
+
+   3. Test case: `find john`
+   4. **Expected**: Shows vendors with "john" in their name.
+
+   5. Test case: `find caterer photographer`
+   6. **Expected**: Shows vendors tagged with either "caterer" OR "photographer".
+
+   7. Test case: `find nonexistent`
+   8. **Expected**: Shows "0 persons listed" message.
+
+### Undo functionality
+
+1. **Undoing recent operations**
+   1. Prerequisites: Perform any state-changing command (add, edit, assign, etc.)
+   2. Test case: `undo`
+   3. **Expected**: Previous operation reversed, data restored to prior state.
+
+   4. Test case: `undo` (when no previous operation exists)
+   5. **Expected**: Error message indicating nothing to undo.
+
+### Data persistence
+
+1. **Handling corrupted data files**
+   1. Exit the application
+   2. Edit the JSON data file and introduce syntax errors
+   3. Restart the application
+   4. **Expected**: Application starts with sample data, warning logged about corrupted file.
+
+2. **Data saving verification**
+   1. Make several changes (add vendors, create events, assignments)
+   2. Exit and restart application
+   3. **Expected**: All changes preserved exactly as made.
+
+### Error handling
+
+1. **Invalid command formats**
+   1. Test case: `add` (missing parameters)
+   2. **Expected**: Usage message showing correct command format.
+
+   3. Test case: `assign` (missing parameters)
+   4. **Expected**: Usage message for assign command.
+
+   5. Test case: `invalidcommand`
+   6. **Expected**: Error message indicating unknown command.
+
+2. **Index boundary testing**
+   1. Prerequisites: Note the current list sizes for vendors and events
+   2. Test case: `delete 0`, `delete [size+1]`, `assign 0 c/1`, `assign 1 c/0`
+   3. **Expected**: Appropriate error messages for each invalid index scenario.
+
+These test cases cover the major functionality of AbsolutSin-ema. Testers should also explore edge cases, rapid command sequences, and integration scenarios to ensure robust operation.
+
+--------------------------------------------------------------------------------------------------------------------
+
+## **Appendix: Effort**
+
+### Overview
+
+Developing AbsolutSin-ema required significant effort beyond the base AddressBook-Level3 project. The application evolved from a simple contact manager to a sophisticated dual-entity system designed specifically for party planning professionals.
+
+### Major Enhancements
+
+#### 1. Dual-Entity Architecture (High Effort)
+
+**Challenge**: Extending from single-entity (Person) to dual-entity (Person + Event) system
+**Implementation Effort**:
+- Created complete Event model with EventName, EventDate, EventTime classes
+- Developed UniqueEventList with duplicate detection and management
+- Modified AddressBook to handle both entities simultaneously
+- Updated Storage layer to persist both entities in JSON format
+- Enhanced UI to display both persons and events effectively
+
+**Lines of Code**: ~800 additional lines across model, storage, and UI layers
+
+#### 2. Event-Person Relationship Management (High Effort)
+
+**Challenge**: Creating robust many-to-many relationships between vendors and events
+**Implementation Effort**:
+- Designed PersonId system for stable relationship references
+- Built assignment commands (assign/unassign) with bulk operations
+- Implemented relationship integrity checks and validation
+- Created participant tracking within events
+- Developed UI components to display relationships
+
+**Complexity**: Managing bidirectional relationships while maintaining data integrity required careful design and extensive testing.
+
+#### 3. Budget Management System (Medium-High Effort)
+
+**Challenge**: Real-time budget tracking and validation across assignments
+**Implementation Effort**:
+- Added Budget class with validation and arithmetic operations
+- Implemented budget constraint checking in assignment commands
+- Created remaining budget calculations for events
+- Built budget visualization in UI components
+- Added budget-aware error handling and user feedback
+
+**Critical Feature**: Budget validation prevents overspending and is core to the party planning domain.
+
+#### 4. Advanced Command System (Medium Effort)
+
+**Challenge**: Extending basic CRUD to domain-specific operations
+**Implementation Effort**:
+- Built AddEventCommand with optional bulk assignment
+- Created AssignContactToEventCommand with sophisticated validation
+- Developed confirmation system for destructive operations (ConfirmClearCommand)
+- Enhanced search to work across both names and tags
+- Added undo system with state preservation
+
+**Domain Integration**: Commands specifically designed for party planning workflows.
+
+#### 5. Enhanced User Interface (Medium Effort)
+
+**Challenge**: Adapting UI for dual-entity display and specialized workflows
+**Implementation Effort**:
+- Created EventListPanel with participant count display
+- Enhanced PersonListPanel with budget and website information
+- Developed budget status indicators and color coding
+- Built responsive layout handling for both entity types
+- Added comprehensive help system with scrollable reference
+
+### Technical Challenges Overcome
+
+#### 1. JSON Serialization Complexity
+- **Challenge**: Serializing PersonId references and maintaining relationships
+- **Solution**: Custom JSON adapters with careful ID preservation
+- **Effort**: Multiple iterations to ensure data integrity across sessions
+
+#### 2. Observable List Management
+- **Challenge**: Maintaining UI responsiveness with dual filtered lists
+- **Solution**: Proper JavaFX binding and update mechanisms
+- **Effort**: Required deep understanding of JavaFX observable patterns
+
+#### 3. Command Parser Extension
+- **Challenge**: Adding complex command syntax while maintaining consistency
+- **Solution**: Extended parser framework with new prefix types and validation
+- **Effort**: Careful design to maintain backward compatibility
+
+#### 4. Budget Arithmetic Precision
+- **Challenge**: Ensuring accurate financial calculations
+- **Solution**: Robust number parsing and validation with proper error handling
+- **Effort**: Multiple test scenarios to ensure calculation accuracy
+
+### Quantitative Metrics
+
+- **Total Java Files**: 108 (significant increase from base project)
+- **New Model Classes**: 15+ (Event hierarchy, PersonId, Budget)
+- **New Commands**: 8 (AddEvent, AssignContact, UnassignContact, etc.)
+- **New UI Components**: 5 (EventListPanel, enhanced displays)
+- **Test Coverage**: Comprehensive unit and integration tests
+
+### Team Coordination Effort
+
+- **Architecture Decisions**: Multiple team discussions on entity relationships
+- **UI/UX Design**: Iterative refinement based on user feedback
+- **Integration Testing**: Extensive testing of component interactions
+- **Documentation**: Comprehensive developer and user guides
+
+### Comparison to AB3
+
+| Aspect | AddressBook-Level3 | AbsolutSin-ema | Effort Multiplier |
+|--------|-------------------|----------------|-------------------|
+| Core Entities | 1 (Person) | 2 (Person + Event) | 2x |
+| Relationships | None | Many-to-many | New |
+| Domain Logic | Generic | Party Planning | 3x |
+| Budget System | None | Comprehensive | New |
+| Command Complexity | Basic CRUD | Domain Operations | 2x |
+| UI Complexity | Single list | Dual entity display | 1.5x |
+
+### Conclusion
+
+AbsolutSin-ema represents a substantial evolution from the base project, requiring significant architectural changes, new domain modeling, and specialized user experience design. The effort invested has resulted in a professional-grade application tailored specifically for party planning workflows, demonstrating the team's ability to transform a generic template into a domain-specific solution.
+
+The project successfully balances feature richness with maintainability, providing a solid foundation for future enhancements while delivering immediate value to party planning professionals.
