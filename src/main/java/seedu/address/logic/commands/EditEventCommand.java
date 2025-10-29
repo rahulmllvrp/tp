@@ -96,7 +96,15 @@ public class EditEventCommand extends Command {
         Budget updatedInitialBudget = editEventDescriptor.getBudget().orElse(eventToEdit.getInitialBudget());
         Budget updatedRemainingBudget;
         if (editEventDescriptor.getBudget().isPresent()) {
-            updatedRemainingBudget = updatedInitialBudget;
+            // Calculate the sum of assigned contacts' budgets
+            double oldInitialBudget = Double.parseDouble(eventToEdit.getInitialBudget().value);
+            double oldRemainingBudget = Double.parseDouble(eventToEdit.getRemainingBudget().value);
+            double assignedBudgetsSum = oldInitialBudget - oldRemainingBudget;
+
+            // New remaining budget = new initial budget - sum of assigned budgets
+            double newInitialBudget = Double.parseDouble(updatedInitialBudget.value);
+            double newRemainingBudget = newInitialBudget - assignedBudgetsSum;
+            updatedRemainingBudget = new Budget(String.valueOf(newRemainingBudget));
         } else {
             updatedRemainingBudget = eventToEdit.getRemainingBudget();
         }
