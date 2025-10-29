@@ -2,6 +2,11 @@
 layout: page
 title: Developer Guide
 ---
+
+# AbsolutSin-ema Developer Guide
+
+**AbsolutSin-ema** is a desktop application for party planners to manage contacts and events efficiently. It is optimized for use via a Command Line Interface (CLI) while still having the benefits of a Graphical User Interface (GUI). This guide provides comprehensive documentation for developers who wish to understand, maintain, or extend AbsolutSin-ema.
+
 * Table of Contents
 {:toc}
 
@@ -9,7 +14,10 @@ title: Developer Guide
 
 ## **Acknowledgements**
 
-* {list here sources of all reused/adapted ideas, code, documentation, and third-party libraries -- include links to the original source as well}
+* This project is based on the AddressBook-Level3 project created by the [SE-EDU initiative](https://se-education.org)
+* JavaFX library for GUI components
+* Jackson library for JSON serialization/deserialization
+* JUnit5 for testing framework
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -30,21 +38,21 @@ Refer to the guide [_Setting up and getting started_](SettingUp.md).
 
 <img src="images/ArchitectureDiagram.png" width="280" />
 
-The ***Architecture Diagram*** given above explains the high-level design of the App.
+The ***Architecture Diagram*** given above explains the high-level design of AbsolutSin-ema.
 
 Given below is a quick overview of main components and how they interact with each other.
 
 **Main components of the architecture**
 
-**`Main`** (consisting of classes [`Main`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/Main.java) and [`MainApp`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/MainApp.java)) is in charge of the app launch and shut down.
+**`Main`** (consisting of classes [`Main`](https://github.com/AY2526S1-CS2103T-T12-4/tp/tree/master/src/main/java/seedu/address/Main.java) and [`MainApp`](https://github.com/AY2526S1-CS2103T-T12-4/tp/tree/master/src/main/java/seedu/address/MainApp.java)) is in charge of AbsolutSin-ema's launch and shut down.
 * At app launch, it initializes the other components in the correct sequence, and connects them up with each other.
 * At shut down, it shuts down the other components and invokes cleanup methods where necessary.
 
-The bulk of the app's work is done by the following four components:
+The bulk of AbsolutSin-ema's work is done by the following four components:
 
-* [**`UI`**](#ui-component): The UI of the App.
+* [**`UI`**](#ui-component): The UI of AbsolutSin-ema.
 * [**`Logic`**](#logic-component): The command executor.
-* [**`Model`**](#model-component): Holds the data of the App in memory.
+* [**`Model`**](#model-component): Holds the data of AbsolutSin-ema in memory.
 * [**`Storage`**](#storage-component): Reads data from, and writes data to, the hard disk.
 
 [**`Commons`**](#common-classes) represents a collection of classes used by multiple other components.
@@ -68,24 +76,28 @@ The sections below give more details of each component.
 
 ### UI component
 
-The **API** of this component is specified in [`Ui.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/ui/Ui.java)
+The **API** of this component is specified in [`Ui.java`](https://github.com/AY2526S1-CS2103T-T12-4/tp/tree/master/src/main/java/seedu/address/ui/Ui.java)
 
 ![Structure of the UI Component](images/UiClassDiagram.png)
 
-The UI consists of a `MainWindow` that is made up of parts e.g.`CommandBox`, `ResultDisplay`, `PersonListPanel`, `StatusBarFooter` etc. All these, including the `MainWindow`, inherit from the abstract `UiPart` class which captures the commonalities between classes that represent parts of the visible GUI.
+The UI consists of a `MainWindow` that is made up of parts e.g.`CommandBox`, `ResultDisplay`, `PersonListPanel`, `EventListPanel`, `StatusBarFooter` etc. All these, including the `MainWindow`, inherit from the abstract `UiPart` class which captures the commonalities between classes that represent parts of the visible GUI.
 
-The `UI` component uses the JavaFx UI framework. The layout of these UI parts are defined in matching `.fxml` files that are in the `src/main/resources/view` folder. For example, the layout of the [`MainWindow`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/ui/MainWindow.java) is specified in [`MainWindow.fxml`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/resources/view/MainWindow.fxml)
+The UI displays two main lists:
+* `PersonListPanel` - Shows all contacts (vendors/clients) with their details
+* `EventListPanel` - Shows all events (parties) with their details including budgets
+
+The `UI` component uses the JavaFx UI framework. The layout of these UI parts are defined in matching `.fxml` files that are in the `src/main/resources/view` folder. For example, the layout of the [`MainWindow`](https://github.com/AY2526S1-CS2103T-T12-4/tp/tree/master/src/main/java/seedu/address/ui/MainWindow.java) is specified in [`MainWindow.fxml`](https://github.com/AY2526S1-CS2103T-T12-4/tp/tree/master/src/main/resources/view/MainWindow.fxml)
 
 The `UI` component,
 
 * executes user commands using the `Logic` component.
 * listens for changes to `Model` data so that the UI can be updated with the modified data.
 * keeps a reference to the `Logic` component, because the `UI` relies on the `Logic` to execute commands.
-* depends on some classes in the `Model` component, as it displays `Person` object residing in the `Model`.
+* depends on some classes in the `Model` component, as it displays `Person` and `Event` objects residing in the `Model`.
 
 ### Logic component
 
-**API** : [`Logic.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/logic/Logic.java)
+**API** : [`Logic.java`](https://github.com/AY2526S1-CS2103T-T12-4/tp/tree/master/src/main/java/seedu/address/logic/Logic.java)
 
 Here's a (partial) class diagram of the `Logic` component:
 
@@ -115,16 +127,18 @@ How the parsing works:
 * All `XYZCommandParser` classes (e.g., `AddCommandParser`, `DeleteCommandParser`, ...) inherit from the `Parser` interface so that they can be treated similarly where possible e.g, during testing.
 
 ### Model component
-**API** : [`Model.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/model/Model.java)
+**API** : [`Model.java`](https://github.com/AY2526S1-CS2103T-T12-4/tp/tree/master/src/main/java/seedu/address/model/Model.java)
 
 <img src="images/ModelClassDiagram.png" width="450" />
 
 
 The `Model` component,
 
-* stores the address book data i.e., all `Person` objects (which are contained in a `UniquePersonList` object).
-* stores the currently 'selected' `Person` objects (e.g., results of a search query) as a separate _filtered_ list which is exposed to outsiders as an unmodifiable `ObservableList<Person>` that can be 'observed' e.g. the UI can be bound to this list so that the UI automatically updates when the data in the list change.
-* stores a `UserPref` object that represents the user’s preferences. This is exposed to the outside as a `ReadOnlyUserPref` objects.
+* stores the address book data i.e., all `Person` objects (which are contained in a `UniquePersonList` object) and all `Event` objects (which are contained in a `UniqueEventList` object).
+* each `Person` has the following fields: `Name`, `Phone`, `Email`, `Website`, `Budget`, `PersonId` (unique identifier), and a set of `Tag` objects.
+* each `Event` has the following fields: `EventName`, `EventDate`, `EventTime`, `initialBudget`, `remainingBudget`, and a list of `PersonId` representing participants.
+* stores the currently 'selected' `Person` and `Event` objects (e.g., results of a search query) as separate _filtered_ lists which are exposed to outsiders as unmodifiable `ObservableList<Person>` and `ObservableList<Event>` that can be 'observed' e.g. the UI can be bound to these lists so that the UI automatically updates when the data in the lists change.
+* stores a `UserPref` object that represents the user's preferences. This is exposed to the outside as a `ReadOnlyUserPref` objects.
 * does not depend on any of the other three components (as the `Model` represents data entities of the domain, they should make sense on their own without depending on other components)
 
 <div markdown="span" class="alert alert-info">:information_source: **Note:** An alternative (arguably, a more OOP) model is given below. It has a `Tag` list in the `AddressBook`, which `Person` references. This allows `AddressBook` to only require one `Tag` object per unique tag, instead of each `Person` needing their own `Tag` objects.<br>
@@ -136,12 +150,12 @@ The `Model` component,
 
 ### Storage component
 
-**API** : [`Storage.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/storage/Storage.java)
+**API** : [`Storage.java`](https://github.com/AY2526S1-CS2103T-T12-4/tp/tree/master/src/main/java/seedu/address/storage/Storage.java)
 
 <img src="images/StorageClassDiagram.png" width="550" />
 
 The `Storage` component,
-* can save both address book data and user preference data in JSON format, and read them back into corresponding objects.
+* can save both AbsolutSin-ema's data (contacts and events) and user preference data in JSON format, and read them back into corresponding objects.
 * inherits from both `AddressBookStorage` and `UserPrefStorage`, which means it can be treated as either one (if only the functionality of only one is needed).
 * depends on some classes in the `Model` component (because the `Storage` component's job is to save/retrieve objects that belong to the `Model`)
 
@@ -155,42 +169,35 @@ Classes used by multiple components are in the `seedu.address.commons` package.
 
 This section describes some noteworthy details on how certain features are implemented.
 
-### \[Proposed\] Undo/redo feature
+### Undo feature
 
-#### Proposed Implementation
+#### Implementation
 
-The proposed undo/redo mechanism is facilitated by `VersionedAddressBook`. It extends `AddressBook` with an undo/redo history, stored internally as an `addressBookStateList` and `currentStatePointer`. Additionally, it implements the following operations:
+The undo mechanism is facilitated by `AddressBookSnapshot`. The application stores snapshots of the address book state before each modifying command. The system implements the following operations:
 
 * `VersionedAddressBook#commit()` — Saves the current address book state in its history.
 * `VersionedAddressBook#undo()` — Restores the previous address book state from its history.
 * `VersionedAddressBook#redo()` — Restores a previously undone address book state from its history.
 
-These operations are exposed in the `Model` interface as `Model#commitAddressBook()`, `Model#undoAddressBook()` and `Model#redoAddressBook()` respectively.
+These operations are exposed in the `Model` interface and used by commands that modify the address book data (e.g., `AddCommand`, `DeleteCommand`, `EditCommand`).
 
-Given below is an example usage scenario and how the undo/redo mechanism behaves at each step.
+Given below is an example usage scenario and how the undo mechanism behaves at each step.
 
-Step 1. The user launches the application for the first time. The `VersionedAddressBook` will be initialized with the initial address book state, and the `currentStatePointer` pointing to that single address book state.
+Step 1. The user launches the application for the first time. The address book starts with no saved states for undo.
 
-![UndoRedoState0](images/UndoRedoState0.png)
-
-Step 2. The user executes `delete 5` command to delete the 5th person in the address book. The `delete` command calls `Model#commitAddressBook()`, causing the modified state of the address book after the `delete 5` command executes to be saved in the `addressBookStateList`, and the `currentStatePointer` is shifted to the newly inserted address book state.
+Step 2. The user executes `delete 5` command to delete the 5th person in the address book. Before executing the deletion, the `delete` command calls `Model#saveStateForUndo("delete")`, saving a snapshot of the current address book state.
 
 ![UndoRedoState1](images/UndoRedoState1.png)
 
-Step 3. The user executes `add n/David …​` to add a new person. The `add` command also calls `Model#commitAddressBook()`, causing another modified address book state to be saved into the `addressBookStateList`.
+Step 3. The user executes `add n/David …​` to add a new person. The `add` command also calls `Model#saveStateForUndo("add")` before adding, saving another snapshot.
 
-![UndoRedoState2](images/UndoRedoState2.png)
-
-<div markdown="span" class="alert alert-info">:information_source: **Note:** If a command fails its execution, it will not call `Model#commitAddressBook()`, so the address book state will not be saved into the `addressBookStateList`.
+<div markdown="span" class="alert alert-info">:information_source: **Note:** If a command fails its execution, it will not call `Model#saveStateForUndo()`, so the address book state will not be saved.
 
 </div>
 
-Step 4. The user now decides that adding the person was a mistake, and decides to undo that action by executing the `undo` command. The `undo` command will call `Model#undoAddressBook()`, which will shift the `currentStatePointer` once to the left, pointing it to the previous address book state, and restores the address book to that state.
+Step 4. The user now decides that adding the person was a mistake, and decides to undo that action by executing the `undo` command. The `undo` command calls `Model#undo()`, which restores the address book to the state before the add command was executed.
 
-![UndoRedoState3](images/UndoRedoState3.png)
-
-<div markdown="span" class="alert alert-info">:information_source: **Note:** If the `currentStatePointer` is at index 0, pointing to the initial AddressBook state, then there are no previous AddressBook states to restore. The `undo` command uses `Model#canUndoAddressBook()` to check if this is the case. If so, it will return an error to the user rather
-than attempting to perform the undo.
+<div markdown="span" class="alert alert-info">:information_source: **Note:** If there are no saved states to restore, the `undo` command uses `Model#canUndo()` to check this. If no undo is possible, it will return an error to the user rather than attempting to perform the undo.
 
 </div>
 
@@ -239,6 +246,77 @@ The following activity diagram summarizes what happens when a user executes a ne
 
 _{more aspects and alternatives to be added}_
 
+### Event Management System
+
+#### Implementation
+
+The event management system allows party planners to create and manage events (parties), track budgets, and assign contacts (vendors/clients) to specific events. This feature is fully integrated with the person management system.
+
+**Key Components:**
+
+1. **Event Entity** (`seedu.address.model.event.Event`)
+   - Stores event details: `EventName`, `EventDate`, `EventTime`
+   - Manages budgets: `initialBudget` and `remainingBudget`
+   - Tracks participants via a list of `PersonId` references
+   - Implements `isSameEvent()` method to prevent duplicate events
+
+2. **Event Commands:**
+   - `AddEventCommand` (`addp`) - Creates a new event with name, date, time, and budget
+   - `EditEventCommand` (`editp`) - Modifies existing event details
+   - `DeleteEventCommand` (`deletep`) - Removes an event from the system
+   - `AssignContactToEventCommand` (`assign`) - Links one or more contacts to an event as participants (format: `assign EVENT_INDEX c/CONTACT_INDEXES`)
+   - `UnassignContactFromEventCommand` (`unassign`) - Removes one or more contacts from an event (format: `unassign EVENT_INDEX c/CONTACT_INDEXES`)
+   - `ViewCommand` (`view`) - Displays all participants for a specific event
+
+3. **Budget Tracking:**
+   - Each event tracks both initial and remaining budget
+   - Each person (vendor) has an associated budget cost
+   - When a person is assigned to an event, the remaining budget can be adjusted
+   - Budget validation ensures sufficient funds are available
+
+4. **UI Components:**
+   - `EventListPanel` - Displays all events in the system
+   - `EventListCard` - Shows individual event details including name, date, time, and budget
+
+**How Event-Person Association Works:**
+
+Events don't store full `Person` objects, but rather `PersonId` references. This design:
+- Prevents data duplication
+- Ensures person updates automatically reflect in associated events
+- Allows efficient querying of participants via `Model#getPersonById(PersonId)`
+
+**Example Usage Scenario:**
+
+1. Party planner creates a new birthday party: `addp n/Birthday Party d/2024-12-25 t/18:00 b/5000`
+2. System creates event with $5000 budget
+3. Planner assigns caterer to event: `assign 1 c/1` (assigns contact at index 1 to event at index 1)
+4. Planner can assign multiple contacts at once: `assign 1 c/2,3,4` (assigns contacts 2, 3, and 4 to event 1)
+5. Planner can view all vendors/participants: `view 1`
+6. If needed, planner can unassign: `unassign 1 c/1` (removes contact 1 from event 1)
+
+### Confirmation System for Destructive Operations
+
+#### Implementation
+
+To prevent accidental data loss, the application implements a confirmation system for the `clear` command, which deletes all contacts and events.
+
+**How it works:**
+
+1. When user executes `clear`, the `ClearCommand` displays a warning message:
+   ```
+   Are you sure you want to clear the party planner? (Type 'y' to confirm, 'n' to cancel)
+   ```
+2. User must type `y` to confirm or `n` to cancel the operation
+3. If confirmed, the `ConfirmClearCommand` performs the actual data deletion
+4. If cancelled, the operation is aborted and no data is lost
+
+**Design Rationale:**
+- Destructive operations like `clear` are irreversible (even with undo, losing all data is risky)
+- Interactive confirmation with explicit yes/no response provides a strong safety net
+- The confirmation message clearly explains what will happen and how to proceed
+- User-friendly prompts reduce the chance of accidental data loss from typos or misclicks
+- Could be extended to other dangerous operations (e.g., bulk delete) in future versions
+
 ### \[Proposed\] Data archiving
 
 _{Explain here how the data archiving feature will be implemented}_
@@ -271,7 +349,7 @@ _{Explain here how the data archiving feature will be implemented}_
 * Prefer desktop applications for quick data entry and retrieval
 * Are reasonably comfortable with CLI commands for efficiency
 
-**Value proposition**: AbsolutSin-ema helps party planners manage their contacts more efficiently than generic contact management apps by:
+**Value proposition**: **AbsolutSin-ema** helps party planners manage their contacts more efficiently than generic contact management apps by:
 
 * Organizing vendor contacts by party type (birthday, anniversary, corporate, kids' parties)
 * Quick filtering by vendor category (caterer, decorator, DJ, venue, photographer)
@@ -310,7 +388,7 @@ Priorities: High (must have) - `* * *`, Medium (should have) - `* *`, Low (nice 
 
 ### Use cases
 
-(For all use cases below, the **System** is the `AbsolutSin-ema` app and the **Actor** is the `Party Planner`.)
+(For all use cases below, the **System** is **AbsolutSin-ema** and the **Actor** is the `Party Planner`.)
 
 **Use case UC01: Add a new caterer for kids' birthday parties**
 
@@ -384,13 +462,15 @@ Priorities: High (must have) - `* * *`, Medium (should have) - `* *`, Low (nice 
 
 | Term           | Definition                                                                 |
 |----------------|----------------------------------------------------------------------------|
+| AbsolutSin-ema | The name of this party planning contact and event management application   |
 | Party Planner  | Professional who organizes and coordinates events                          |
 | Vendor         | Service provider (caterer, decorator, entertainer, venue, etc.)            |
 | Tag            | A label used to categorize contacts (e.g., `caterer`, `kids`, `halal`)     |
-| Contact        | Vendor or client entry with name, phone, email, address, and tags          |
+| Contact        | Vendor or client entry with name, phone, email, website, budget, and tags  |
+| Event          | A party or gathering with date, time, budget, and assigned participants    |
 | CLI            | Command Line Interface, text-based commands                                |
-| GUI            | Graphical User Interface, displays contacts visually                       |
-| Index          | Numerical position of a contact in the displayed list                      |
+| GUI            | Graphical User Interface, displays contacts and events visually            |
+| Index          | Numerical position of a contact or event in the displayed list             |
 | Service Type   | Category of vendor service (caterer, DJ, venue, etc.)                      |
 | Party Theme    | Style of a party (princess, superhero, elegant, tropical)                  |
 | MVP            | Minimum Viable Product, core features needed for release                   |
@@ -398,7 +478,7 @@ Priorities: High (must have) - `* * *`, Medium (should have) - `* *`, Low (nice 
 
 ## **Appendix: Instructions for manual testing**
 
-Given below are instructions to test the app manually.
+Given below are instructions to test AbsolutSin-ema manually.
 
 <div markdown="span" class="alert alert-info">:information_source: **Note:** These instructions only provide a starting point for testers to work on;
 testers are expected to do more *exploratory* testing.
@@ -411,7 +491,7 @@ testers are expected to do more *exploratory* testing.
 
    1. Download the jar file and copy into an empty folder
 
-   1. Double-click the jar file Expected: Shows the GUI with a set of sample contacts. The window size may not be optimum.
+   1. Double-click the jar file Expected: Shows the AbsolutSin-ema GUI with a set of sample contacts and events. The window size may not be optimum.
 
 1. Saving window preferences
 
