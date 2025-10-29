@@ -18,8 +18,8 @@ import seedu.address.commons.core.LogsCenter;
  */
 public class HelpWindow extends UiPart<Stage> {
 
-    public static final String HELP_MESSAGE
-            = "1. help:\n"
+    public static final String HELP_MESSAGE =
+            "1. help:\n"
             + "   Shows a basic help message with a link to the AbsolutSin-ema User Guide.\n\n"
             + "2. add n/NAME p/PHONE_NUMBER e/EMAIL w/WEBSITE [t/TAG t/TAG2 ...]:\n"
             + "   Adds a contact with up to 6 tags.\n\n"
@@ -112,21 +112,21 @@ public class HelpWindow extends UiPart<Stage> {
      * Shows the help window.
      *
      * @throws IllegalStateException
-     * <ul>
-     * <li>
-     * if this method is called on a thread other than the JavaFX Application
-     * Thread.
-     * </li>
-     * <li>
-     * if this method is called during animation or layout processing.
-     * </li>
-     * <li>
-     * if this method is called on the primary stage.
-     * </li>
-     * <li>
-     * if {@code dialogStage} is already showing.
-     * </li>
-     * </ul>
+     *     <ul>
+     *         <li>
+     *             if this method is called on a thread other than the JavaFX Application
+     *             Thread.
+     *         </li>
+     *         <li>
+     *             if this method is called during animation or layout processing.
+     *         </li>
+     *         <li>
+     *             if this method is called on the primary stage.
+     *         </li>
+     *         <li>
+     *             if {@code dialogStage} is already showing.
+     *         </li>
+     *     </ul>
      */
     public void show() {
         logger.fine("Showing help page about the application.");
