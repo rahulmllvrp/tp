@@ -120,14 +120,17 @@ Format: `find KEYWORD [MORE_KEYWORDS]`
 
 * The search is case-insensitive. e.g `hans` will match `Hans`
 * The order of the keywords does not matter. e.g. `Hans Bo` will match `Bo Hans`
-* Only the name is searched.
-* Only full words will be matched e.g. `Han` will not match `Hans`
+* Full words are not needed to find a match e.g. `Han` will match `Hans`
 * Persons matching at least one keyword will be returned (i.e. `OR` search).
   e.g. `Hans Bo` will return `Hans Gruber`, `Bo Yang`
+* You can also **search by tags** in addition to names.  
+  e.g. `find friend` will return all persons tagged as “friend”.
 
 Examples:
 * `find John` returns `john` and `John Doe`
 * `find alex` returns `Alex Yeoh`<br>
+* `find friend` returns all persons with the tag `friend`.
+* `find alex friend` returns all persons whose name includes “Alex” or who have the tag “friend”.
   ![result for 'find alex david'](images/findAlexResult.png)
 
 ### Searching by tags: Search Bar
