@@ -226,4 +226,20 @@ public interface Model {
      * @return A description of the operation that was undone.
      */
     String undo();
+
+    // ========================= CLEAR HELPERS =========================
+
+    /**
+     * Clears all contacts (persons) from the address book.
+     */
+    default void clearContacts() {
+        throw new UnsupportedOperationException("clearContacts not implemented");
+    }
+
+    /**
+     * Clears all events from the address book.
+     */
+    default void clearEvents() {
+        throw new UnsupportedOperationException("clearEvents not implemented");
+    }
 }

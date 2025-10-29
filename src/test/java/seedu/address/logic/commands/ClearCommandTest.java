@@ -31,4 +31,40 @@ public class ClearCommandTest {
         CommandTestUtil.assertCommandSuccess(new ClearCommand(), model, expectedCommandResult, expectedModel);
     }
 
+    @Test
+    public void execute_explicitAllTarget_success() {
+        Model model = new ModelManager(getTypicalAddressBook(), new UserPrefs());
+        Model expectedModel = new ModelManager(getTypicalAddressBook(), new UserPrefs());
+
+        CommandResult expectedCommandResult =
+                new CommandResult("Are you sure you want to clear the party planner?",
+                        new ConfirmClearCommand(ClearTarget.ALL));
+        CommandTestUtil.assertCommandSuccess(new ClearCommand(ClearTarget.ALL), model, expectedCommandResult,
+                expectedModel);
+    }
+
+    @Test
+    public void execute_clearPartiesTarget_success() {
+        Model model = new ModelManager(getTypicalAddressBook(), new UserPrefs());
+        Model expectedModel = new ModelManager(getTypicalAddressBook(), new UserPrefs());
+
+        CommandResult expectedCommandResult =
+                new CommandResult("Are you sure you want to clear all parties?",
+                        new ConfirmClearCommand(ClearTarget.EVENTS));
+        CommandTestUtil.assertCommandSuccess(new ClearCommand(ClearTarget.EVENTS), model, expectedCommandResult,
+                expectedModel);
+    }
+
+    @Test
+    public void execute_clearContactsTarget_success() {
+        Model model = new ModelManager(getTypicalAddressBook(), new UserPrefs());
+        Model expectedModel = new ModelManager(getTypicalAddressBook(), new UserPrefs());
+
+        CommandResult expectedCommandResult =
+                new CommandResult("Are you sure you want to clear all contacts?",
+                        new ConfirmClearCommand(ClearTarget.CONTACTS));
+        CommandTestUtil.assertCommandSuccess(new ClearCommand(ClearTarget.CONTACTS), model, expectedCommandResult,
+                expectedModel);
+    }
+
 }
