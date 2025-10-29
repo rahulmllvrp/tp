@@ -28,7 +28,7 @@ AbsolutSin-ema is a **desktop app for managing contacts, optimized for use via a
 
    * `list` : Lists all contacts.
 
-   * `add n/John Doe p/98765432 e/johnd@example.com w/johndoe.com` : Adds a contact named `John Doe` to the AbsolutSin-ema.
+   * `add n/John Doe p/98765432 e/johnd@example.com w/johndoe.com b/100` : Adds a contact named `John Doe` to the AbsolutSin-ema.
 
    * `delete 3` : Deletes the 3rd contact shown in the current list.
 
@@ -70,7 +70,7 @@ AbsolutSin-ema is a **desktop app for managing contacts, optimized for use via a
 
 Shows a message explaining how to access the help page.
 
-![help message](images/improvedHelpMessage.png)
+![help message](images/helpMessage.png)
 
 Format: `help`
 
@@ -79,14 +79,14 @@ Format: `help`
 
 Adds a person to the AbsolutSin-ema.
 
-Format: `add n/NAME p/PHONE_NUMBER e/EMAIL w/WEBSITE [t/TAG]…​`
+Format: `add n/NAME p/PHONE_NUMBER e/EMAIL w/WEBSITE b/BUDGET [t/TAG]…​`
 
 <div markdown="span" class="alert alert-primary">:bulb: **Tip:**
 A person can have any number of tags (including 0)
 </div>
 
 Examples:
-* `add n/John Doe p/98765432 e/johnd@example.com w/johndoe.com`
+* `add n/John Doe p/98765432 e/johnd@example.com w/johndoe.com b/100`
 * `add n/Betsy Crowe t/friend e/betsycrowe@example.com w/betsycrowe.com p/1234567 t/criminal`
 
 ### Listing all persons : `list`
@@ -99,12 +99,12 @@ Format: `list`
 
 Edits an existing person in the AbsolutSin-ema.
 
-Format: `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [w/WEBSITE] [t/TAG]…​`
+Format: `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [w/WEBSITE] [t/TAG] [b/BUDGET]…​`
 
 * Edits the person at the specified `INDEX`. The index refers to the index number shown in the displayed person list. The index **must be a positive integer** 1, 2, 3, …​
 * At least one of the optional fields must be provided.
 * Existing values will be updated to the input values.
-* When editing tags, the existing tags of the person will be removed i.e adding of tags is not cumulative.
+* When editing tags, the existing tags of the person will be removed i.e. adding of tags is not cumulative.
 * You can remove all the person’s tags by typing `t/` without
     specifying any tags after it.
 
@@ -131,7 +131,7 @@ Examples:
 * `find alex` returns `Alex Yeoh`<br>
 * `find friend` returns all persons with the tag `friend`.
 * `find alex friend` returns all persons whose name includes “Alex” or who have the tag “friend”.
-  ![result for 'find alex david'](images/findAlexResult.png)
+  ![result for 'find alex friend'](images/findAlexResult.png)
 
 
 ### Deleting a person : `delete`
@@ -193,6 +193,7 @@ Assigns contacts to a specific party.
 Format: `assign INDEX c/CONTACT_INDEX[,CONTACT_INDEX ...]`
 
 * Assigns the specified contacts to the party at the given `INDEX`.
+* With each contact added, the budget of the party will be updated.
 
 Example:
 * `assign 1 c/1,2`
@@ -219,9 +220,9 @@ Example:
 
 ### Clearing all entries : `clear`
 
-Clears all entries from the AbsolutSin-ema.
+Clears all parties, contacts, or both, from the AbsolutSin-ema.
 
-Format: `clear`
+Format: `clear all/parties/contacts`
 
 Upon executing the `clear` command, a confirmation message will appear to prevent accidental data loss. You must confirm the action to proceed.
 
@@ -278,10 +279,6 @@ If your changes to the data file makes its format invalid, AbsolutSin-ema will d
 Furthermore, certain edits can cause the AbsolutSin-ema to behave in unexpected ways (e.g., if a value entered is outside of the acceptable range). Therefore, edit the data file only if you are confident that you can update it correctly.
 </div>
 
-### Archiving data files `[coming in v2.0]`
-
-_Details coming soon ..._
-
 --------------------------------------------------------------------------------------------------------------------
 
 ## FAQ
@@ -297,6 +294,28 @@ _Details coming soon ..._
 
 **Q**: Can I have two contacts with the same name?<br>
 **A**: No, AbsolutSin-ema does not allow duplicate names. Each contact must have a unique name. If you try to add a contact with an existing name, you will get an error message.
+
+**Q**: What happens if I use `clear contacts` or `clear parties`?<br>
+**A**: `clear contacts` will remove all contacts but keep your parties intact. Any parties that previously had assigned contacts will now show no participants.  
+`clear parties` will remove all parties while keeping your contacts untouched. Use `clear all` to remove both.
+
+**Q**: Can I undo a `clear all/contacts/parties` command?<br>
+**A**: Yes. If you accidentally clear data, you can immediately type `undo` to restore everything to its previous state. Only one level of undo is supported, so make sure to do it right after the clear command.
+
+**Q**: Will clearing parties also delete the contacts assigned to them?<br>
+**A**: No. Clearing parties only removes the party entries. The contacts themselves will remain in the contact list.
+
+**Q**: Can I assign the same contact to multiple parties?<br>
+**A**: Yes. A contact can belong to multiple parties at once. Each party tracks its own list of assigned contacts independently.
+
+**Q**: What if I unassign a contact who is not part of that party?<br>
+**A**: The command will show an error message. Only contacts currently assigned to that specific party can be unassigned.
+
+**Q**: What happens if I use `undo` multiple times?<br>
+**A**: AbsolutSin-ema currently supports only **one level of undo**. Running `undo` again after restoring data will not revert earlier actions.
+
+**Q**: How can I verify that a contact was successfully assigned to a party?<br>
+**A**: After using the `assign` command, run `view INDEX` (where `INDEX` refers to the party) to see the list of assigned contacts.
 
 **Q**: What should I do if the application won't start?<br>
 **A**: Ensure you have Java 17 or above installed. Check that the jar file is not corrupted by re-downloading it. Make sure you're running the command `java -jar absolutsin-ema.jar` from the correct directory. See the [Troubleshooting](#troubleshooting) section for more detailed steps.
@@ -325,7 +344,7 @@ Action | Format, Examples
 --------|------------------
 **Add** | `add n/NAME p/PHONE_NUMBER e/EMAIL w/WEBSITE [t/TAG]…​` <br> e.g., `add n/James Ho p/22224444 e/jamesho@example.com w/jamesho.com t/friend t/colleague`
 **Add Party** | `addp en/NAME d/DATE t/TIME [c/CONTACT_INDEX...]` <br> e.g., `addp en/John's Birthday d/12-12-2025 t/18:00 c/1,2`
-**Clear** | `clear`
+**Clear** | `clear all/parties/contacts`
 **Delete** | `delete INDEX`<br> e.g., `delete 3`
 **Delete Party** | `deletep INDEX` <br> e.g., `deletep 2`
 **Edit** | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [w/WEBSITE] [t/TAG]…​`<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com`
