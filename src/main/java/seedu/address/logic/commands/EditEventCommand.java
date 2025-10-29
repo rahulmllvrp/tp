@@ -40,7 +40,8 @@ public class EditEventCommand extends Command {
             + "Example: " + COMMAND_WORD + " 1 "
             + PREFIX_EVENT_NAME + "John's Birthday "
             + PREFIX_DATE + "13-12-2025 "
-            + PREFIX_TIME + "19:00" + PREFIX_BUDGET + "500";
+            + PREFIX_TIME + "19:00 "
+            + PREFIX_BUDGET + "500";
 
     public static final String MESSAGE_EDIT_EVENT_SUCCESS = "Edited Party: %1$s";
     public static final String MESSAGE_NOT_EDITED = "At least one field to edit must be provided.";
