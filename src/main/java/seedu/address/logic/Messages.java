@@ -46,6 +46,8 @@ public class Messages {
                 .append(person.getEmail())
                 .append("; Website: ")
                 .append(person.getWebsite())
+                .append("; Budget: ")
+                .append(person.getBudget())
                 .append("; Tags: ");
         person.getTags().forEach(builder::append);
         return builder.toString();
@@ -60,7 +62,11 @@ public class Messages {
                 .append("; Date: ")
                 .append(event.getDate())
                 .append("; Time: ")
-                .append(event.getTime());
+                .append(event.getTime())
+                .append("; Initial Budget: ")
+                .append(event.getInitialBudget())
+                .append("; Remaining Budget: ")
+                .append(event.getRemainingBudget());
         return builder.toString();
     }
 

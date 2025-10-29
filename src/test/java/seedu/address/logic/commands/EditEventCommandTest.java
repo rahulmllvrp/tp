@@ -185,4 +185,36 @@ public class EditEventCommandTest {
         assertEquals(expected, editEventCommand.toString());
     }
 
+    @Test
+    public void execute_editBudgetWithAssignedContacts_remainingBudgetCalculatedCorrectly() {
+        // Create an event with initial budget 1000 and remaining budget 700 (300 already assigned)
+        Event eventWithAssignedContacts = new EventBuilder()
+                .withName("Test Party")
+                .withBudget("1000")
+                .withRemainingBudget("700")
+                .build();
+
+        Model testModel = new ModelManager(new AddressBook(), new UserPrefs());
+        testModel.addEvent(eventWithAssignedContacts);
+
+        // Edit the budget to 1500
+        EditEventDescriptor descriptor = new EditEventDescriptorBuilder().withBudget("1500").build();
+        EditEventCommand editEventCommand = new EditEventCommand(INDEX_FIRST_EVENT, descriptor);
+
+        // Expected: new remaining budget = 1500 - (1000 - 700) = 1500 - 300 = 1200
+        Event expectedEvent = new EventBuilder()
+                .withName("Test Party")
+                .withBudget("1500")
+                .withRemainingBudget("1200.0")
+                .build();
+
+        String expectedMessage = String.format(
+                EditEventCommand.MESSAGE_EDIT_EVENT_SUCCESS, Messages.format(expectedEvent));
+
+        Model expectedModel = new ModelManager(new AddressBook(), new UserPrefs());
+        expectedModel.addEvent(expectedEvent);
+
+        assertCommandSuccess(editEventCommand, testModel, expectedMessage, expectedModel);
+    }
+
 }

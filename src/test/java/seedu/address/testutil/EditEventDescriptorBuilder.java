@@ -5,6 +5,7 @@ import seedu.address.model.event.Event;
 import seedu.address.model.event.EventDate;
 import seedu.address.model.event.EventName;
 import seedu.address.model.event.EventTime;
+import seedu.address.model.person.Budget;
 
 /**
  * A utility class to help with building EditEventDescriptor objects.
@@ -52,6 +53,14 @@ public class EditEventDescriptorBuilder {
      */
     public EditEventDescriptorBuilder withTime(String time) {
         descriptor.setTime(new EventTime(time));
+        return this;
+    }
+
+    /**
+     * Sets the {@code Budget} of the {@code EditEventDescriptor} that we are building.
+     */
+    public EditEventDescriptorBuilder withBudget(String budget) {
+        descriptor.setBudget(new Budget(budget));
         return this;
     }
 
