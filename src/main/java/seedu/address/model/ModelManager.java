@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
@@ -191,6 +192,23 @@ public class ModelManager implements Model {
     public void updateFilteredEventList(Predicate<seedu.address.model.event.Event> predicate) {
         requireNonNull(predicate);
         filteredEvents.setPredicate(predicate);
+    }
+
+    //=========== CLEAR HELPERS ============================================================================
+
+    @Override
+    public void clearContacts() {
+        // Defensive: ensure addressBook is non-null
+        requireNonNull(addressBook);
+        addressBook.setPersons(new ArrayList<>());
+        updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+        logger.info("Cleared all contacts in ModelManager");
+    }
+
+    @Override
+    public void clearEvents() {
+        addressBook.setEvents(new ArrayList<>());
+        updateFilteredEventList(PREDICATE_SHOW_ALL_EVENTS);
     }
 
     //=========== Undo Functionality ==========================================================================

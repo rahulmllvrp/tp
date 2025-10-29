@@ -42,8 +42,16 @@ public class AddressBookParserTest {
 
     @Test
     public void parseCommand_clear() throws Exception {
-        assertTrue(parser.parseCommand(ClearCommand.COMMAND_WORD) instanceof ClearCommand);
-        assertTrue(parser.parseCommand(ClearCommand.COMMAND_WORD + " 3") instanceof ClearCommand);
+        // bare 'clear' or invalid arguments should result in a ParseException with usage information
+        String expectedUsage = String.format(MESSAGE_INVALID_COMMAND_FORMAT, ClearCommand.MESSAGE_USAGE);
+        assertThrows(ParseException.class, expectedUsage, () -> parser.parseCommand(ClearCommand.COMMAND_WORD));
+        assertThrows(ParseException.class, expectedUsage, () -> parser.parseCommand(
+                ClearCommand.COMMAND_WORD + " 3"));
+
+        // allowed forms
+        assertTrue(parser.parseCommand(ClearCommand.COMMAND_WORD + " all") instanceof ClearCommand);
+        assertTrue(parser.parseCommand(ClearCommand.COMMAND_WORD + " parties") instanceof ClearCommand);
+        assertTrue(parser.parseCommand(ClearCommand.COMMAND_WORD + " contacts") instanceof ClearCommand);
     }
 
     @Test
