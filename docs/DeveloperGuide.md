@@ -3,6 +3,10 @@ layout: page
 title: Developer Guide
 ---
 
+# AbsolutSin-ema Developer Guide
+
+**AbsolutSin-ema** is a desktop application for party planners to manage contacts and events efficiently. It is optimized for use via a Command Line Interface (CLI) while still having the benefits of a Graphical User Interface (GUI). This guide provides comprehensive documentation for developers who wish to understand, maintain, or extend AbsolutSin-ema.
+
 * Table of Contents
 {:toc}
 
@@ -10,8 +14,10 @@ title: Developer Guide
 
 ## **Acknowledgements**
 
-* This project is based on the AddressBook-Level3 project created by the [SE-EDU initiative](https://se-education.org/).
-* Libraries used: [JavaFX](https://openjfx.io/), [Jackson](https://github.com/FasterXML/jackson), [JUnit5](https://github.com/junit-team/junit5)
+* This project is based on the AddressBook-Level3 project created by the [SE-EDU initiative](https://se-education.org)
+* JavaFX library for GUI components
+* Jackson library for JSON serialization/deserialization
+* JUnit5 for testing framework
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -104,7 +110,7 @@ The UI uses JavaFX framework with FXML layouts stored in `src/main/resources/vie
 
 ### Logic Component
 
-**API**: [`Logic.java`](https://github.com/AY2526S1-CS2103T-T12-4/tp/tree/master/src/main/java/seedu/address/logic/Logic.java)
+**API** : [`Logic.java`](https://github.com/AY2526S1-CS2103T-T12-4/tp/tree/master/src/main/java/seedu/address/logic/Logic.java)
 
 Here's the class diagram of the `Logic` component:
 
@@ -355,6 +361,80 @@ Advanced search capabilities supporting both name-based and tag-based filtering 
 * `NameAndTagContainsKeywordsPredicate`: Advanced filtering logic
 * Real-time result updates in UI
 
+
+### Event Management System
+
+#### Implementation
+
+The event management system allows party planners to create and manage events (parties), track budgets, and assign contacts (vendors/clients) to specific events. This feature is fully integrated with the person management system.
+
+**Key Components:**
+
+1. **Event Entity** (`seedu.address.model.event.Event`)
+   - Stores event details: `EventName`, `EventDate`, `EventTime`
+   - Manages budgets: `initialBudget` and `remainingBudget`
+   - Tracks participants via a list of `PersonId` references
+   - Implements `isSameEvent()` method to prevent duplicate events
+
+2. **Event Commands:**
+   - `AddEventCommand` (`addp`) - Creates a new event with name, date, time, and budget
+   - `EditEventCommand` (`editp`) - Modifies existing event details
+   - `DeleteEventCommand` (`deletep`) - Removes an event from the system
+   - `AssignContactToEventCommand` (`assign`) - Links one or more contacts to an event as participants (format: `assign EVENT_INDEX c/CONTACT_INDEXES`)
+   - `UnassignContactFromEventCommand` (`unassign`) - Removes one or more contacts from an event (format: `unassign EVENT_INDEX c/CONTACT_INDEXES`)
+   - `ViewCommand` (`view`) - Displays all participants for a specific event
+
+3. **Budget Tracking:**
+   - Each event tracks both initial and remaining budget
+   - Each person (vendor) has an associated budget cost
+   - When a person is assigned to an event, the remaining budget can be adjusted
+   - Budget validation ensures sufficient funds are available
+
+4. **UI Components:**
+   - `EventListPanel` - Displays all events in the system
+   - `EventListCard` - Shows individual event details including name, date, time, and budget
+
+**How Event-Person Association Works:**
+
+Events don't store full `Person` objects, but rather `PersonId` references. This design:
+- Prevents data duplication
+- Ensures person updates automatically reflect in associated events
+- Allows efficient querying of participants via `Model#getPersonById(PersonId)`
+
+**Example Usage Scenario:**
+
+1. Party planner creates a new birthday party: `addp n/Birthday Party d/2024-12-25 t/18:00 b/5000`
+2. System creates event with $5000 budget
+3. Planner assigns caterer to event: `assign 1 c/1` (assigns contact at index 1 to event at index 1)
+4. Planner can assign multiple contacts at once: `assign 1 c/2,3,4` (assigns contacts 2, 3, and 4 to event 1)
+5. Planner can view all vendors/participants: `view 1`
+6. If needed, planner can unassign: `unassign 1 c/1` (removes contact 1 from event 1)
+
+### Confirmation System for Destructive Operations
+
+#### Implementation
+
+To prevent accidental data loss, the application implements a confirmation system for the `clear` command, which deletes all contacts and events.
+
+**How it works:**
+
+1. When user executes `clear`, the `ClearCommand` displays a warning message:
+   ```
+   Are you sure you want to clear the party planner? (Type 'y' to confirm, 'n' to cancel)
+   ```
+2. User must type `y` to confirm or `n` to cancel the operation
+3. If confirmed, the `ConfirmClearCommand` performs the actual data deletion
+4. If cancelled, the operation is aborted and no data is lost
+
+**Design Rationale:**
+- Destructive operations like `clear` are irreversible (even with undo, losing all data is risky)
+- Interactive confirmation with explicit yes/no response provides a strong safety net
+- The confirmation message clearly explains what will happen and how to proceed
+- User-friendly prompts reduce the chance of accidental data loss from typos or misclicks
+- Could be extended to other dangerous operations (e.g., bulk delete) in future versions
+
+### \[Proposed\] Data archiving
+
 **Search Algorithm:**
 ```java
 public boolean test(Person person) {
@@ -406,7 +486,7 @@ AbsolutSin-ema targets **professional party planners** who:
 * Prefer efficient CLI tools over slower GUI applications
 * Handle time-sensitive vendor assignments and budget allocations
 
-**Value proposition**:
+**Value proposition**: **AbsolutSin-ema** helps party planners manage their contacts more efficiently than generic contact management apps by:
 
 AbsolutSin-ema provides party planners with:
 * **Specialized vendor management**: Custom fields (website, budget) for vendor-specific needs
@@ -555,6 +635,7 @@ Priorities: High (must have) - `* * *`, Medium (should have) - `* *`, Low (nice 
 
 | Term              | Definition                                                                    |
 |-------------------|-------------------------------------------------------------------------------|
+| **AbsolutSin-ema**| The name of this party planning contact and event management application   |
 | **Party Planner** | Professional who organizes and coordinates events and parties                 |
 | **Vendor**        | Service provider such as caterer, decorator, entertainer, venue, photographer |
 | **Event/Party**   | A planned gathering such as birthday, anniversary, wedding, corporate event   |
@@ -563,7 +644,11 @@ Priorities: High (must have) - `* * *`, Medium (should have) - `* *`, Low (nice 
 | **Tag**           | Label used to categorize vendors by specialty (e.g., caterer, halal, elegant)|
 | **PersonId**      | Unique identifier ensuring data integrity across vendor-event relationships   |
 | **CLI**           | Command Line Interface - text-based commands for rapid data manipulation     |
+| **GUI**           | Graphical User Interface, displays contacts and events visually            |
 | **Index**         | Numerical position of vendor/event in the currently displayed list           |
+| **Service Type**   | Category of vendor service (caterer, DJ, venue, etc.)                      |
+| **Party Theme**    | Style of a party (princess, superhero, elegant, tropical)                  |
+| **MVP**            | Minimum Viable Product, core features needed for release 
 | **Remaining Budget** | Event budget minus already assigned vendor costs                            |
 | **Bulk Assignment** | Assigning multiple vendors to an event in a single command                  |
 
@@ -571,7 +656,7 @@ Priorities: High (must have) - `* * *`, Medium (should have) - `* *`, Low (nice 
 
 ## **Appendix: Instructions for manual testing**
 
-Given below are instructions to test the app manually.
+Given below are instructions to test AbsolutSin-ema manually.
 
 <div markdown="span" class="alert alert-info">:information_source: **Note:** These instructions provide a starting point for testers. Testers are expected to do more *exploratory* testing beyond these scenarios.
 </div>
