@@ -15,7 +15,7 @@ public class ClearCommandTest {
         Model model = new ModelManager();
         Model expectedModel = new ModelManager();
         CommandResult expectedCommandResult =
-                new CommandResult("Are you sure you want to clear the address book?",
+                new CommandResult("Are you sure you want to clear the party planner?",
                         new ConfirmClearCommand());
         CommandTestUtil.assertCommandSuccess(new ClearCommand(), model, expectedCommandResult, expectedModel);
     }
@@ -26,7 +26,7 @@ public class ClearCommandTest {
         Model expectedModel = new ModelManager(getTypicalAddressBook(), new UserPrefs());
 
         CommandResult expectedCommandResult =
-                new CommandResult("Are you sure you want to clear the address book?",
+                new CommandResult("Are you sure you want to clear the party planner?",
                         new ConfirmClearCommand());
         CommandTestUtil.assertCommandSuccess(new ClearCommand(), model, expectedCommandResult, expectedModel);
     }

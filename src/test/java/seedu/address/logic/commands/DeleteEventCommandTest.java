@@ -30,7 +30,7 @@ public class DeleteEventCommandTest {
     @Test
     public void execute_validIndexUnfilteredList_success() {
         Event eventToDelete = model.getFilteredEventList().get(INDEX_FIRST_EVENT.getZeroBased());
-        DeleteEventCommand deleteEventCommand = new DeleteEventCommand(INDEX_FIRST_EVENT);
+        DeleteEventCommand deleteEventCommand = new DeleteEventCommand(INDEX_FIRST_EVENT, true);
 
         String expectedMessage = String.format(DeleteEventCommand.MESSAGE_DELETE_EVENT_SUCCESS,
                 Messages.format(eventToDelete));
@@ -39,6 +39,16 @@ public class DeleteEventCommandTest {
         expectedModel.deleteEvent(eventToDelete);
 
         assertCommandSuccess(deleteEventCommand, model, expectedMessage, expectedModel);
+    }
+
+    @Test
+    public void execute_unconfirmedDelete_promptsForConfirmation() {
+        DeleteEventCommand deleteEventCommand = new DeleteEventCommand(INDEX_FIRST_EVENT, false);
+        CommandResult expectedCommandResult = new CommandResult(DeleteEventCommand.MESSAGE_CONFIRMATION,
+                new DeleteEventCommand(INDEX_FIRST_EVENT, true));
+        Model expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
+
+        assertCommandSuccess(deleteEventCommand, model, expectedCommandResult, expectedModel);
     }
 
     @Test
@@ -54,7 +64,7 @@ public class DeleteEventCommandTest {
         showEventAtIndex(model, INDEX_FIRST_EVENT);
 
         Event eventToDelete = model.getFilteredEventList().get(INDEX_FIRST_EVENT.getZeroBased());
-        DeleteEventCommand deleteEventCommand = new DeleteEventCommand(INDEX_FIRST_EVENT);
+        DeleteEventCommand deleteEventCommand = new DeleteEventCommand(INDEX_FIRST_EVENT, true);
 
         String expectedMessage = String.format(DeleteEventCommand.MESSAGE_DELETE_EVENT_SUCCESS,
                 Messages.format(eventToDelete));
@@ -99,13 +109,18 @@ public class DeleteEventCommandTest {
 
         // different event -> returns false
         assertFalse(deleteFirstCommand.equals(deleteSecondCommand));
+
+        // different confirmation status -> returns false
+        DeleteEventCommand deleteFirstCommandConfirmed = new DeleteEventCommand(INDEX_FIRST_EVENT, true);
+        assertFalse(deleteFirstCommand.equals(deleteFirstCommandConfirmed));
     }
 
     @Test
     public void toStringMethod() {
         Index targetIndex = Index.fromOneBased(1);
-        DeleteEventCommand deleteEventCommand = new DeleteEventCommand(targetIndex);
-        String expected = DeleteEventCommand.class.getCanonicalName() + "{targetIndex=" + targetIndex + "}";
+        DeleteEventCommand deleteEventCommand = new DeleteEventCommand(targetIndex, false);
+        String expected = DeleteEventCommand.class.getCanonicalName() + "{targetIndex=" + targetIndex
+                + ", isConfirmed=false}";
         assertEquals(expected, deleteEventCommand.toString());
     }
 

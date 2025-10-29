@@ -12,6 +12,6 @@ public class ClearCommand extends Command {
 
     @Override
     public CommandResult execute(Model model) {
-        return new CommandResult("Are you sure you want to clear the address book?", new ConfirmClearCommand());
+        return new CommandResult("Are you sure you want to clear the party planner?", new ConfirmClearCommand());
     }
 }
