@@ -52,4 +52,21 @@ public class ClearCommand extends Command {
 
         return new CommandResult(message, new ConfirmClearCommand(target));
     }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other == this) {
+            return true;
+        }
+        if (!(other instanceof ClearCommand)) {
+            return false;
+        }
+        ClearCommand o = (ClearCommand) other;
+        return this.target == o.target;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(target);
+    }
 }
