@@ -31,12 +31,12 @@ public class EventDateTest {
         assertFalse(EventDate.isValidDate("28-02-2023")); // past date
 
         // valid dates (today or future)
-        assertTrue(EventDate.isValidDate("30-10-2025")); // today
-        assertTrue(EventDate.isValidDate("31-10-2025")); // tomorrow
-        assertTrue(EventDate.isValidDate("31-12-2025")); // end of year
-        assertTrue(EventDate.isValidDate("29-02-2028")); // future leap year Feb 29 (2028 is divisible by 4)
-        assertTrue(EventDate.isValidDate("30-04-2026")); // April has 30 days
-        assertTrue(EventDate.isValidDate("31-05-2026")); // May has 31 days
+        assertTrue(EventDate.isValidDate("01-01-2030")); // today (example future date)
+        assertTrue(EventDate.isValidDate("02-01-2030")); // tomorrow (example future date)
+        assertTrue(EventDate.isValidDate("31-12-2030")); // end of year
+        assertTrue(EventDate.isValidDate("29-02-2032")); // future leap year Feb 29 (2032 is divisible by 4)
+        assertTrue(EventDate.isValidDate("30-04-2031")); // April has 30 days
+        assertTrue(EventDate.isValidDate("31-05-2031")); // May has 31 days
     }
 
     @Test

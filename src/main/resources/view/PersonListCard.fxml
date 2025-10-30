@@ -15,13 +15,13 @@
         <padding>
           <Insets bottom="5" left="15" right="5" top="5" />
         </padding>
-        <HBox alignment="CENTER_LEFT">
+        <HBox alignment="TOP_LEFT">
           <Label fx:id="id" styleClass="cell_big_label">
             <minWidth>
               <Region fx:constant="USE_PREF_SIZE" />
             </minWidth>
           </Label>
-          <Label fx:id="name" styleClass="cell_big_label" text="\$first" />
+          <Label fx:id="name" styleClass="cell_big_label" text="\$first" wrapText="true" maxWidth="200" />
         </HBox>
         <Label fx:id="phone" styleClass="cell_small_label" text="\$phone" />
         <Label fx:id="website" styleClass="cell_small_label" text="\$website" />
