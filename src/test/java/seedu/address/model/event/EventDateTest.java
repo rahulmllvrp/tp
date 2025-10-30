@@ -25,15 +25,18 @@ public class EventDateTest {
         assertFalse(EventDate.isValidDate("29-02-2023")); // 2023 is not a leap year
         assertFalse(EventDate.isValidDate("29-02-2100")); // 2100 is not a leap year (divisible by 100 but not 400)
 
-        // valid dates
-        assertTrue(EventDate.isValidDate("01-01-2024")); // standard date
-        assertTrue(EventDate.isValidDate("31-12-2024")); // end of year
-        assertTrue(EventDate.isValidDate("28-02-2023")); // Feb 28 in non-leap year
-        assertTrue(EventDate.isValidDate("29-02-2024")); // leap year Feb 29 (2024 is divisible by 4)
-        assertTrue(EventDate.isValidDate("29-02-2020")); // another leap year
-        assertTrue(EventDate.isValidDate("29-02-2000")); // 2000 is a leap year (divisible by 400)
-        assertTrue(EventDate.isValidDate("30-04-2024")); // April has 30 days
-        assertTrue(EventDate.isValidDate("31-05-2024")); // May has 31 days
+        // invalid dates (past dates)
+        assertFalse(EventDate.isValidDate("01-01-2024")); // past date
+        assertFalse(EventDate.isValidDate("29-02-2024")); // past leap year date
+        assertFalse(EventDate.isValidDate("28-02-2023")); // past date
+
+        // valid dates (today or future)
+        assertTrue(EventDate.isValidDate("30-10-2025")); // today
+        assertTrue(EventDate.isValidDate("31-10-2025")); // tomorrow
+        assertTrue(EventDate.isValidDate("31-12-2025")); // end of year
+        assertTrue(EventDate.isValidDate("29-02-2028")); // future leap year Feb 29 (2028 is divisible by 4)
+        assertTrue(EventDate.isValidDate("30-04-2026")); // April has 30 days
+        assertTrue(EventDate.isValidDate("31-05-2026")); // May has 31 days
     }
 
     @Test
@@ -57,8 +60,8 @@ public class EventDateTest {
     @Test
     public void constructor_validDate_success() {
         // This should not throw any exception
-        new EventDate("29-02-2024");
-        new EventDate("28-02-2023");
-        new EventDate("31-12-2024");
+        new EventDate("31-10-2025"); // tomorrow
+        new EventDate("28-02-2026"); // future date
+        new EventDate("31-12-2025"); // end of year
     }
 }

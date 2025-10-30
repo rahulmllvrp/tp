@@ -15,7 +15,7 @@ import java.time.format.ResolverStyle;
 public class EventDate {
 
     public static final String MESSAGE_CONSTRAINTS =
-            "Dates should be in the format dd-MM-yyyy and must be a valid calendar date.";
+            "Dates should be in the format dd-MM-yyyy, must be a valid calendar date, and cannot be before today.";
 
     public static final String VALIDATION_REGEX = "^(3[01]|[12][0-9]|0[1-9])-(1[0-2]|0[1-9])-[0-9]{4}$";
 
@@ -45,8 +45,11 @@ public class EventDate {
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-uuuu")
                     .withResolverStyle(ResolverStyle.STRICT);
-            LocalDate.parse(test, formatter);
-            return true;
+            LocalDate parsedDate = LocalDate.parse(test, formatter);
+
+            // Check if the date is not before today
+            LocalDate today = LocalDate.now();
+            return !parsedDate.isBefore(today);
         } catch (DateTimeParseException e) {
             return false;
         }
