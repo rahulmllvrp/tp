@@ -130,9 +130,21 @@ Examples:
 * `find John` returns `john` and `John Doe`
 * `find alex` returns `Alex Yeoh`<br>
 * `find friend` returns all persons with the tag `friend`.
-* `find alex friend` returns all persons whose name includes “Alex” or who have the tag “friend”.
+* `find alex friend` returns all persons whose name includes "Alex" or who have the tag "friend".
   ![result for 'find alex friend'](images/findAlexResult.png)
 
+### Listing all tags : `listtags`
+
+Lists all tags currently used in the AbsolutSin-ema.
+
+Format: `listtags`
+
+* The command displays all unique tags across all persons in alphabetical order.
+* If no tags exist in the address book, a message will indicate that no tags were found.
+
+Example:
+* `listtags` displays all tags such as `colleague`, `friend`, `supplier`, etc.
+  ![result for 'listTags'](images/listTags.png)
 
 ### Deleting a person : `delete`
 
@@ -165,6 +177,8 @@ Examples:
 * `addp n/John's Birthday d/12-12-2025 t/18:00`
 * `addp n/Team Meeting d/01-11-2025 t/14:00 c/1,2`
 
+  ![result for 'addParty'](images/addParty.png)
+
 #### Editing a party: `editp`
 Edits the details of an existing party.
 
@@ -174,8 +188,10 @@ Format: `editp INDEX [n/NAME] [d/DATE] [t/TIME]`
 * At least one of the optional fields must be provided.
 
 Examples:
-* `editp 1 n/John's Surprise Party d/13-12-2025 t/19:00`
+* `editp 1 d/13-12-2025 t/20:00 b/5100`
 * `editp 2 t/15:00`
+
+  ![result for 'editParty'](images/editParty.png)
 
 #### Deleting a party: `deletep`
 Deletes a party from the party list.
@@ -187,6 +203,9 @@ Format: `deletep INDEX`
 Example:
 * `deletep 1`
 
+![result for 'delParty1'](images/delParty1.png)
+![result for 'delParty2'](images/delParty2.png)
+
 #### Assigning contacts to a party: `assign`
 Assigns contacts to a specific party.
 
@@ -196,7 +215,9 @@ Format: `assign INDEX c/CONTACT_INDEX[,CONTACT_INDEX ...]`
 * With each contact added, the budget of the party will be updated.
 
 Example:
-* `assign 1 c/1,2`
+* `assign 1 c/5`
+
+  ![result for 'assignContact'](images/assignContact.png)
 
 #### Unassigning contacts from a party: `unassign`
 Unassigns contacts from a specific party.
@@ -206,7 +227,9 @@ Format: `unassign INDEX c/CONTACT_INDEX[,CONTACT_INDEX ...]`
 * Unassigns the specified contacts from the party at the given `INDEX`.
 
 Example:
-* `unassign 1 c/1,2`
+* `unassign 1 c/2`
+
+  ![result for 'unassignContact'](images/unassignContact.png)
 
 #### Viewing party participants: `view`
 Shows all contacts assigned to a party.
@@ -218,6 +241,9 @@ Format: `view INDEX`
 Example:
 * `view 1`
 
+![result for 'viewParty'](images/viewParty.png)
+
+
 ### Clearing all entries : `clear`
 
 Clears all parties, contacts, or both, from the AbsolutSin-ema.
@@ -225,6 +251,11 @@ Clears all parties, contacts, or both, from the AbsolutSin-ema.
 Format: `clear all/parties/contacts`
 
 Upon executing the `clear` command, a confirmation message will appear to prevent accidental data loss. You must confirm the action to proceed.
+
+![result for 'clearParty1'](images/clearParty1.png)
+![result for 'clearParty2'](images/clearParty2.png)
+
+
 
 <div markdown="span" class="alert alert-warning">:exclamation: **Warning:**
 This will delete ALL contacts permanently. While this action can be undone, it should still be used with caution.
@@ -235,6 +266,9 @@ This will delete ALL contacts permanently. While this action can be undone, it s
 Undoes the most recent add, delete, edit, clear, or any party-related command. This restores AbsolutSin-ema to the state before the last command was executed.
 
 Format: `undo`
+
+![result for 'undo'](images/undo.png)
+
 
 **Commands that can be undone:**
 - `add` - Removes the person that was added
