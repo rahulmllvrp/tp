@@ -21,7 +21,7 @@ public class HelpWindow extends UiPart<Stage> {
     public static final String HELP_MESSAGE =
             "1. help:\n"
             + "   Shows a basic help message with a link to the AbsolutSin-ema User Guide.\n\n"
-            + "2. add n/NAME p/PHONE_NUMBER e/EMAIL w/WEBSITE b/BUDGET [t/TAG t/TAG2 ...]:\n"
+            + "2. add n/NAME p/PHONE_NUMBER e/EMAIL [w/WEBSITE] b/BUDGET [t/TAG t/TAG2 ...]:\n"
             + "   Adds a contact with up to 6 tags.\n\n"
             + "3. list:\n"
             + "   Shows all saved contacts and parties.\n\n"
