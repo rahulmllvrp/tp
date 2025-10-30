@@ -34,7 +34,7 @@ AbsolutSin-ema is a **desktop app for managing contacts, optimized for use via a
 
    * `undo` : Undoes the most recent add, delete, edit, or clear command.
 
-   * `clear` : Deletes all contacts.
+   * `clear all` : Deletes all contacts and parties.
 
    * `exit` : Exits the app.
 
@@ -60,7 +60,7 @@ AbsolutSin-ema is a **desktop app for managing contacts, optimized for use via a
 * Parameters can be in any order.<br>
   e.g. if the command specifies `n/NAME p/PHONE_NUMBER`, `p/PHONE_NUMBER n/NAME` is also acceptable.
 
-* Extraneous parameters for commands that do not take in parameters (such as `help`, `list`, `exit` and `clear`) will be ignored.<br>
+* Extraneous parameters for commands that do not take in parameters (such as `help`, `list`, `exit`) will be ignored.<br>
   e.g. if the command specifies `help 123`, it will be interpreted as `help`.
 
 * If you are using a PDF version of this document, be careful when copying and pasting commands that span multiple lines as space characters surrounding line-breaks may be omitted when copied over to the application.
@@ -87,7 +87,7 @@ A person can have any number of tags (including 0)
 
 Examples:
 * `add n/John Doe p/98765432 e/johnd@example.com w/johndoe.com b/100`
-* `add n/Betsy Crowe t/friend e/betsycrowe@example.com w/betsycrowe.com p/1234567 t/criminal`
+* `add n/Betsy Crowe t/friend e/betsycrowe@example.com w/betsycrowe.com p/1234567 b/250 t/photographer`
 
 ### Listing all persons : `list`
 
@@ -99,7 +99,7 @@ Format: `list`
 
 Edits an existing person in the AbsolutSin-ema.
 
-Format: `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [w/WEBSITE] [t/TAG] [b/BUDGET]…​`
+Format: `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [w/WEBSITE] [b/BUDGET] [t/TAG]…`
 
 * Edits the person at the specified `INDEX`. The index refers to the index number shown in the displayed person list. The index **must be a positive integer** 1, 2, 3, …​
 * At least one of the optional fields must be provided.
@@ -109,7 +109,7 @@ Format: `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [w/WEBSITE] [t/TAG] [b/BUDGET]�
     specifying any tags after it.
 
 Examples:
-*  `edit 1 p/91234567 e/johndoe@example.com w/johndoe.com` Edits the phone number, email and website of the 1st person to be `91234567`, `johndoe@example.com` and `johndoe.com` respectively.
+*  `edit 1 p/91234567 e/johndoe@example.com w/johndoe.com b/120` Edits the phone number, email, website, and budget of the 1st person to be `91234567`, `johndoe@example.com`, `johndoe.com`, and `120` respectively.
 *  `edit 2 n/Betsy Crower t/` Edits the name of the 2nd person to be `Betsy Crower` and clears all existing tags.
 
 ### Locating persons by name: `find`
@@ -167,22 +167,22 @@ AbsolutSin-ema allows you to manage parties (events) and assign contacts to them
 #### Adding a party: `addp`
 Adds a party to the party list.
 
-Format: `addp n/NAME d/DATE t/TIME [c/CONTACT_INDEX ...]`
+Format: `addp n/NAME d/DATE t/TIME b/BUDGET [c/CONTACT_INDEX ...]`
 
 * You may optionally assign contacts to the party using their indexes.
 * The date must be in a valid format (e.g. 12-12-2025).
 * The time must be in a valid format (e.g. 18:00).
 
 Examples:
-* `addp n/John's Birthday d/12-12-2025 t/18:00`
-* `addp n/Team Meeting d/01-11-2025 t/14:00 c/1,2`
+* `addp n/John's Birthday d/12-12-2025 t/18:00 b/5000`
+* `addp n/Team Meeting d/01-11-2025 t/14:00 b/2000 c/1,2`
 
   ![result for 'addParty'](images/addParty.png)
 
 #### Editing a party: `editp`
 Edits the details of an existing party.
 
-Format: `editp INDEX [n/NAME] [d/DATE] [t/TIME]`
+Format: `editp INDEX [n/NAME] [d/DATE] [t/TIME] [b/BUDGET]`
 
 * Edits the party at the specified `INDEX` in the party list.
 * At least one of the optional fields must be provided.
@@ -274,7 +274,7 @@ Format: `undo`
 - `add` - Removes the person that was added
 - `delete` - Restores the person that was deleted
 - `edit` - Restores the person to their previous state
-- `clear` - Restores all contacts that were cleared
+- `clear` - Restores all contacts and/or parties that were cleared
 - `addp` - Removes the party that was added
 - `editp` - Restores the party to its previous state
 - `deletep` - Restores the party that was deleted
@@ -290,7 +290,7 @@ Commands like `find`, `list`, `help`, and `exit` do not modify data and therefor
 </div>
 
 **Examples:**
-* After running `addp en/John's Birthday d/12-12-2025 t/18:00`, typing `undo` will remove the party from your party list.
+* After running `addp n/John's Birthday d/12-12-2025 t/18:00 b/5000`, typing `undo` will remove the party from your party list.
 * After running `assign 1 c/2`, typing `undo` will unassign contact 2 from the 1st party.
 * After running `deletep 2`, typing `undo` will restore the 2nd party back to your party list.
 
@@ -334,7 +334,7 @@ Furthermore, certain edits can cause the AbsolutSin-ema to behave in unexpected 
 `clear parties` will remove all parties while keeping your contacts untouched. Use `clear all` to remove both.
 
 **Q**: Can I undo a `clear all/contacts/parties` command?<br>
-**A**: Yes. If you accidentally clear data, you can immediately type `undo` to restore everything to its previous state. Only one level of undo is supported, so make sure to do it right after the clear command.
+**A**: Yes. If you accidentally clear data, you can immediately type `undo` to restore everything to its previous state. Only one level of undo is supported.
 
 **Q**: Will clearing parties also delete the contacts assigned to them?<br>
 **A**: No. Clearing parties only removes the party entries. The contacts themselves will remain in the contact list.
@@ -358,7 +358,7 @@ Furthermore, certain edits can cause the AbsolutSin-ema to behave in unexpected 
 **A**: Yes, simply copy the `addressbook.json` file from the data folder to a safe location. You can restore it later by copying it back. It's recommended to backup your data regularly.
 
 **Q**: Are my contacts searchable by phone number or email?<br>
-**A**: Currently, the `find` command only searches by name. To find contacts by other fields, use the `list` command to view all contacts and manually search through them.
+**A**: Currently, the `find` command only searches by name and tag. To find contacts by other fields, use the `list` command to view all contacts and manually search through them.
 
 **Q**: What characters are allowed in names and addresses?<br>
 **A**: Names can contain letters, numbers, and spaces. Addresses can contain any characters including special symbols, making them flexible for international addresses.
@@ -368,7 +368,6 @@ Furthermore, certain edits can cause the AbsolutSin-ema to behave in unexpected 
 ## Known issues
 
 1. **When using multiple screens**, if you move the application to a secondary screen, and later switch to using only the primary screen, the GUI will open off-screen. The remedy is to delete the `preferences.json` file created by the application before running the application again.
-2. **If you minimize the Help Window** and then run the `help` command (or use the `Help` menu, or the keyboard shortcut `F1`) again, the original Help Window will remain minimized, and no new Help Window will appear. The remedy is to manually restore the minimized Help Window.
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -376,16 +375,16 @@ Furthermore, certain edits can cause the AbsolutSin-ema to behave in unexpected 
 
 Action | Format, Examples
 --------|------------------
-**Add** | `add n/NAME p/PHONE_NUMBER e/EMAIL w/WEBSITE [t/TAG]…​` <br> e.g., `add n/James Ho p/22224444 e/jamesho@example.com w/jamesho.com t/friend t/colleague`
-**Add Party** | `addp en/NAME d/DATE t/TIME [c/CONTACT_INDEX...]` <br> e.g., `addp en/John's Birthday d/12-12-2025 t/18:00 c/1,2`
+**Add** | `add n/NAME p/PHONE_NUMBER e/EMAIL w/WEBSITE b/BUDGET [t/TAG]…​` <br> e.g., `add n/James Ho p/22224444 e/jamesho@example.com w/jamesho.com b/500 t/friend t/colleague`
+**Add Party** | `addp n/NAME d/DATE t/TIME b/BUDGET [c/CONTACT_INDEX...]` <br> e.g., `addp n/John's Birthday d/12-12-2025 t/18:00 b/5000 c/1,2`
 **Clear** | `clear all/parties/contacts`
 **Delete** | `delete INDEX`<br> e.g., `delete 3`
 **Delete Party** | `deletep INDEX` <br> e.g., `deletep 2`
-**Edit** | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [w/WEBSITE] [t/TAG]…​`<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com`
-**Edit Party** | `editp INDEX [en/NAME] [d/DATE] [t/TIME]` <br> e.g., `editp 1 en/John's Birthday d/13-12-2025 t/19:00`
+**Edit** | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [w/WEBSITE] [t/TAG]... [b/BUDGET]`<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com b/300`
+**Edit Party** | `editp INDEX [n/NAME] [d/DATE] [t/TIME] [b/BUDGET]` <br> e.g., `editp 1 n/John's Birthday d/13-12-2025 t/19:00 b/5200`
 **Assign to Party** | `assign PARTY_INDEX c/CONTACT_INDEX...` <br> e.g., `assign 1 c/1,2,3`
 **Unassign from Party** | `unassign PARTY_INDEX c/CONTACT_INDEX...` <br> e.g., `unassign 1 c/2,3`
 **Find** | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find James Jake`
 **List** | `list`
 **Undo** | `undo`
-**Help** |
+**Help** | `help`
