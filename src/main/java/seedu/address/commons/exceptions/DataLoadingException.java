@@ -8,4 +8,12 @@ public class DataLoadingException extends Exception {
         super(cause);
     }
 
+    // Additional constructors for richer error reporting
+    public DataLoadingException(String message) {
+        super(message);
+    }
+
+    public DataLoadingException(String message, Exception cause) {
+        super(message, cause);
+    }
 }
