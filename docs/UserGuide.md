@@ -28,7 +28,7 @@ AbsolutSin-ema is a **desktop app for managing contacts, optimized for use via a
 
    * `list` : Lists all contacts.
 
-   * `add n/John Doe p/98765432 e/johnd@example.com w/johndoe.com b/100` : Adds a contact named `John Doe` to the AbsolutSin-ema.
+   * `add n/John Doe p/98765432 e/johnd@example.com w/johndoe.com b/100` : Adds a contact named `John Doe` to the AbsolutSin-ema with a cost of 100.
 
    * `delete 3` : Deletes the 3rd contact shown in the current list.
 
@@ -83,6 +83,7 @@ Format: `add n/NAME p/PHONE_NUMBER e/EMAIL w/WEBSITE b/BUDGET [t/TAG]…​`
 
 <div markdown="span" class="alert alert-primary">:bulb: **Tip:**
 A person can have any number of tags (including 0)
+Additionally, budget refers to the cost of hiring this contact
 </div>
 
 Examples:
