@@ -171,8 +171,8 @@ Adds a party to the party list.
 Format: `addp n/NAME d/DATE t/TIME b/BUDGET [c/CONTACT_INDEX ...]`
 
 * You may optionally assign contacts to the party using their indexes.
-* The date must be in a valid format (e.g. 12-12-2025).
-* The time must be in a valid format (e.g. 18:00).
+* The date must be in the format `DD-MM-YYYY` (e.g. `25-12-2024`) and cannot be before today.
+* The time must be in the format `HH:mm` (e.g. `18:00`).
 
 Examples:
 * `addp n/John's Birthday d/12-12-2025 t/18:00 b/5000`
