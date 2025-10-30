@@ -6,10 +6,14 @@ import java.util.Optional;
 import java.util.logging.Logger;
 
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 import seedu.address.commons.core.Config;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.commons.core.Version;
+import seedu.address.commons.exceptions.DataCorruptionException;
 import seedu.address.commons.exceptions.DataLoadingException;
 import seedu.address.commons.util.ConfigUtil;
 import seedu.address.commons.util.StringUtil;
@@ -46,6 +50,10 @@ public class MainApp extends Application {
     protected Model model;
     protected Config config;
 
+    // If set during init, we will show an error alert and exit in start().
+    private String startupFatalErrorMessage;
+    private Throwable startupFatalErrorCause;
+
     @Override
     public void init() throws Exception {
         logger.info("=============================[ Initializing AbsoluteSin-Ema ]===========================");
@@ -60,35 +68,45 @@ public class MainApp extends Application {
         AddressBookStorage addressBookStorage = new JsonAddressBookStorage(userPrefs.getAddressBookFilePath());
         storage = new StorageManager(addressBookStorage, userPrefsStorage);
 
-        model = initModelManager(storage, userPrefs);
-
-        logic = new LogicManager(model, storage);
-
-        ui = new UiManager(logic);
+        try {
+            model = initModelManager(storage, userPrefs);
+            logic = new LogicManager(model, storage);
+            ui = new UiManager(logic);
+        } catch (DataLoadingException e) {
+            // If data is corrupted, capture the message for the startup alert and skip creating UI/Logic.
+            if (e.getCause() instanceof DataCorruptionException || e instanceof DataCorruptionException) {
+                startupFatalErrorMessage = e.getMessage();
+                startupFatalErrorCause = e;
+                logger.severe("Data corruption detected during initialization: " + e.getMessage());
+                // Do not create logic/ui; start() will display the alert and exit.
+            } else {
+                // For other loading errors, fall back to empty address book
+                logger.warning("Data file at " + storage.getAddressBookFilePath() + " could not be loaded."
+                        + " Will be starting with an empty AbsoluteSin-Ema.");
+                model = new ModelManager(new AddressBook(), userPrefs);
+                logic = new LogicManager(model, storage);
+                ui = new UiManager(logic);
+            }
+        }
     }
 
     /**
      * Returns a {@code ModelManager} with the data from {@code storage}'s address book and {@code userPrefs}. <br>
      * The data from the sample address book will be used instead if {@code storage}'s address book is not found,
-     * or an empty address book will be used instead if errors occur when reading {@code storage}'s address book.
+     * or throws {@code DataLoadingException} if errors occur when reading {@code storage}'s address book.
      */
-    private Model initModelManager(Storage storage, ReadOnlyUserPrefs userPrefs) {
+    private Model initModelManager(Storage storage, ReadOnlyUserPrefs userPrefs) throws DataLoadingException {
         logger.info("Using data file : " + storage.getAddressBookFilePath());
 
         Optional<ReadOnlyAddressBook> addressBookOptional;
         ReadOnlyAddressBook initialData;
-        try {
-            addressBookOptional = storage.readAddressBook();
-            if (!addressBookOptional.isPresent()) {
-                logger.info("Creating a new data file " + storage.getAddressBookFilePath()
-                        + " populated with a sample AbsoluteSin-Ema.");
-            }
-            initialData = addressBookOptional.orElseGet(SampleDataUtil::getSampleAddressBook);
-        } catch (DataLoadingException e) {
-            logger.warning("Data file at " + storage.getAddressBookFilePath() + " could not be loaded."
-                    + " Will be starting with an empty AbsoluteSin-Ema.");
-            initialData = new AddressBook();
+
+        addressBookOptional = storage.readAddressBook();
+        if (!addressBookOptional.isPresent()) {
+            logger.info("Creating a new data file " + storage.getAddressBookFilePath()
+                    + " populated with a sample AbsoluteSin-Ema.");
         }
+        initialData = addressBookOptional.orElseGet(SampleDataUtil::getSampleAddressBook);
 
         return new ModelManager(initialData, userPrefs);
     }
@@ -171,6 +189,26 @@ public class MainApp extends Application {
     @Override
     public void start(Stage primaryStage) {
         logger.info("Starting AbsoluteSin-Ema " + MainApp.VERSION);
+        if (startupFatalErrorMessage != null) {
+            // Show a fatal error dialog and exit.
+            final Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Corrupted data file detected");
+            alert.setHeaderText("Your data file is corrupted or has been manually modified.");
+            String path = storage != null
+                    ? String.valueOf(storage.getAddressBookFilePath())
+                    : "<unknown path>";
+            StringBuilder content = new StringBuilder();
+            if (startupFatalErrorMessage != null) {
+                content.append(startupFatalErrorMessage);
+            }
+            content.append("\n\nFile: ").append(path)
+                   .append("\n\nPlease delete the data file and relaunch the application to regenerate a fresh one.");
+            alert.setContentText(content.toString());
+            alert.showAndWait();
+            Platform.exit();
+            System.exit(1);
+            return;
+        }
         ui.start(primaryStage);
     }
 

@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.logging.Logger;
 
 import seedu.address.commons.core.LogsCenter;
+import seedu.address.commons.exceptions.DataCorruptionException;
 import seedu.address.commons.exceptions.DataLoadingException;
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.commons.util.FileUtil;
@@ -55,12 +56,26 @@ public class JsonAddressBookStorage implements AddressBookStorage {
         }
 
         try {
+            // Diagnostics: log checksum values if present
+            try {
+                String stored = jsonAddressBook.get().getStoredChecksum();
+                String computed = jsonAddressBook.get().getComputedChecksumForDiagnostics();
+                logger.info("Checksum diagnostics: stored=" + stored + ", computed=" + computed);
+            } catch (Throwable t) {
+                logger.warning("Checksum diagnostics failed: " + t.getMessage());
+            }
+            // Validate integrity if a checksum exists
+            jsonAddressBook.get().validateIntegrityOrThrow();
+
             ReadOnlyAddressBook readOnly = jsonAddressBook.get().toModelType();
             logger.info("Successfully loaded AddressBook from " + filePath);
             return Optional.of(readOnly);
         } catch (IllegalValueException ive) {
             logger.info("Illegal values found in " + filePath + ": " + ive.getMessage());
             throw new DataLoadingException(ive);
+        } catch (DataCorruptionException dce) {
+            logger.warning("Data corruption detected in " + filePath + ": " + dce.getMessage());
+            throw new DataLoadingException(dce.getMessage(), dce);
         }
     }
 
