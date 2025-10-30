@@ -28,7 +28,7 @@ AbsolutSin-ema is a **desktop app for managing contacts, optimized for use via a
 
    * `list` : Lists all contacts.
 
-   * `add n/John Doe p/98765432 e/johnd@example.com w/johndoe.com b/100` : Adds a contact named `John Doe` to the AbsolutSin-ema.
+   * `add n/John Doe p/98765432 e/johnd@example.com w/johndoe.com b/100` : Adds a contact named `John Doe` to the AbsolutSin-ema with a cost of 100.
 
    * `delete 3` : Deletes the 3rd contact shown in the current list.
 
@@ -70,7 +70,7 @@ AbsolutSin-ema is a **desktop app for managing contacts, optimized for use via a
 
 Shows a message explaining how to access the help page.
 
-![help message](images/helpMessage.png)
+<img src="images/helpMessage.png" alt="help message" width="500">
 
 Format: `help`
 
@@ -79,10 +79,11 @@ Format: `help`
 
 Adds a person to the AbsolutSin-ema.
 
-Format: `add n/NAME p/PHONE_NUMBER e/EMAIL w/WEBSITE b/BUDGET [t/TAG]…​`
+Format: `add n/NAME p/PHONE_NUMBER e/EMAIL [w/WEBSITE] b/BUDGET [t/TAG]…​`
 
 <div markdown="span" class="alert alert-primary">:bulb: **Tip:**
 A person can have any number of tags (including 0)
+Additionally, budget refers to the cost of hiring this contact
 </div>
 
 Examples:
@@ -375,7 +376,7 @@ Furthermore, certain edits can cause the AbsolutSin-ema to behave in unexpected 
 
 Action | Format, Examples
 --------|------------------
-**Add** | `add n/NAME p/PHONE_NUMBER e/EMAIL w/WEBSITE b/BUDGET [t/TAG]…​` <br> e.g., `add n/James Ho p/22224444 e/jamesho@example.com w/jamesho.com b/500 t/friend t/colleague`
+**Add** | `add n/NAME p/PHONE_NUMBER e/EMAIL [w/WEBSITE] b/BUDGET [t/TAG]…​` <br> e.g., `add n/James Ho p/22224444 e/jamesho@example.com w/jamesho.com b/500 t/friend t/colleague`
 **Add Party** | `addp n/NAME d/DATE t/TIME b/BUDGET [c/CONTACT_INDEX...]` <br> e.g., `addp n/John's Birthday d/12-12-2025 t/18:00 b/5000 c/1,2`
 **Clear** | `clear all/parties/contacts`
 **Delete** | `delete INDEX`<br> e.g., `delete 3`
