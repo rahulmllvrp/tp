@@ -29,7 +29,7 @@ public class EventCommandTestUtil {
     public static final String VALID_TIME_BIRTHDAY = "18:00";
 
     public static final String VALID_NAME_MEETING = "Project Meeting";
-    public static final String VALID_DATE_MEETING = "01-01-2024";
+    public static final String VALID_DATE_MEETING = "01-01-2026";
     public static final String VALID_TIME_MEETING = "10:00";
 
     public static final String NAME_DESC_BIRTHDAY = " " + PREFIX_EVENT_NAME + VALID_NAME_BIRTHDAY;

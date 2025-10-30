@@ -35,9 +35,9 @@ public class UnassignContactFromEventCommandTest {
         model = new ModelManager();
 
         // create two events
-        eventOne = new EventBuilder().withName("John's Party").withDate("01-01-2024")
+        eventOne = new EventBuilder().withName("John's Party").withDate("01-01-2026")
                 .withTime("12:00").withBudget("1000").build();
-        Event eventTwo = new EventBuilder().withName("Jane's Party").withDate("02-02-2024")
+        Event eventTwo = new EventBuilder().withName("Jane's Party").withDate("02-02-2026")
                 .withTime("18:00").withBudget("500").build();
 
         // add two persons to the model
