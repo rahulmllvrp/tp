@@ -9,7 +9,7 @@ import static seedu.address.commons.util.AppUtil.checkArgument;
  */
 public class Website {
 
-    public static final String MESSAGE_CONSTRAINTS = "Websites can take any values, but should not be blank if present";
+    public static final String MESSAGE_CONSTRAINTS = "Websites [optional] can take any values, but should not be blank if present";
 
     /*
      * The first character of the website must not be a whitespace,

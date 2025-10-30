@@ -70,7 +70,7 @@ AbsolutSin-ema is a **desktop app for managing contacts, optimized for use via a
 
 Shows a message explaining how to access the help page.
 
-![help message](images/helpMessage.png)
+<img src="images/helpMessage.png" alt="help message" width="500">
 
 Format: `help`
 
@@ -79,7 +79,7 @@ Format: `help`
 
 Adds a person to the AbsolutSin-ema.
 
-Format: `add n/NAME p/PHONE_NUMBER e/EMAIL w/WEBSITE b/BUDGET [t/TAG]…​`
+Format: `add n/NAME p/PHONE_NUMBER e/EMAIL w/WEBSITE (optional) b/BUDGET [t/TAG]…​`
 
 <div markdown="span" class="alert alert-primary">:bulb: **Tip:**
 A person can have any number of tags (including 0)
