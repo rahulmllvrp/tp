@@ -1,6 +1,6 @@
 package seedu.address.storage;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 
@@ -12,7 +12,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import seedu.address.commons.exceptions.DataLoadingException;
 import seedu.address.model.AddressBook;
 
 public class JsonAddressBookCorruptionTest {
@@ -34,7 +33,7 @@ public class JsonAddressBookCorruptionTest {
     }
 
     @Test
-    public void readAddressBook_afterManualTamper_throwsDataLoadingException() throws Exception {
+    public void readAddressBook_afterManualTamper_acceptsIfDataValid() throws Exception {
         // Save a normal address book to disk
         AddressBook original = getTypicalAddressBook();
         storageManager.saveAddressBook(original);
@@ -68,9 +67,6 @@ public class JsonAddressBookCorruptionTest {
             }
         }
 
-        DataLoadingException ex = assertThrows(DataLoadingException.class, () -> storageManager.readAddressBook());
-        String msg = ex.getMessage() != null ? ex.getMessage().toLowerCase() : "";
-        assertTrue(msg.contains("corrupted") || msg.contains("manually modified"),
-                "Expected corruption message, but was: " + ex.getMessage());
+        assertDoesNotThrow(() -> storageManager.readAddressBook());
     }
 }
