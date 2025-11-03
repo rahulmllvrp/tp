@@ -1099,14 +1099,14 @@ Given below are instructions to test AbsolutSin-ema manually.
 
    4. Test case: `addp n/Small Party d/20-01-2027 t/12:00 b/100 c/1,2,3`
    5. **Expected**: Error message for exceeding budget of any contact during creation:
-      "The budget of <Name> exceeds the remaining budget of the party."
+      "The budget of {Name} exceeds the remaining budget of the party."
 
    6. Test case (concurrent assignment on same date):
       - Create Event A on date D.
       - Assign vendor X to Event A.
       - Create Event B on the same date D (time can differ).
       - Add vendor X in creation: `addp n/Event B d/<D> t/18:00 b/500 c/<index of X>`
-      - **Expected**: Error: "<Name> is already assigned to another party on the same date."
+      - **Expected**: Error: "{Name} is already assigned to another party on the same date."
 
 3. **Editing event information**
    1. Prerequisites: At least one event
@@ -1138,10 +1138,10 @@ Given below are instructions to test AbsolutSin-ema manually.
    1. Prerequisites: Events and vendors exist; note remaining budget
    2. Test case: `assign 1 c/2,3`
    3. **Expected**: Vendors 2 and 3 assigned to event 1. Budget updated. Success message:
-      "Assigned the following people to <Event Name>'s party: <Names>"
+      "Assigned the following people to {Event Name}'s party: {Names}"
 
    4. Test case: `assign 1 c/2`
-   5. **Expected**: If vendor 2 already assigned to event 1: "<Name> has already been assigned to this party."
+   5. **Expected**: If vendor 2 already assigned to event 1: "{Name} has already been assigned to this party."
 
    6. Test case: `assign 1 c/99`
    7. **Expected**: Error message: "The person index provided is invalid Try switching to the person list view and retry."
@@ -1152,21 +1152,21 @@ Given below are instructions to test AbsolutSin-ema manually.
 2. **Budget validation during assignment**
    1. Prerequisites: Event with low remaining budget, and a vendor whose cost exceeds it
    2. Test case: `assign 1 c/5` (where vendor 5's cost > event 1 remaining budget)
-   3. **Expected**: Error: "The budget of <Name> exceeds the remaining budget of the party."
+   3. **Expected**: Error: "The budget of {Name} exceeds the remaining budget of the party."
 
 3. **Prevent scheduling conflicts on the same date**
    1. Prerequisites: Two events on the same date, vendor X not yet on event 2
    2. Assign vendor X to event 1, then run `assign 2 c/<index of X>`
-   3. **Expected**: Error: "<Name> is already assigned to another party on the same date."
+   3. **Expected**: Error: "{Name} is already assigned to another party on the same date."
 
 4. **Unassigning vendors from events**
    1. Prerequisites: Event 1 has assigned vendors
    2. Test case: `unassign 1 c/2`
    3. **Expected**: Vendor 2 removed from event 1. Remaining budget increases appropriately. Success message:
-      "Unassigned the following people from <Event Name>'s party: <Names>"
+      "Unassigned the following people from {Event Name}'s party: {Names}"
 
    4. Test case (not assigned): `unassign 1 c/99` (99 refers to a person that exists but is not assigned)
-   5. **Expected**: "<Name> is not assigned to this party."
+   5. **Expected**: "{Name} is not assigned to this party."
 
    6. Test case (invalid person index in current view): `unassign 1 c/999`
    7. **Expected**: "The person index provided is invalid Try switching to the person list view and retry."
