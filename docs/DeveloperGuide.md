@@ -46,7 +46,7 @@ Refer to the guide [_Setting up and getting started_](SettingUp.md).
 
 <div markdown="span" class="alert alert-primary">
 
-:bulb: **Tip:** The `.puml` files used to create diagrams are in this document `docs/diagrams` folder. Refer to the [_PlantUML Tutorial_ at se-edu/guides](https://se-education.org/guides/tutorials/plantUml.html) to learn how to create and edit diagrams.
+💡 **Tip:** The `.puml` files used to create diagrams are in this document `docs/diagrams` folder. Refer to the [_PlantUML Tutorial_ at se-edu/guides](https://se-education.org/guides/tutorials/plantUml.html) to learn how to create and edit diagrams.
 </div>
 
 ### Architecture
@@ -536,9 +536,14 @@ Priorities: High (must have) - `* * *`, Medium (should have) - `* *`, Low (nice 
 | `* * *`  | party planner          | assign vendors to specific events               | organize who's working on each party                    |
 | `* * *`  | party planner          | see budget validation during assignments       | avoid overspending on events                            |
 | `* * *`  | party planner          | view all vendors and events in one app         | have centralized party planning management              |
+| `* * *`  | party planner          | delete individual vendor contacts               | remove outdated or incorrect vendor information         |
+| `* * *`  | party planner          | delete individual events                        | remove cancelled or completed parties from my list      |
 | `* *`    | busy party planner     | quickly find vendors by specialty tags         | locate appropriate services for specific party themes   |
 | `* *`    | party planner          | edit vendor and event information              | keep information current as details change              |
 | `* *`    | party planner          | see confirmation before deleting data          | prevent accidental loss of important vendor information |
+| `* *`    | party planner          | clear all contacts at once                      | reset my contact list when starting fresh               |
+| `* *`    | party planner          | clear all parties at once                       | clean up after event season without affecting contacts  |
+| `* *`    | party planner          | clear all data (contacts and parties)           | completely reset the application when needed            |
 | `* *`    | party planner          | undo recent changes                             | recover from mistakes during rapid data entry           |
 | `* *`    | new user               | access comprehensive help                       | learn the system quickly without external documentation |
 | `*`      | experienced planner    | assign multiple vendors to events at once      | speed up event setup for large parties                  |
@@ -633,28 +638,45 @@ Priorities: High (must have) - `* * *`, Medium (should have) - `* *`, Low (nice 
 4. UI updates should be immediate when data changes
 
 **Usability Requirements**
-5. New users should successfully create vendors and events within 10 minutes using help
-6. Error messages should clearly indicate the problem and suggest fixes
-7. CLI commands should follow consistent syntax patterns
-8. GUI should be readable on screen resolutions from 1024x768 upward
+1. New users should successfully create vendors and events within 10 minutes using help
+2. Error messages should clearly indicate the problem and suggest fixes
+3. CLI commands should follow consistent syntax patterns
+4. GUI should be readable on screen resolutions from 1024x768 upward
 
 **Reliability Requirements**
-9. Data should auto-save after every successful command
-10. Application should recover gracefully from corrupted data files
-11. Budget calculations should be accurate to 2 decimal places
-12. Undo functionality should reliably restore previous state
+1. Data should auto-save after every successful command
+2. Application should recover gracefully from corrupted data files
+3. Budget calculations should be accurate to 2 decimal places
+4. Undo functionality should reliably restore previous state
 
 **Compatibility Requirements**
-13. Should run on Windows 10+, macOS 10.15+, and Ubuntu 18.04+
-14. Requires Java 17 or higher
-15. Should work offline without internet connectivity
-16. Data files should be portable across operating systems
+1. Should run on Windows 10+, macOS 10.15+, and Ubuntu 18.04+
+2. Requires Java 17 or higher
+3. Should work offline without internet connectivity
+4. Data files should be portable across operating systems
 
 **Maintainability Requirements**
-17. New command types should be addable without modifying existing commands
-18. New vendor fields should be addable through configuration
-19. Code should follow established design patterns for consistency
-20. Component interfaces should remain stable across versions
+1. New command types should be addable without modifying existing commands
+2. New vendor fields should be addable through configuration
+3. Code should follow established design patterns for consistency
+4. Component interfaces should remain stable across versions
+
+**Reliability Constraints**
+1. Budget values must always be formatted and displayed with exactly 2 decimal places
+2. Assigning contacts must not cause the total cost to exceed the party's budget
+3. Editing a contact's budget must not violate any party budget constraints for parties they are assigned to
+4. A contact cannot be assigned to multiple parties occurring at the same date and time
+5. Duplicate contact names are not allowed (case-insensitive comparison)
+
+**Usability Constraints**
+1. Budget values must contain up to 7 digits with up to 2 decimal places
+2. Phone numbers must be between 3 to 15 digits long
+3. Event dates cannot be in the past (must be present or future dates)
+4. Search operations are case-insensitive for names and tags
+5. Find command treats spaces as keyword separators (not phrase search)
+6. Tag editing does not support cumulative addition - all existing tags must be replaced when editing
+7. Only one level of undo is supported (no redo functionality)
+8. Undo command cannot undo another undo command
 
 ---
 
@@ -685,7 +707,7 @@ Priorities: High (must have) - `* * *`, Medium (should have) - `* *`, Low (nice 
 
 Given below are instructions to test AbsolutSin-ema manually.
 
-<div markdown="span" class="alert alert-info">:information_source: **Note:** These instructions provide a starting point for testers. Testers are expected to do more *exploratory* testing beyond these scenarios.
+<div markdown="span" class="alert alert-info">ℹ️ **Note:** These instructions provide a starting point for testers. Testers are expected to do more *exploratory* testing beyond these scenarios.
 </div>
 
 ### Launch and shutdown
