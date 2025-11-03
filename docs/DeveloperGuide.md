@@ -213,7 +213,7 @@ The Model is completely independent of UI and Storage components, following clea
 **Key Storage Features:**
 
 1. **Automatic Saving**: Data persists after every state-changing command
-2. **Graceful Recovery**: Handles corrupted files by reverting to sample data
+2. **Graceful Recovery**: Handles corrupted files by clearing data
 3. **Relationship Preservation**: PersonId references maintained across sessions
 4. **User Preferences**: Window size, position, and view preferences saved
 
@@ -536,10 +536,10 @@ Priorities: High (must have) - `* * *`, Medium (should have) - `* *`, Low (nice 
 
 **Extensions**
 * 2a. Duplicate vendor name detected
-  * 2a1. System shows error message "This person already exists"
+  * 2a1. System shows error message "This person already exists in the address book"
   * 2a2. Use case ends
 * 2b. Invalid budget format
-  * 2b1. System shows "Budget should be a non-negative number"
+  * 2b1. System shows "Budget should only contain numbers, and it should be at least 0."
   * 2b2. Planner corrects input, use case resumes at step 1
 
 **Use case UC02: Create event and assign vendors with budget validation**
@@ -555,10 +555,10 @@ Priorities: High (must have) - `* * *`, Medium (should have) - `* *`, Low (nice 
 
 **Extensions**
 * 4a. Vendor costs exceed event budget
-  * 4a1. System shows "Total vendor costs (600) exceed event budget (500)"
+  * 4a1. System shows "The budget of {vendor} exceeds the remaining budget of the party."
   * 4a2. Use case ends, no event created
 * 3a. Invalid contact index provided
-  * 3a1. System shows "Invalid person index: 10"
+  * 3a1. System shows "The person index provided is invalid"
   * 3a2. Use case ends
 
 **Use case UC03: Assign additional vendors to existing event**
@@ -574,10 +574,10 @@ Priorities: High (must have) - `* * *`, Medium (should have) - `* *`, Low (nice 
 
 **Extensions**
 * 4a. Insufficient remaining budget
-  * 4a1. System shows "Vendor John's Decorations (cost: 200) exceeds remaining budget (150)"
+  * 4a1. System shows "The budget of {vendor} exceeds the remaining budget of the party."
   * 4a2. Use case ends, no assignments made
 * 5a. Vendor already assigned to event
-  * 5a1. System shows "Alice's Flowers has already been assigned to this party"
+  * 5a1. System shows "{vendor} has already been assigned to this party."
   * 5a2. Use case ends
 
 **Use case UC04: Search vendors by specialty and assign to event**
@@ -592,7 +592,7 @@ Priorities: High (must have) - `* * *`, Medium (should have) - `* *`, Low (nice 
 
 **Extensions**
 * 2a. No photographers found
-  * 2a1. System shows "0 persons listed"
+  * 2a1. System shows "0 persons listed!"
   * 2a2. Use case ends
 
 ---
@@ -633,24 +633,24 @@ Priorities: High (must have) - `* * *`, Medium (should have) - `* *`, Low (nice 
 
 ### Glossary
 
-| Term              | Definition                                                                    |
-|-------------------|-------------------------------------------------------------------------------|
-| **AbsolutSin-ema**| The name of this party planning contact and event management application   |
-| **Party Planner** | Professional who organizes and coordinates events and parties                 |
-| **Vendor**        | Service provider such as caterer, decorator, entertainer, venue, photographer |
-| **Event/Party**   | A planned gathering such as birthday, anniversary, wedding, corporate event   |
-| **Assignment**    | The process of allocating vendors to work on specific events                  |
-| **Budget**        | Monetary amount allocated for vendor services or event expenses               |
-| **Tag**           | Label used to categorize vendors by specialty (e.g., caterer, halal, elegant)|
-| **PersonId**      | Unique identifier ensuring data integrity across vendor-event relationships   |
-| **CLI**           | Command Line Interface - text-based commands for rapid data manipulation     |
-| **GUI**           | Graphical User Interface, displays contacts and events visually            |
-| **Index**         | Numerical position of vendor/event in the currently displayed list           |
-| **Service Type**   | Category of vendor service (caterer, DJ, venue, etc.)                      |
-| **Party Theme**    | Style of a party (princess, superhero, elegant, tropical)                  |
-| **MVP**            | Minimum Viable Product, core features needed for release 
-| **Remaining Budget** | Event budget minus already assigned vendor costs                            |
-| **Bulk Assignment** | Assigning multiple vendors to an event in a single command                  |
+| Term                      | Definition                                                                    |
+|---------------------------|-------------------------------------------------------------------------------|
+| **AbsolutSin-ema**        | The name of this party planning contact and event management application   |
+| **Party Planner**         | Professional who organizes and coordinates events and parties                 |
+| **Vendor/Person/Contact** | Service provider such as caterer, decorator, entertainer, venue, photographer |
+| **Event/Party**           | A planned gathering such as birthday, anniversary, wedding, corporate event   |
+| **Assignment**            | The process of allocating vendors to work on specific events                  |
+| **Budget**                | Monetary amount allocated for vendor services or event expenses               |
+| **Tag**                   | Label used to categorize vendors by specialty (e.g., caterer, halal, elegant)|
+| **PersonId**              | Unique identifier ensuring data integrity across vendor-event relationships   |
+| **CLI**                   | Command Line Interface - text-based commands for rapid data manipulation     |
+| **GUI**                   | Graphical User Interface, displays contacts and events visually            |
+| **Index**                 | Numerical position of vendor/event in the currently displayed list           |
+| **Service Type**          | Category of vendor service (caterer, DJ, venue, etc.)                      |
+| **Party Theme**           | Style of a party (princess, superhero, elegant, tropical)                  |
+| **MVP**                   | Minimum Viable Product, core features needed for release 
+| **Remaining Budget**      | Event budget minus already assigned vendor costs                            |
+| **Bulk Assignment**       | Assigning multiple vendors to an event in a single command                  |
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -763,10 +763,10 @@ Given below are instructions to test AbsolutSin-ema manually.
    1. Exit the application
    2. Edit the JSON data file and introduce syntax errors
    3. Restart the application
-   4. **Expected**: Application starts with sample data, warning logged about corrupted file.
+   4. **Expected**: Invalid data file popup appears, application starts with cleared data
 
 2. **Data saving verification**
-   1. Make several changes (add vendors, create events, assignments)
+   1. Make several valid changes (add vendors, create parties, assignments)
    2. Exit and restart application
    3. **Expected**: All changes preserved exactly as made.
 

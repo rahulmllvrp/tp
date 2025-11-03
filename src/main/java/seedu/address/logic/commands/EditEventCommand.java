@@ -74,6 +74,10 @@ public class EditEventCommand extends Command {
 
         Event eventToEdit = lastShownList.get(index.getZeroBased());
         Event editedEvent = createEditedEvent(eventToEdit, editEventDescriptor);
+        if (editedEvent.getDate().isInPast(editedEvent.getTime().value)) {
+            throw new CommandException("Events cannot be scheduled in the past. "
+                    + "Please choose a date and time that is now or in the future.");
+        }
 
         if (!eventToEdit.isSameEvent(editedEvent) && model.hasEvent(editedEvent)) {
             throw new CommandException(MESSAGE_DUPLICATE_EVENT);
@@ -88,27 +92,31 @@ public class EditEventCommand extends Command {
      * Creates and returns a {@code Event} with the details of {@code eventToEdit}
      * edited with {@code editEventDescriptor}.
      */
-    private static Event createEditedEvent(Event eventToEdit, EditEventDescriptor editEventDescriptor) {
+    private Event createEditedEvent(Event eventToEdit, EditEventDescriptor editEventDescriptor)
+            throws CommandException {
         assert eventToEdit != null;
         EventName updatedName = editEventDescriptor.getName().orElse(eventToEdit.getName());
         EventDate updatedDate = editEventDescriptor.getDate().orElse(eventToEdit.getDate());
         EventTime updatedTime = editEventDescriptor.getTime().orElse(eventToEdit.getTime());
         Budget updatedInitialBudget = editEventDescriptor.getBudget().orElse(eventToEdit.getInitialBudget());
         Budget updatedRemainingBudget;
+
         if (editEventDescriptor.getBudget().isPresent()) {
-            // Calculate the sum of assigned contacts' budgets
             double oldInitialBudget = Double.parseDouble(eventToEdit.getInitialBudget().value);
             double oldRemainingBudget = Double.parseDouble(eventToEdit.getRemainingBudget().value);
             double assignedBudgetsSum = oldInitialBudget - oldRemainingBudget;
 
-            // New remaining budget = new initial budget - sum of assigned budgets
             double newInitialBudget = Double.parseDouble(updatedInitialBudget.value);
             double newRemainingBudget = newInitialBudget - assignedBudgetsSum;
+
+            if (newRemainingBudget < 0) {
+                throw new CommandException("The new budget is less than the total budget of assigned contacts.");
+            }
             updatedRemainingBudget = new Budget(String.valueOf(newRemainingBudget));
         } else {
             updatedRemainingBudget = eventToEdit.getRemainingBudget();
         }
-        // Keep participants unchanged
+
         return new Event(updatedName, updatedDate, updatedTime, eventToEdit.getParticipants(),
                 updatedInitialBudget, updatedRemainingBudget);
     }

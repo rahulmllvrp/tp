@@ -80,6 +80,7 @@ public class AssignContactToEventCommand extends Command {
             if (updatedParticipantIds.contains(p.getId())) {
                 throw new CommandException(p.getName().toString() + " has already been assigned to this party.");
             }
+            AddEventCommand.validateNoConcurrentEvents(model, eventToModify, p.getId(), p.getName().toString());
             updatedParticipantIds.add(p.getId());
         }
 
@@ -118,6 +119,10 @@ public class AssignContactToEventCommand extends Command {
                         + Messages.MESSAGE_TRY_PERSON_LIST_MODE);
             }
             Person personToAdd = lastShownList.get(i.getZeroBased());
+            if (eventToModify.getParticipants().contains(personToAdd.getId())) {
+                throw new CommandException(personToAdd.getName().toString()
+                        + " has already been assigned to this party.");
+            }
             double personBudget = parseBudgetSafe(personToAdd.getBudget().value);
             if (eventBudget < personBudget) {
                 throw new CommandException("The budget of " + personToAdd.getName().toString()

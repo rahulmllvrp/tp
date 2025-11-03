@@ -26,6 +26,7 @@ import seedu.address.model.person.Budget;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
+import seedu.address.model.person.PersonId;
 import seedu.address.model.person.Phone;
 import seedu.address.model.person.Website;
 import seedu.address.model.tag.Tag;
@@ -86,37 +87,60 @@ public class EditCommand extends Command {
             throw new CommandException(MESSAGE_DUPLICATE_PERSON);
         }
 
-        model.saveStateForUndo("edit " + personToEdit.getName().fullName);
-        model.setPerson(personToEdit, editedPerson);
-
         // Check if budget has changed and update associated events
         if (!personToEdit.getBudget().equals(editedPerson.getBudget())) {
-            // Calculate the budget difference
-            double oldBudget = Double.parseDouble(personToEdit.getBudget().value);
-            double newBudget = Double.parseDouble(editedPerson.getBudget().value);
-            double budgetDifference = newBudget - oldBudget;
-
             List<seedu.address.model.event.Event> allEvents = model.getAddressBook().getEventList();
             for (seedu.address.model.event.Event event : allEvents) {
-                // Check if the edited person is a participant in this event
                 boolean isParticipant = event.getParticipants().contains(personToEdit.getId());
 
                 if (isParticipant) {
-                    // Update the remaining budget of the event
-                    double currentRemainingBudget = Double.parseDouble(event.getRemainingBudget().value);
-                    double newRemainingBudget = currentRemainingBudget - budgetDifference;
+                    double newBudget = Double.parseDouble(editedPerson.getBudget().value);
+                    double initialEventBudget = Double.parseDouble(event.getInitialBudget().value);
+                    double totalBudgetOfOtherParticipants = 0;
 
+                    for (PersonId participantId : event.getParticipants()) {
+                        if (!participantId.equals(personToEdit.getId())) {
+                            Optional<Person> participant = model.getPersonById(participantId);
+                            if (participant.isPresent()) {
+                                totalBudgetOfOtherParticipants +=
+                                        Double.parseDouble(participant.get().getBudget().value);
+                            }
+                        }
+                    }
 
+                    if (totalBudgetOfOtherParticipants + newBudget > initialEventBudget) {
+                        throw new CommandException("Editing budget failed: New budget exceeds event budget limit.");
+                    }
+                }
+            }
+        }
 
-                    // Create a new event with the updated remaining budget
+        model.saveStateForUndo("edit " + personToEdit.getName().fullName);
+        model.setPerson(personToEdit, editedPerson);
+
+        if (!personToEdit.getBudget().equals(editedPerson.getBudget())) {
+            List<seedu.address.model.event.Event> allEvents = model.getAddressBook().getEventList();
+            for (seedu.address.model.event.Event event : allEvents) {
+                boolean isParticipant = event.getParticipants().contains(editedPerson.getId());
+                if (isParticipant) {
+                    double totalParticipantBudget = 0;
+                    for (PersonId participantId : event.getParticipants()) {
+                        Optional<Person> participant = model.getPersonById(participantId);
+                        if (participant.isPresent()) {
+                            totalParticipantBudget += Double.parseDouble(participant.get().getBudget().value);
+                        }
+                    }
+                    double newRemainingBudget =
+                            Double.parseDouble(event.getInitialBudget().value) - totalParticipantBudget;
                     seedu.address.model.event.Event updatedEvent = new seedu.address.model.event.Event(
                             event.getName(), event.getDate(), event.getTime(),
                             event.getParticipants(), event.getInitialBudget(),
                             new Budget(String.valueOf(newRemainingBudget)));
-                    model.setEvent(event, updatedEvent); // Update the event in the model
+                    model.setEvent(event, updatedEvent);
                 }
             }
         }
+
         model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
         return new CommandResult(String.format(MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson)));
     }
@@ -145,7 +169,6 @@ public class EditCommand extends Command {
             return true;
         }
 
-        // instanceof handles nulls
         if (!(other instanceof EditCommand)) {
             return false;
         }

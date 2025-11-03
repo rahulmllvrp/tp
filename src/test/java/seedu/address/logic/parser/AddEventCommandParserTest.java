@@ -54,12 +54,6 @@ public class AddEventCommandParserTest {
         assertParseFailure(parser, userInput, EventDate.MESSAGE_CONSTRAINTS);
     }
 
-    @Test
-    public void parse_pastDate_failure() {
-        // Past dates should be rejected
-        String userInput = " n/Past Party d/01-01-2024 t/18:00 b/500";
-        assertParseFailure(parser, userInput, EventDate.MESSAGE_CONSTRAINTS);
-    }
 
     @Test
     public void parse_compulsoryFieldMissing_failure() {

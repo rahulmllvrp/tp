@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.AppUtil.checkArgument;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
@@ -46,10 +47,33 @@ public class EventDate {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-uuuu")
                     .withResolverStyle(ResolverStyle.STRICT);
             LocalDate parsedDate = LocalDate.parse(test, formatter);
+            return true;
+        } catch (DateTimeParseException e) {
+            return false;
+        }
+    }
 
-            // Check if the date is not before today
+    /**
+     * Returns true if the date and time combination is in the past.
+     */
+    public boolean isInPast(String timeValue) {
+        try {
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-uuuu")
+                    .withResolverStyle(ResolverStyle.STRICT);
+            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+
+            LocalDate parsedDate = LocalDate.parse(value, dateFormatter);
+            LocalTime parsedTime = LocalTime.parse(timeValue, timeFormatter);
+
             LocalDate today = LocalDate.now();
-            return !parsedDate.isBefore(today);
+            LocalTime now = LocalTime.now();
+
+            if (parsedDate.isBefore(today)) {
+                return true;
+            } else if (parsedDate.equals(today)) {
+                return parsedTime.isBefore(now);
+            }
+            return false;
         } catch (DateTimeParseException e) {
             return false;
         }
