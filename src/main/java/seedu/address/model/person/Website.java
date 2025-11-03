@@ -10,13 +10,17 @@ import static seedu.address.commons.util.AppUtil.checkArgument;
 public class Website {
 
     public static final String MESSAGE_CONSTRAINTS =
-            "Websites [optional] can take any values, but should not be blank if present";
+            "Websites [optional] should be a valid domain (e.g., example.com, www.example.com) "
+                    + "without spaces and should not be blank if present";
 
-    /*
-     * The first character of the website must not be a whitespace,
-     * otherwise " " (a blank string) becomes a valid input.
+    /**
+     * The website should be a valid domain format without spaces.
+     * Allows optional protocol (http/https), optional www subdomain,
+     * domain name with at least one dot and valid TLD.
      */
-    public static final String VALIDATION_REGEX = "[^\s].*";
+    public static final String VALIDATION_REGEX =
+            "^(?:https?://)?(?:www\\.)?[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?"
+                    + "(\\.[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?)*\\.[a-zA-Z]{2,}(?:/.*)?$";
 
     public final String value;
 
@@ -35,7 +39,16 @@ public class Website {
      * Returns true if a given string is a valid website.
      */
     public static boolean isValidWebsite(String test) {
-        return test.isEmpty() || test.matches(VALIDATION_REGEX);
+        if (test.isEmpty()) {
+            return true; // Empty string is valid for optional field
+        }
+
+        // Reject any input containing spaces
+        if (test.contains(" ")) {
+            return false;
+        }
+
+        return test.matches(VALIDATION_REGEX);
     }
 
     @Override
