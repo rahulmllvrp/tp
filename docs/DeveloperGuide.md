@@ -567,71 +567,378 @@ Priorities: High (must have) - `* * *`, Medium (should have) - `* *`, Low (nice 
 
 **MSS**
 1. Planner enters `add n/Elite Catering p/91234567 e/info@elite.com w/www.elite.com t/caterer t/halal b/150`
-2. System validates all required fields and budget format
-3. System creates vendor entry with unique PersonId
-4. System displays success message with vendor details
-5. System updates vendor list display
+2.  System validates all required fields, ensuring the name is unique and the budget format is correct.
+3. System creates a new vendor entry with a unique PersonId.
+4. System displays a success message with the new vendor's details.
+5. System updates the vendor list displayed in the UI.
+
+    Use case ends.
 
 **Extensions**
-* 2a. Duplicate vendor name detected
-  * 2a1. System shows error message "This person already exists in the address book"
-  * 2a2. Use case ends
-* 2b. Invalid budget format
+* 2a. Duplicate vendor name detected.
+  * 2a1. System shows error message "This person already exists in the address book".
+  * Use case ends.
+* 2b. Invalid budget format.
   * 2b1. System shows "Budget should only contain numbers, and it should be at least 0."
-  * 2b2. Planner corrects input, use case resumes at step 1
+  * 2b2. Planner corrects input.
+  * Use case resumes at step 1.
+* 2c. Invalid contact field (phone, email, website):
+    * 2c1. System shows specific error message for the invalid field (e.g., "Phone numbers should only contain numbers, and it should be at
+    least 3 digits long").
+    * 2c2. Planner corrects input. 
+    * Use case resumes at step 1.
+
 
 **Use case UC02: Create event and assign vendors with budget validation**
 
 **MSS**
 1. Planner enters `addp n/Sarah's Birthday d/15-12-2024 t/19:00 b/500 c/1,3,5`
-2. System validates event details and contact indexes
-3. System retrieves vendor costs for contacts 1, 3, and 5
-4. System validates total vendor costs (150+100+75=325) against event budget (500)
-5. System creates event with assigned vendors
-6. System updates event remaining budget to 175 (500-325)
-7. System displays success message with event and assignment details
+2. System validates event details and contact indexes.
+3. System retrieves vendor costs for contacts 1, 3, and 5.
+4. System validates total vendor costs (150+100+75=325) against event budget (500).
+5. System creates event with assigned vendors.
+6. System updates event remaining budget to 175 (500-325).
+7. System displays success message with event and assignment details.
+8. System updates the event list displayed in the UI.
+
+    Use case ends.
 
 **Extensions**
-* 4a. Vendor costs exceed event budget
-  * 4a1. System shows "The budget of {vendor} exceeds the remaining budget of the party."
-  * 4a2. Use case ends, no event created
-* 3a. Invalid contact index provided
-  * 3a1. System shows "The person index provided is invalid"
-  * 3a2. Use case ends
+* 2a. Vendor costs exceed event initial budget:
+  * 2a1. System shows an error message (e.g., "The total budget of assigned vendors exceeds the event's initial budget.").
+  * Use case ends, no event created.
+* 2b. Invalid contact index provided:
+  * 2b1. System shows an error message (e.g., "The person index provided is invalid").
+  * Use case ends, no event created.
+* 2c. Invalid event detail format (date, time, budget):
+  * 2c1. System shows specific error message for the invalid field.
+  * 2c2. Planner corrects input
+  * Use case resumes at step 1.
+* 2d. Duplicate event name:
+  * 2d1. System shows error message "This event already exists in the address book".
+  * Use case ends.
+
 
 **Use case UC03: Assign additional vendors to existing event**
 
 **MSS**
-1. Planner views event list and identifies target event at index 2
+1. Planner views the event list and identifies the target event (e.g., at index 2).
 2. Planner enters `assign 2 c/4,7`
-3. System retrieves event at index 2 and its remaining budget
-4. System validates vendor costs against remaining budget
-5. System checks vendors 4 and 7 are not already assigned
-6. System updates event participant list and adjusts remaining budget
-7. System displays success message with assigned vendor names
+3. System retrieves the event at the specified index and its current remaining budget.
+4. System retrieves the service costs for vendors 4 and 7, and validates them against the event's remaining budget.
+5. System checks that vendors 4 and 7 are not already assigned to this event.
+6. System updates the event's participant list and adjusts its remaining budget.
+7. System displays a success message with the assigned vendor names.
+8. System updates the event list displayed in the UI.
+
+    Use case ends.
 
 **Extensions**
+* 2a. Invalid event index:
+  * 2a1. System shows error message "The event index provided is invalid".
+  * 2a2. Use case ends.
+* 2b. Invalid vendor index:
+  * 2b1. System shows error message "The person index provided is invalid".
+  * 2b2. Use case proceeds, skipping the invalid vendor index.
 * 4a. Insufficient remaining budget
   * 4a1. System shows "The budget of {vendor} exceeds the remaining budget of the party."
-  * 4a2. Use case ends, no assignments made
+  * Use case ends, no assignments made
 * 5a. Vendor already assigned to event
   * 5a1. System shows "{vendor} has already been assigned to this party."
-  * 5a2. Use case ends
+  *  Use case ends
 
-**Use case UC04: Search vendors by specialty and assign to event**
+
+**Use case UC04: Search vendors by specialty/name and assign to event**
 
 **MSS**
-1. Planner enters `find photographer` to locate photographers
-2. System filters vendor list showing only vendors tagged with "photographer"
-3. Planner reviews filtered list and identifies suitable vendor at index 2
-4. Planner enters `assign 1 c/2` to assign photographer to event 1
-5. System validates assignment and updates event
-6. Planner enters `list` to return to full vendor view
+1. Planner enters `find photographer` to locate photographers.
+2. System filters vendor list showing only vendors whose names or tags contain "photographer".
+3. Planner reviews filtered list and identifies suitable vendors (e.g., at index 2 in the filtered list).
+4. Planner enters `assign 1 c/2` to assign photographer at index 2 to event 1.
+5. System validates assignment (including budget checks) and updates the event's participant list and remaining budget.
+6. System displays a success message with the assigned vendor's name and event details.
+7. Planner enters `list` to return to full vendor view
+
+    Use case ends.
 
 **Extensions**
-* 2a. No photographers found
+* 1a. Planner searches by multiple keywords (name or tag): find caterer halal
+  * 1a1. System filters the vendor list, showing vendors matching "caterer" OR "halal".
+  * Use case continues from step 3.
+* 2a. No photographer found
   * 2a1. System shows "0 persons listed!"
-  * 2a2. Use case ends
+  * Use case ends
+* 5a. Assignment fails due to budget constraints:
+  * 5a1. System shows "The budget of {vendor} exceeds the remaining budget of the party."
+  * Use case ends, no assignment is made.
+* 5b. Assignment fails due to invalid event or vendor index:
+  * 5b1. System shows an appropriate error message (e.g., "The event index provided is invalid" or "The person index provided is invalid").
+  * Use case ends, no assignment is made.
+
+
+**Use case UC05: Edit vendor information.**
+
+**MSS**
+1. Planner identifies the vendor to edit (e.g., at index 1).
+2. Planner enters `edit 1 p/87654321 b/250`
+3. System validates the new information (e.g., phone number format, budget value).
+4. System updates the vendor's details.
+5. System displays a success message confirming the changes.
+6. System updates the vendor list displayed in the UI.
+
+    Use case ends
+
+**Extensions**
+* 2a. Invalid vendor index:
+  * 2a1. System shows error message "The person index provided is invalid".
+  * Use case ends.
+* 3a. Invalid format for any field:
+  * 3a1. System shows specific error message for the invalid field.
+  * Use case ends, no changes are made to the vendor.
+
+**Use case UC06: Delete a vendor**
+
+**MSS**
+1. Planner identifies the vendor to delete (e.g., at index 1).
+2. Planner enters `delete 1`
+3. Planner confirms deletion(UC15)
+4. System removes the vendor from the address book.
+5. System displays a success message confirming the deletion.
+6. System updates the vendor list displayed in the UI.
+
+    Use case ends.
+
+**Extensions**
+* 2a. Invalid vendor index:
+  * 2a1. System shows error message "The person index provided is invalid".
+  * Use case ends.
+
+
+**Use case UC07: List all vendors**
+
+**MSS**
+1. Planner enters `list`
+2. System displays an unfiltered list of all vendors in the UI.
+    
+    Use case ends.
+
+**Extensions**
+* 2a. No vendors exist in the system:
+  * 2a1. System displays message "0 persons listed!".
+  * Use case ends.
+
+
+**Use case UC08: Edit event information**
+
+
+**MSS**
+1. Planner identifies the event to edit (e.g., at index 1).
+2. Planner enters `editp 1 n/Wedding Reception d/26-06-2025 b/3000`
+3. System validates the new event details.
+4. System updates the event's information, including recalculating remaining budget if the initial budget changed 
+and re-validating against assigned vendor costs.
+5. System displays a success message confirming the changes.
+6. System updates the event list displayed in the UI.
+
+    Use case ends.
+
+
+**Extensions**
+* 2a. Invalid event index:
+  * 2a1. System shows error message "The event index provided is invalid".
+  * Use case ends.
+* 3a. Invalid format for any field (date, time, budget):
+  * 3a1. System shows specific error message for the invalid field.
+  * Use case ends, no changes are made to the event.
+* 4a. New initial budget is less than total assigned vendor costs:
+  * 4a1. System shows error message "The new budget is less than the total cost of currently assigned vendors."
+  * Use case ends, no changes are made.
+
+**Use case UC09: Delete an event**
+
+**MSS**
+1. Planner identifies the event to delete (e.g., at index 1).
+2. Planner enters `deletep 1`
+3. Planner confirms deletion(UC16).
+4. System removes the event from the address book.
+5. System displays a success message confirming the deletion.
+6. System updates the event list displayed in the UI.
+
+    Use case ends.
+
+
+**Extensions**
+* 2a. Invalid event index:
+  * 2a1. System shows error message "The event index provided is invalid". 
+  * Use case ends.
+
+
+**Use case UC10: View event participants**
+
+
+**MSS**
+1. Planner identifies the event (e.g., at index 1).
+2. Planner enters `view 1`
+3. System displays a detailed view of Event 1, including its name, date, time, budget, and a list of 
+all assigned vendors (PersonId to Name/details).
+
+    Use case ends.
+
+**Extensions**
+* 2a. Invalid event index:
+  * 2a1. System shows error message "The event index provided is invalid".
+  * Use case ends.
+* 3a. No vendors assigned to the event:
+   * 3a1. System displays event details and message "No vendors assigned to this event."
+   * Use case ends.
+
+
+**Use case UC11: List all events**
+
+
+**MSS**
+1. Planner enters `listp`
+2. System displays an unfiltered list of all events in the UI.
+
+   Use case ends.
+
+
+**Extensions**
+* 2a. No events exist in the system:
+  * 2a1. System displays message "0 events listed!".
+  * Use case ends.
+
+
+**Use case UC12: Unassign contact from event**
+
+
+**MSS**
+1. Planner identifies the event and the vendors to unassign (e.g., event index 1, contacts at index 2 and 3).
+2. Planner enters `unassign 1 c/2,3`
+3. System retrieves the event and the specified vendors.
+4. System removes vendors 2 and 3 from the event's participant list.
+5. System adjusts the event's remaining budget by adding back the unassigned vendors' costs.
+6. System displays a success message confirming the unassignment.
+7. System updates the event list displayed in the UI.
+
+    Use case ends.
+
+**Extensions**
+* 2a. Invalid event index:
+  * 2a1. System shows error message "The event index provided is invalid".
+  * Use case ends.
+* 2b. Invalid vendor index:
+  * 2b1. System shows error message "The person index provided is invalid".
+  * Use case ends.
+* 4a. Vendor not assigned to the event:
+  * 4a1. System shows message "{vendor} is not assigned to this party."
+  * Use case ends.
+
+
+**Use case UC13: Undo recent operation**
+
+**MSS**
+1. Planner performs a state-changing command (e.g., add, delete, assign).
+2. Planner enters `undo`
+3. System restores the application state to reflect the state before the last command was executed.
+4. System displays a success message (e.g., "Undid {description of undone operation}").
+5. System updates the UI to reflect the restored state.
+
+    Use case ends.
+
+**Extensions**
+* 2a. No previous operation to undo:
+  * 2a1. System shows error message "There is no command to undo!".
+  * Use case ends.
+
+
+**Use case UC14: Clear all data with confirmation**
+
+
+**MSS**
+1. Planner enters `clear all`
+2. System displays a warning message: "Are you sure you want to clear the party planner? 
+(Type 'y' to confirm, 'n' to cancel)".
+3. Planner enters y to confirm.
+4. System deletes all vendors and events.
+5. System displays a success message "Address book has been cleared!".
+6. System updates the UIs (vendor list and event list) to be empty.
+
+    Use case ends.
+
+**Extensions**
+* 3a. Planner enters n to cancel:
+  * 3a1. System displays "Operation cancelled."
+  * Use case ends, no data is deleted.
+* 3b. Planner enters an invalid input (neither 'y' nor 'n'):
+  * 3b1. System re-prompts for confirmation or cancels the operation (implementation dependent).
+  * Use case ends (if cancelled) or resumes at step 3 (if re-prompted).
+
+
+**Use case UC15: Clear only contacts with confirmation**
+
+**MSS**
+1. Planner enters `clear contacts`
+2. System displays a warning message: "Are you sure you want to clear all contacts? (Type 'y' to confirm, 'n' to cancel)".
+3. Planner enters y to confirm.
+4. System deletes all contact/vendor entries.
+5. System displays a success message "All contacts have been cleared!".
+6. System updates the vendor list in the UI to be empty.
+
+    Use case ends.
+
+**Extensions**
+* 3a. Planner enters n to cancel:
+  * 3a1. System displays "Operation cancelled."
+  * Use case ends, no contacts are deleted.
+
+
+**Use case UC16: Clear only events with confirmation**
+
+
+**MSS**
+1. Planner enters `clear parties`
+2. System displays a warning message: "Are you sure you want to clear all parties? (Type 'y' to confirm, 'n' to cancel)".
+3. Planner enters y to confirm.
+4. System deletes all event entries.
+5. System displays a success message "All parties have been cleared!".
+6. System updates the event list in the UI to be empty.
+
+    Use case ends.
+
+**Extensions**
+* 3a. Planner enters n to cancel:
+  * 3a1. System displays "Operation cancelled."
+  * Use case ends, no events are deleted.
+
+
+
+**Use case UC17: Find events by name**
+
+
+**MSS**
+1. Planner enters `findp birthday`
+2. System filters the event list to show only events whose names contain "birthday".
+3. System displays the filtered list of events in the UI.
+
+    Use case ends.
+
+**Extensions**
+* 2a. No events found matching the keywords:
+  * 2a1. System shows "0 events listed!".
+  * Use case ends.
+
+
+**Use case UC18: Access comprehensive help**
+
+**MSS**
+1. Planner enters `help`
+2. System opens a HelpWindow displaying comprehensive instructions, command formats, and examples.
+3. The HelpWindow is scrollable and allows the planner to navigate through the help content.
+
+    Use case ends.
+
+
 
 ---
 
