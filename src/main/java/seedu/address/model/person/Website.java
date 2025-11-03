@@ -13,11 +13,7 @@ public class Website {
             "Websites [optional] should be a valid domain (e.g., example.com, www.example.com) "
                     + "without spaces and should not be blank if present";
 
-    /*
-     * The first character of the website must not be a whitespace,
-     * otherwise " " (a blank string) becomes a valid input.
-     */
-    /*
+    /**
      * The website should be a valid domain format without spaces.
      * Allows optional protocol (http/https), optional www subdomain,
      * domain name with at least one dot and valid TLD.
@@ -39,9 +35,6 @@ public class Website {
         value = website;
     }
 
-    /**
-     * Returns true if a given string is a valid website.
-     */
     /**
      * Returns true if a given string is a valid website.
      */
