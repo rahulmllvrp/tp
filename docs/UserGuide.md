@@ -144,6 +144,11 @@ Let's plan Sarah's Birthday Party to see AbsolutSin-ema in action:
 * If you are using a PDF version of this document, be careful when copying and pasting commands that span multiple lines as space characters surrounding line-breaks may be omitted when copied over to the application.
 
 * **Case sensitivity**: Contact names and party names are case-insensitive. `John Doe`, `john doe`, and `JOHN DOE` are treated as the same name.
+
+* **Parameter restrictions**: All parameters cannot contain spaces **except for names**. For example:
+  * ✅ Valid: `n/John Doe` (names can have spaces)
+  * ✅ Valid: `p/91234567`, `e/john@example.com`, `w/www.example.com`
+  * ❌ Invalid: `p/9123 4567`, `e/john @example.com`, `w/www.example .com`
 </div>
 
 ### Viewing help: `help`

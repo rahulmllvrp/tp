@@ -299,6 +299,10 @@ The assignment system manages complex relationships between vendors and events w
 
 #### Implementation
 
+The following sequence diagram shows how the assign command works when a user executes `assign 1 c/2,3`:
+
+<img src="images/AssignSequenceDiagram.png" width="800" />
+
 **Assignment Command Flow:**
 1. `AssignContactToEventCommand` receives event index and person indexes
 2. Validates all indexes against current filtered lists
