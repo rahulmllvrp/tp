@@ -713,7 +713,7 @@ Priorities: High (must have) - `* * *`, Medium (should have) - `* *`, Low (nice 
 
 Given below are instructions to test AbsolutSin-ema manually.
 
-<div markdown="span" class="alert alert-info">ℹ️ **Note:** These instructions provide a starting point for testers. Testers are expected to do more *exploratory* testing beyond these scenarios.
+<div markdown="span" class="alert alert-info">ℹ️ Note: These instructions provide a starting point for testers. Testers are expected to do more exploratory testing beyond these scenarios.
 </div>
 
 ### Launch and shutdown
