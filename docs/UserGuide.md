@@ -247,7 +247,7 @@ Examples:
 
 AbsolutSin-ema allows you to manage parties (events) and assign contacts to them.
 
-#### Adding a party: `addp`
+### Adding a party: `addp`
 Adds a party to the party list.
 
 Format: `addp n/NAME d/DATE t/TIME b/BUDGET [c/CONTACT_INDEX ...]`
