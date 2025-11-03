@@ -61,10 +61,8 @@ public class AddEventCommand extends Command {
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
 
-        // Validate date and time
         if (toAdd.getDate().isInPast(toAdd.getTime().value)) {
-            throw new CommandException("Events cannot be scheduled in the past. "
-                    + "Please choose a date and time that is now or in the future.");
+            throw new CommandException("Events cannot be scheduled in the past.");
         }
 
         if (model.hasEvent(toAdd)) {
@@ -124,12 +122,7 @@ public class AddEventCommand extends Command {
                 .toString();
     }
     /**
-     * Validates that a person is not assigned to concurrent events on the same date.
-     * @param model The model containing event data
-     * @param targetEvent The event being created/modified
-     * @param personId The ID of the person being assigned
-     * @param personName The name of the person for error messages
-     * @throws CommandException if person is already assigned to concurrent event
+     * Validates no concurrent events for a person on the same date.
      */
     public static void validateNoConcurrentEvents(Model model, Event targetEvent, PersonId personId, String personName)
             throws CommandException {

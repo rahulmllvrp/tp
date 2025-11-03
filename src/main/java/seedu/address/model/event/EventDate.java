@@ -53,7 +53,6 @@ public class EventDate {
         }
     }
 
-
     /**
      * Returns true if the date and time combination is in the past.
      */
