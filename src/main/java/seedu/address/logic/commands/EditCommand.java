@@ -117,7 +117,6 @@ public class EditCommand extends Command {
         model.saveStateForUndo("edit " + personToEdit.getName().fullName);
         model.setPerson(personToEdit, editedPerson);
 
-        // Recalculate the remaining budget for all affected events
         if (!personToEdit.getBudget().equals(editedPerson.getBudget())) {
             List<seedu.address.model.event.Event> allEvents = model.getAddressBook().getEventList();
             for (seedu.address.model.event.Event event : allEvents) {
@@ -168,7 +167,6 @@ public class EditCommand extends Command {
             return true;
         }
 
-        // instanceof handles nulls
         if (!(other instanceof EditCommand)) {
             return false;
         }
