@@ -60,6 +60,13 @@ public class AddEventCommand extends Command {
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
+
+        // Validate date and time
+        if (toAdd.getDate().isInPast(toAdd.getTime().value)) {
+            throw new CommandException("Events cannot be scheduled in the past. "
+                    + "Please choose a date and time that is now or in the future.");
+        }
+
         if (model.hasEvent(toAdd)) {
             throw new CommandException(MESSAGE_DUPLICATE_EVENT);
         }
