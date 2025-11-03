@@ -123,7 +123,14 @@ public class AddEventCommand extends Command {
                 .add("toAdd", toAdd)
                 .toString();
     }
-    // Validates that a person is not assigned to concurrent events on the same date.
+    /**
+     * Validates that a person is not assigned to concurrent events on the same date.
+     * @param model The model containing event data
+     * @param targetEvent The event being created/modified
+     * @param personId The ID of the person being assigned
+     * @param personName The name of the person for error messages
+     * @throws CommandException if person is already assigned to concurrent event
+     */
     public static void validateNoConcurrentEvents(Model model, Event targetEvent, PersonId personId, String personName)
             throws CommandException {
         for (Event existingEvent : model.getFilteredEventList()) {
