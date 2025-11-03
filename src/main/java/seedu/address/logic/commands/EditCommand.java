@@ -102,7 +102,8 @@ public class EditCommand extends Command {
                         if (!participantId.equals(personToEdit.getId())) {
                             Optional<Person> participant = model.getPersonById(participantId);
                             if (participant.isPresent()) {
-                                totalBudgetOfOtherParticipants += Double.parseDouble(participant.get().getBudget().value);
+                                totalBudgetOfOtherParticipants +=
+                                        Double.parseDouble(participant.get().getBudget().value);
                             }
                         }
                     }
@@ -129,7 +130,8 @@ public class EditCommand extends Command {
                             totalParticipantBudget += Double.parseDouble(participant.get().getBudget().value);
                         }
                     }
-                    double newRemainingBudget = Double.parseDouble(event.getInitialBudget().value) - totalParticipantBudget;
+                    double newRemainingBudget =
+                            Double.parseDouble(event.getInitialBudget().value) - totalParticipantBudget;
                     seedu.address.model.event.Event updatedEvent = new seedu.address.model.event.Event(
                             event.getName(), event.getDate(), event.getTime(),
                             event.getParticipants(), event.getInitialBudget(),
