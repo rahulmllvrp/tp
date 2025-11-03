@@ -87,7 +87,7 @@ public class Person {
     }
 
     /**
-     * Returns true if both persons have the same name (case-sensitive, no trailing spaces).
+     * Returns true if both persons have the same name (case-insensitive, no trailing spaces).
      * This defines a weaker notion of equality between two persons.
      */
     public boolean isSamePerson(Person otherPerson) {
