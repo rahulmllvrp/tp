@@ -1,0 +1,118 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":AssignContactToEventCommandParser" as AssignParser LOGIC_COLOR
+participant "a:AssignContactToEventCommand" as AssignCommand LOGIC_COLOR
+participant "r:CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant "m:Model" as Model MODEL_COLOR
+participant ":Event" as Event MODEL_COLOR
+participant ":Person" as Person MODEL_COLOR
+end box
+
+[-> LogicManager : execute("assign 1 c/2,3")
+activate LogicManager
+
+LogicManager -> AddressBookParser : parseCommand("assign 1 c/2,3")
+activate AddressBookParser
+
+create AssignParser
+AddressBookParser -> AssignParser
+activate AssignParser
+
+AssignParser --> AddressBookParser
+deactivate AssignParser
+
+AddressBookParser -> AssignParser : parse("1 c/2,3")
+activate AssignParser
+
+AssignParser -> AssignParser : parseIndex("1")
+AssignParser -> AssignParser : parseContactIndexes("2,3")
+
+create AssignCommand
+AssignParser -> AssignCommand : AssignContactToEventCommand(eventIndex, personIndexSet)
+activate AssignCommand
+
+AssignCommand --> AssignParser
+deactivate AssignCommand
+
+AssignParser --> AddressBookParser : a
+deactivate AssignParser
+'Hidden arrow to position the destroy marker below the end of the activation bar.
+AssignParser -[hidden]-> AddressBookParser
+destroy AssignParser
+
+AddressBookParser --> LogicManager : a
+deactivate AddressBookParser
+
+LogicManager -> AssignCommand : execute(m)
+activate AssignCommand
+
+AssignCommand -> Model : saveStateForUndo("assign to party 1")
+activate Model
+Model --> AssignCommand
+deactivate Model
+
+AssignCommand -> Model : getFilteredEventList()
+activate Model
+Model --> AssignCommand : eventList
+deactivate Model
+
+AssignCommand -> Model : getFilteredPersonList()
+activate Model
+Model --> AssignCommand : personList
+deactivate Model
+
+AssignCommand -> Event : getRemainingBudget()
+activate Event
+Event --> AssignCommand : remainingBudget
+deactivate Event
+
+loop for each person index
+    AssignCommand -> Person : getBudget()
+    activate Person
+    Person --> AssignCommand : personBudget
+    deactivate Person
+
+    AssignCommand -> AssignCommand : validateBudget(remainingBudget, personBudget)
+    AssignCommand -> AssignCommand : validateNotAlreadyAssigned(person, event)
+end
+
+AssignCommand -> Event : getParticipants()
+activate Event
+Event --> AssignCommand : currentParticipants
+deactivate Event
+
+AssignCommand -> AssignCommand : calculateNewRemainingBudget()
+
+create Event
+AssignCommand -> Event : new Event(name, date, time, updatedParticipants, initialBudget, newRemainingBudget)
+activate Event
+
+Event --> AssignCommand : newEvent
+deactivate Event
+
+AssignCommand -> Model : setEvent(oldEvent, newEvent)
+activate Model
+Model --> AssignCommand
+deactivate Model
+
+create CommandResult
+AssignCommand -> CommandResult : new CommandResult(successMessage)
+activate CommandResult
+
+CommandResult --> AssignCommand : r
+deactivate CommandResult
+
+AssignCommand --> LogicManager : r
+deactivate AssignCommand
+
+[<--LogicManager
+deactivate LogicManager
+@enduml
