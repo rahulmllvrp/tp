@@ -25,10 +25,10 @@ public class EventDateTest {
         assertFalse(EventDate.isValidDate("29-02-2023")); // 2023 is not a leap year
         assertFalse(EventDate.isValidDate("29-02-2100")); // 2100 is not a leap year (divisible by 100 but not 400)
 
-        // invalid dates (past dates)
-        assertFalse(EventDate.isValidDate("01-01-2024")); // past date
-        assertFalse(EventDate.isValidDate("29-02-2024")); // past leap year date
-        assertFalse(EventDate.isValidDate("28-02-2023")); // past date
+        // valid past dates (validation moved to command execution)
+        assertTrue(EventDate.isValidDate("01-01-2024")); // past date (format valid)
+        assertTrue(EventDate.isValidDate("29-02-2024")); // past leap year date (format valid)
+        assertTrue(EventDate.isValidDate("28-02-2023")); // past date (format valid)
 
     }
 
