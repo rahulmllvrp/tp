@@ -280,6 +280,11 @@ public class AddEventCommandTest {
             return FXCollections.observableArrayList(personsAdded);
         }
 
+        @Override
+        public ObservableList<Event> getFilteredEventList() {
+            return FXCollections.observableArrayList(eventsAdded);
+        }
+
         public void addPerson(Person person) {
             personsAdded.add(person);
         }
