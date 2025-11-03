@@ -78,7 +78,7 @@ Event *--> "1" EventTime
 
 ' ===== Shared PersonId =====
 Person *--> "1" PersonId
-Event  --> "1" PersonId
+Event  --> "*" PersonId
 
 ' ===== Hidden layout alignments =====
 
