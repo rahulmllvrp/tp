@@ -7,8 +7,23 @@ title: Developer Guide
 
 **AbsolutSin-ema** is a desktop application for party planners to manage contacts and events efficiently. It is optimized for use via a Command Line Interface (CLI) while still having the benefits of a Graphical User Interface (GUI). This guide provides comprehensive documentation for developers who wish to understand, maintain, or extend AbsolutSin-ema.
 
-* Table of Contents
-{:toc}
+AbsolutSin-ema is an address book that is designed for party planners across all experience levels — from student organizers and hall committees to freelance coordinators and professional event teams. It serves individuals who manage guests, suppliers, and logistics, and who value fast, organized, and command-driven workflows that streamline event planning and communication.
+
+## Table of Contents
+- [Acknowledgements](#acknowledgements)
+- [Setting up, getting started](#setting-up-getting-started)
+- [Design](#design)
+- [Component Details](#component-details)
+- [Implementation](#implementation)
+- [Documentation, logging, testing, configuration, dev-ops](#documentation-logging-testing-configuration-dev-ops)
+- [Appendix: Requirements](#appendix-requirements)
+  - [Product scope](#product-scope)
+  - [User stories](#user-stories)
+  - [Use cases](#use-cases)
+  - [Non-Functional Requirements](#non-functional-requirements)
+  - [Glossary](#glossary)
+- [Appendix: Instructions for manual testing](#appendix-instructions-for-manual-testing)
+- [Appendix: Effort](#appendix-effort)
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -64,11 +79,11 @@ The application's core functionality is delivered through four main components:
 * [**`Model`**](#model-component): Data models and business rules
 * [**`Storage`**](#storage-component): Data persistence and retrieval
 
-[**`Commons`**](#common-classes) provides shared utilities used across components.
+**`Commons`** provides shared utilities used across components.
 
 ### Component Interaction
 
-The *Sequence Diagram* below shows how the components interact for the command `assign 1 c/2,3` (assigning contacts 2 and 3 to event 1):
+The *Sequence Diagram* below shows how the components interact for the command `delete 1`:
 
 <img src="images/ArchitectureSequenceDiagram.png" width="574" />
 
@@ -216,6 +231,17 @@ The Model is completely independent of UI and Storage components, following clea
 2. **Graceful Recovery**: Handles corrupted files by clearing data
 3. **Relationship Preservation**: PersonId references maintained across sessions
 4. **User Preferences**: Window size, position, and view preferences saved
+
+### Common classes
+
+Classes used by multiple components are in the `seedu.address.commons` package. These include:
+
+* **`LogsCenter`**: Handles application-wide logging functionality
+* **`Config`**: Manages application configuration settings
+* **`Messages`**: Contains common message templates and constants
+* **`JsonUtil`**: Provides JSON serialization and file I/O utilities
+* **`StringUtil`**: Common string manipulation and validation helpers
+* **`AppUtil`**: General application utilities and argument validation
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -433,7 +459,7 @@ To prevent accidental data loss, the application implements a confirmation syste
 - User-friendly prompts reduce the chance of accidental data loss from typos or misclicks
 - Could be extended to other dangerous operations (e.g., bulk delete) in future versions
 
-### \[Proposed\] Data archiving
+### [Proposed] Data archiving
 
 **Search Algorithm:**
 ```java
@@ -502,22 +528,23 @@ AbsolutSin-ema provides party planners with:
 
 Priorities: High (must have) - `* * *`, Medium (should have) - `* *`, Low (nice to have) - `*`
 
-| Priority | As a…                  | I want to…                                      | So that I can…                                           |
-| -------- | ---------------------- | ----------------------------------------------- | -------------------------------------------------------- |
+| Priority | As a…                  | I want to…                                      | So that I can…                                          |
+| -------- | ---------------------- | ----------------------------------------------- |---------------------------------------------------------|
+| `* * *`  | party planner          | add vendor contacts | contact the vendor                                      |
 | `* * *`  | party planner          | add vendor contacts with budget info           | track service costs for budget planning                 |
-| `* * *`  | party planner          | create events with budgets                      | manage individual party finances                         |
-| `* * *`  | party planner          | assign vendors to specific events               | organize who's working on each party                     |
-| `* * *`  | party planner          | see budget validation during assignments       | avoid overspending on events                             |
-| `* * *`  | party planner          | view all vendors and events in one app         | have centralized party planning management               |
+| `* * *`  | party planner          | create events with budgets                      | manage individual party finances                        |
+| `* * *`  | party planner          | assign vendors to specific events               | organize who's working on each party                    |
+| `* * *`  | party planner          | see budget validation during assignments       | avoid overspending on events                            |
+| `* * *`  | party planner          | view all vendors and events in one app         | have centralized party planning management              |
 | `* *`    | busy party planner     | quickly find vendors by specialty tags         | locate appropriate services for specific party themes   |
-| `* *`    | party planner          | edit vendor and event information              | keep information current as details change               |
-| `* *`    | party planner          | see confirmation before deleting data          | prevent accidental loss of important vendor information  |
+| `* *`    | party planner          | edit vendor and event information              | keep information current as details change              |
+| `* *`    | party planner          | see confirmation before deleting data          | prevent accidental loss of important vendor information |
 | `* *`    | party planner          | undo recent changes                             | recover from mistakes during rapid data entry           |
 | `* *`    | new user               | access comprehensive help                       | learn the system quickly without external documentation |
 | `*`      | experienced planner    | assign multiple vendors to events at once      | speed up event setup for large parties                  |
-| `*`      | budget-conscious planner| see remaining budget for each event           | make informed vendor selection decisions                 |
-| `*`      | organized planner      | export vendor and event data                    | create reports or backup information                     |
-| `*`      | collaborative planner  | share vendor lists with team members           | coordinate with assistants and partners                  |
+| `*`      | budget-conscious planner| see remaining budget for each event           | make informed vendor selection decisions                |
+| `*`      | organized planner      | export vendor and event data                    | create reports or backup information                    |
+| `*`      | collaborative planner  | share vendor lists with team members           | coordinate with assistants and partners                 |
 
 ---
 
@@ -745,7 +772,7 @@ Given below are instructions to test AbsolutSin-ema manually.
    6. **Expected**: Shows vendors tagged with either "caterer" OR "photographer".
 
    7. Test case: `find nonexistent`
-   8. **Expected**: Shows "0 persons listed" message.
+   8. **Expected**: Shows "0 persons listed!" message.
 
 ### Undo functionality
 
