@@ -10,13 +10,13 @@ import static seedu.address.commons.util.AppUtil.checkArgument;
 public class Budget {
 
     public static final String MESSAGE_CONSTRAINTS =
-            "Budget should only contain numbers with up to 2 decimal places, and it should be at least 0.";
+            "Budget should only contain up to 7 digits with up to 2 decimal places, and it should be at least 0.";
 
     /*
      * The first character of the address must not be a whitespace,
      * otherwise " " (a blank string) would be a valid input.
      */
-    public static final String VALIDATION_REGEX = "\\d+(\\.\\d{1,2})?";
+    public static final String VALIDATION_REGEX = "\\d{1,7}(\\.\\d{1,2})?";
 
     public final String value;
 
