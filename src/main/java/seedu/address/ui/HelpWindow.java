@@ -21,14 +21,14 @@ public class HelpWindow extends UiPart<Stage> {
     public static final String HELP_MESSAGE =
             "1. help:\n"
             + "   Shows a basic help message with a link to the AbsolutSin-ema User Guide.\n\n"
-            + "2. add n/NAME p/PHONE_NUMBER e/EMAIL [w/WEBSITE] b/BUDGET [t/TAG....]:\n"
+            + "2. add n/NAME p/PHONE_NUMBER e/EMAIL b/BUDGET [w/WEBSITE] [t/TAG....]:\n"
             + "   Adds a contact with any number of tags.\n"
             + "   BUDGET refers to how much it costs to hire the contact.\n\n"
             + "3. list:\n"
             + "   Shows all saved contacts and parties.\n\n"
             + "4. listtags:\n"
             + "   Shows all unique tags from all contacts.\n\n"
-            + "5. edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [w/WEBSITE] [b/BUDGET] [t/TAG]:\n"
+            + "5. edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [b/BUDGET] [w/WEBSITE] [t/TAG]:\n"
             + "   Edits a contact's personal detail(s) at the specified index.\n\n"
             + "6. edit INDEX t/:\n"
             + "   Removes all tags from the contact.\n\n"
@@ -54,6 +54,8 @@ public class HelpWindow extends UiPart<Stage> {
             + "    Unassigns contacts from a specific party. E.g. unassign 1 c/1,2\n\n"
             + "16. view INDEX:\n"
             + "    Views all people assigned to a party at the given index.\n\n"
+            + "17. undo:\n"
+            + "    Undoes the previous command that modified the address book.\n\n"
             + "For more detailed help, refer to the AbsolutSin-ema User Guide.\n"
             + "https://ay2526s1-cs2103t-t12-4.github.io/tp/UserGuide.html";
 

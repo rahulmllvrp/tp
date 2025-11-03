@@ -83,7 +83,7 @@ Format: `add n/NAME p/PHONE_NUMBER e/EMAIL [w/WEBSITE] b/BUDGET [t/TAG]…​`
 
 <div markdown="span" class="alert alert-primary">:bulb: **Tip:**
 A person can have any number of tags (including 0)
-Additionally, budget refers to the cost of hiring this contact
+Additionally, budget refers to the cost of hiring this contact and should only contain up to 7 digits with up to 2 decimal places
 </div>
 
 Examples:
@@ -105,8 +105,9 @@ Format: `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [w/WEBSITE] [b/BUDGET] [t/TAG]�
 * Edits the person at the specified `INDEX`. The index refers to the index number shown in the displayed person list. The index **must be a positive integer** 1, 2, 3, …​
 * At least one of the optional fields must be provided.
 * Existing values will be updated to the input values.
+* Budget should only contain up to 7 digits with up to 2 decimal places.
 * When editing tags, the existing tags of the person will be removed i.e. adding of tags is not cumulative.
-* You can remove all the person’s tags by typing `t/` without
+* You can remove all the person's tags by typing `t/` without
     specifying any tags after it.
 
 Examples:
@@ -173,6 +174,7 @@ Format: `addp n/NAME d/DATE t/TIME b/BUDGET [c/CONTACT_INDEX ...]`
 * You may optionally assign contacts to the party using their indexes.
 * The date must be in the format `DD-MM-YYYY` (e.g. `25-12-2024`) and cannot be before today.
 * The time must be in the format `HH:mm` (e.g. `18:00`).
+* Budget should only contain up to 7 digits with up to 2 decimal places.
 
 Examples:
 * `addp n/John's Birthday d/12-12-2025 t/18:00 b/5000`
@@ -187,6 +189,7 @@ Format: `editp INDEX [n/NAME] [d/DATE] [t/TIME] [b/BUDGET]`
 
 * Edits the party at the specified `INDEX` in the party list.
 * At least one of the optional fields must be provided.
+* Budget should only contain up to 7 digits with up to 2 decimal places.
 
 Examples:
 * `editp 1 d/13-12-2025 t/20:00 b/5100`
