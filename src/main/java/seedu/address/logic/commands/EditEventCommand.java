@@ -74,6 +74,10 @@ public class EditEventCommand extends Command {
 
         Event eventToEdit = lastShownList.get(index.getZeroBased());
         Event editedEvent = createEditedEvent(eventToEdit, editEventDescriptor);
+        if (editedEvent.getDate().isInPast(editedEvent.getTime().value)) {
+            throw new CommandException("Events cannot be scheduled in the past. "
+                    + "Please choose a date and time that is now or in the future.");
+        }
 
         if (!eventToEdit.isSameEvent(editedEvent) && model.hasEvent(editedEvent)) {
             throw new CommandException(MESSAGE_DUPLICATE_EVENT);
