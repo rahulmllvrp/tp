@@ -24,13 +24,20 @@ public class WebsiteTest {
         // null website
         assertThrows(NullPointerException.class, () -> Website.isValidWebsite(null));
 
-        // invalid websites - those that start with whitespace or are blank
+        // invalid websites - those with spaces or invalid format
         assertFalse(Website.isValidWebsite(" ")); // spaces only
         assertFalse(Website.isValidWebsite("  abc")); // starts with whitespace
         assertFalse(Website.isValidWebsite("  example.com")); // starts with space
         assertFalse(Website.isValidWebsite(" example.com ")); // starts and ends with space
         assertFalse(Website.isValidWebsite("   ")); // multiple spaces only
         assertFalse(Website.isValidWebsite("    a")); // multiple spaces before content
+        assertFalse(Website.isValidWebsite("www.go.co www.jjij.co")); // multiple domains with space
+        assertFalse(Website.isValidWebsite("example .com")); // space in domain
+        assertFalse(Website.isValidWebsite("example. com")); // space after dot
+        assertFalse(Website.isValidWebsite("example")); // no TLD
+        assertFalse(Website.isValidWebsite("example.")); // ends with dot
+        assertFalse(Website.isValidWebsite(".com")); // starts with dot
+        assertFalse(Website.isValidWebsite("example.c")); // TLD too short
 
         // valid websites - empty string (for optional website)
         assertTrue(Website.isValidWebsite("")); // empty string is valid for optional field
@@ -43,10 +50,9 @@ public class WebsiteTest {
         assertTrue(Website.isValidWebsite("https://example.com/path"));
         assertTrue(Website.isValidWebsite("https://example.com/path?query=value"));
         assertTrue(Website.isValidWebsite("https://subdomain.example.com"));
-        assertTrue(Website.isValidWebsite("ftp://files.example.com"));
-        assertTrue(Website.isValidWebsite("localhost:8080"));
-        assertTrue(Website.isValidWebsite("192.168.1.1"));
-        assertTrue(Website.isValidWebsite("a")); // single character is valid
+        assertTrue(Website.isValidWebsite("subdomain.example.com"));
+        assertTrue(Website.isValidWebsite("my-site.example.co"));
+        assertTrue(Website.isValidWebsite("test123.example.org"));
     }
 
     @Test
@@ -86,7 +92,6 @@ public class WebsiteTest {
         // same value -> same hashcode
         Website websiteCopy = new Website("valid.com");
         assertTrue(website.hashCode() == websiteCopy.hashCode());
-
         // different value -> different hashcode
         assertFalse(website.hashCode() == new Website("other.com").hashCode());
 
