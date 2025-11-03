@@ -80,6 +80,7 @@ public class AssignContactToEventCommand extends Command {
             if (updatedParticipantIds.contains(p.getId())) {
                 throw new CommandException(p.getName().toString() + " has already been assigned to this party.");
             }
+            AddEventCommand.validateNoConcurrentEvents(model, eventToModify, p.getId(), p.getName().toString());
             updatedParticipantIds.add(p.getId());
         }
 
