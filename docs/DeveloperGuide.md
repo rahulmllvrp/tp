@@ -639,13 +639,13 @@ Priorities: High (must have) - `* * *`, Medium (should have) - `* *`, Low (nice 
   * 2a2. Use case ends.
 * 2b. Invalid vendor index:
   * 2b1. System shows error message "The person index provided is invalid".
-  * 2b2. Use case proceeds, skipping the invalid vendor index.
+  * 2b2. Use case ends.
 * 4a. Insufficient remaining budget
   * 4a1. System shows "The budget of {vendor} exceeds the remaining budget of the party."
-  * Use case ends, no assignments made
-* 5a. Vendor already assigned to event
+  * Use case ends, no assignments made.
+* 5a. Vendor already assigned to event.
   * 5a1. System shows "{vendor} has already been assigned to this party."
-  *  Use case ends
+  * Use case ends.
 
 
 **Use case UC04: Search vendors by specialty/name and assign to event**
@@ -871,8 +871,8 @@ all assigned vendors (PersonId to Name/details).
   * 3a1. System displays "Operation cancelled."
   * Use case ends, no data is deleted.
 * 3b. Planner enters an invalid input (neither 'y' nor 'n'):
-  * 3b1. System re-prompts for confirmation or cancels the operation (implementation dependent).
-  * Use case ends (if cancelled) or resumes at step 3 (if re-prompted).
+  * 3b1. System re-prompts for confirmation.
+  * Use case resumes at step 3.
 
 
 **Use case UC15: Clear only contacts with confirmation**
@@ -891,7 +891,9 @@ all assigned vendors (PersonId to Name/details).
 * 3a. Planner enters n to cancel:
   * 3a1. System displays "Operation cancelled."
   * Use case ends, no contacts are deleted.
-
+* 3b. Planner enters an invalid input (neither 'y' nor 'n'):
+    * 3b1. System re-prompts for confirmation.
+    * Use case resumes at step 3.
 
 **Use case UC16: Clear only events with confirmation**
 
@@ -910,7 +912,9 @@ all assigned vendors (PersonId to Name/details).
 * 3a. Planner enters n to cancel:
   * 3a1. System displays "Operation cancelled."
   * Use case ends, no events are deleted.
-
+* 3b. Planner enters an invalid input (neither 'y' nor 'n'):
+    * 3b1. System re-prompts for confirmation.
+    * Use case resumes at step 3.
 
 
 **Use case UC17: Find events by name**
