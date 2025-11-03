@@ -85,6 +85,7 @@ public class AddEventCommand extends Command {
                     throw new CommandException(personToAssign.getName().toString()
                             + " has already been assigned to this party.");
                 }
+                validateNoConcurrentEvents(model, toAdd, personToAssign.getId(), personToAssign.getName().toString());
                 double personBudget = Double.parseDouble(personToAssign.getBudget().value);
                 if (currentRemainingBudget < personBudget) {
                     throw new CommandException("The budget of " + personToAssign.getName().toString()
@@ -121,5 +122,16 @@ public class AddEventCommand extends Command {
         return new ToStringBuilder(this)
                 .add("toAdd", toAdd)
                 .toString();
+    }
+    // Validates that a person is not assigned to concurrent events on the same date.
+    public static void validateNoConcurrentEvents(Model model, Event targetEvent, PersonId personId, String personName)
+            throws CommandException {
+        for (Event existingEvent : model.getFilteredEventList()) {
+            if (!existingEvent.equals(targetEvent)
+                    && existingEvent.getDate().equals(targetEvent.getDate())
+                    && existingEvent.getParticipants().contains(personId)) {
+                throw new CommandException(personName + " is already assigned to another party on the same date.");
+            }
+        }
     }
 }
