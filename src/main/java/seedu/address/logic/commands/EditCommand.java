@@ -109,7 +109,8 @@ public class EditCommand extends Command {
                     }
 
                     if (totalBudgetOfOtherParticipants + newBudget > initialEventBudget) {
-                        throw new CommandException("Editing budget failed: New budget exceeds event budget limit.");
+                        throw new CommandException("Editing budget failed: New budget exceeds event budget limit. "
+                                + "Please unassign the person from the party first before editing their budget.");
                     }
                 }
             }

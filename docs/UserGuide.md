@@ -106,7 +106,7 @@ Format: `help`
 
 Adds a person to the AbsolutSin-ema.
 
-Format: `add n/NAME p/PHONE_NUMBER e/EMAIL [w/WEBSITE] b/BUDGET [t/TAG]…​`
+Format: `add n/NAME p/PHONE_NUMBER e/EMAIL b/BUDGET [w/WEBSITE] [t/TAG]…​`
 
 <div markdown="span" class="alert alert-primary"> **💡 Tip:**
 A person can have any number of tags (including 0)
@@ -133,6 +133,7 @@ Format: `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [w/WEBSITE] [b/BUDGET] [t/TAG]�
 * At least one of the optional fields must be provided.
 * Existing values will be updated to the input values.
 * Budget should only contain up to 7 digits with up to 2 decimal places.
+* **Budget constraint:** If editing a contact's budget would cause the total cost of assignees to exceed the budget of any party the contact is assigned to, an error will be returned and the edit will not proceed.
 * When editing tags, the existing tags of the person will be removed i.e. adding of tags is not cumulative.
 * You can remove all the person's tags by typing `t/` without
     specifying any tags after it.
@@ -147,6 +148,7 @@ Finds persons whose names contain any of the given keywords.
 
 Format: `find KEYWORD [MORE_KEYWORDS]`
 
+* **Note:** Spaces separate different keywords. Each space-separated word is treated as an individual search term.
 * The search is case-insensitive. e.g `hans` will match `Hans`
 * The order of the keywords does not matter. e.g. `Hans Bo` will match `Bo Hans`
 * Full words are not needed to find a match e.g. `Han` will match `Hans`
@@ -199,6 +201,8 @@ Adds a party to the party list.
 Format: `addp n/NAME d/DATE t/TIME b/BUDGET [c/CONTACT_INDEX ...]`
 
 * You may optionally assign contacts to the party using their indexes.
+* **Important:** A contact cannot be assigned to multiple parties that occur at the same date and time.
+* **Budget constraint:** If assigning contacts would cause the total cost of all assignees to exceed the party's budget, an error will be returned.
 * The date must be in the format `DD-MM-YYYY` (e.g. `25-12-2024`) and cannot be before today.
 * The time must be in the format `HH:mm` (e.g. `18:00`).
 * Budget should only contain up to 7 digits with up to 2 decimal places.
@@ -244,6 +248,8 @@ Format: `assign INDEX c/CONTACT_INDEX[,CONTACT_INDEX ...]`
 
 * Assigns the specified contacts to the party at the given `INDEX`.
 * With each contact added, the budget of the party will be updated.
+* **Important:** You cannot assign the same person to multiple parties that occur at the same date and time. Each person can only be assigned to one party per time slot.
+* **Budget constraint:** If assigning contacts would cause the total cost of all assignees to exceed the party's budget, an error will be returned and the assignment will not proceed.
 
 Example:
 * `assign 1 c/5`
@@ -312,7 +318,7 @@ Format: `undo`
 - `unassign` - Reverts the removal of contacts from a party
 
 <div markdown="span" class="alert alert-info"> **Note:**
-Only one level of undo is supported. You can only undo the most recent command.
+Only one level of undo is supported. You can only undo the most recent command. You cannot undo an undo command (i.e., there is no redo functionality).
 </div>
 
 <div markdown="span" class="alert alert-warning"> **⚠️ Important:**
