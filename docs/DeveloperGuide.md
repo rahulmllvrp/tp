@@ -942,16 +942,48 @@ Given below are instructions to test AbsolutSin-ema manually.
    6. **Expected**: Error message: "Unknown command"
 
 2. **Index boundary testing**
-   1. Prerequisites: Note the current list sizes for vendors and events
-   2. Test case: `delete 0`, `deletep 0`, `assign 0 c/1`, `assign 1 c/0`
-   3. **Expected**:
-      - Parser-level invalid index (0): "Index is not a non-zero unsigned integer."
-      - For out-of-range indices in displayed lists:
-        - Person: "The person index provided is invalid"
-        - Event: "The event index provided is invalid"
-   - After parsing succeeds, providing an index larger than the list size results in:
-     - Person operations: "The person index provided is invalid"
-     - Event operations: "The event index provided is invalid"
+   1. Prerequisites: Note the current list sizes for vendors (N persons) and events (M events)
+   2. Test case: `delete 0`
+      * **Expected**:
+        ```
+        Invalid command format!
+        delete: Deletes the person identified by the index number used in the displayed person list.
+        Parameters: INDEX (must be a positive integer)
+        Example: delete 1
+        ```
+
+   3. Test case: `delete X` where X > N (exceeds person list size)
+      * **Expected**: "The person index provided is invalid"
+
+   4. Test case: `deletep 0`
+      * **Expected**:
+        ```
+        Invalid command format!
+        deletep: Deletes the party identified by the index number used in the displayed party list.
+        Parameters: INDEX (must be a positive integer)
+        Example: deletep 1
+        ```
+
+   5. Test case: `deletep Y` where Y > M (exceeds event list size)
+      * **Expected**: "The event index provided is invalid"
+
+   6. Test case: `assign 0 c/1`
+      * **Expected**:
+        ```
+        Invalid command format!
+        assign: Assigns one or more contacts to a specific party.
+        Parameters: PARTY_INDEX (must be a positive integer) c/CONTACT_INDEX[,CONTACT_INDEX...]
+        Example: assign 1 c/2,3
+        ```
+
+   7. Test case: `assign 1 c/0`
+      * **Expected**: "Index is not a non-zero unsigned integer."
+
+   8. Test case: `assign Y c/1` where Y > M (exceeds event list size)
+      * **Expected**: "The event index provided is invalid"
+
+   9. Test case: `assign 1 c/X` where X > N (exceeds person list size)
+      * **Expected**: "The person index provided is invalid Try switching to the person list view and retry."
 
 ### Help and exit
 
