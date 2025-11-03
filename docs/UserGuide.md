@@ -5,8 +5,35 @@ title: User Guide
 
 AbsolutSin-ema is a **desktop app for managing contacts, optimized for use via a Command Line Interface** (CLI) while still having the benefits of a Graphical User Interface (GUI). If you can type fast, AbsolutSin-ema can get your contact management tasks done faster than traditional GUI apps.
 
-* Table of Contents
-{:toc}
+AbsolutSin-ema is designed for party planners across all experience levels — from student organizers and hall committees to freelance coordinators and professional event teams. It serves individuals who manage guests, suppliers, and logistics, and who value fast, organized, and command-driven workflows that streamline event planning and communication.
+
+## Table of Contents
+
+* [Quick start](#quick-start)
+* [Features](#features)
+    * [Viewing help](#viewing-help-help)
+    * [Adding a person](#adding-a-person-add)
+    * [Listing all persons](#listing-all-persons-list)
+    * [Editing a person](#editing-a-person-edit)
+    * [Locating persons by name](#locating-persons-by-name-find)
+    * [Listing all tags](#listing-all-tags-listtags)
+    * [Deleting a person](#deleting-a-person-delete)
+    * [Managing parties](#managing-parties)
+        * [Adding a party](#adding-a-party-addp)
+        * [Editing a party](#editing-a-party-editp)
+        * [Deleting a party](#deleting-a-party-deletep)
+        * [Assigning contacts to a party](#assigning-contacts-to-a-party-assign)
+        * [Unassigning contacts from a party](#unassigning-contacts-from-a-party-unassign)
+        * [Viewing party participants](#viewing-party-participants-view)
+    * [Clearing all entries](#clearing-all-entries-clear)
+    * [Undoing the previous command](#undoing-the-previous-command-undo)
+    * [Exiting the program](#exiting-the-program-exit)
+    * [Saving the data](#saving-the-data)
+    * [Editing the data file](#editing-the-data-file)
+* [FAQ](#faq)
+* [Known issues](#known-issues)
+* [Command summary](#command-summary)
+
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -46,7 +73,7 @@ AbsolutSin-ema is a **desktop app for managing contacts, optimized for use via a
 
 <div markdown="block" class="alert alert-info">
 
-**:information_source: Notes about the command format:**<br>
+** ℹ️ Notes about the command format:**<br>
 
 * Words in `UPPER_CASE` are the parameters to be supplied by the user.<br>
   e.g. in `add n/NAME`, `NAME` is a parameter which can be used as `add n/John Doe`.
@@ -66,7 +93,7 @@ AbsolutSin-ema is a **desktop app for managing contacts, optimized for use via a
 * If you are using a PDF version of this document, be careful when copying and pasting commands that span multiple lines as space characters surrounding line-breaks may be omitted when copied over to the application.
 </div>
 
-### Viewing help : `help`
+### Viewing help: `help`
 
 Shows a message explaining how to access the help page.
 
@@ -81,7 +108,7 @@ Adds a person to the AbsolutSin-ema.
 
 Format: `add n/NAME p/PHONE_NUMBER e/EMAIL [w/WEBSITE] b/BUDGET [t/TAG]…​`
 
-<div markdown="span" class="alert alert-primary">:bulb: **Tip:**
+<div markdown="span" class="alert alert-primary"> **💡 Tip:**
 A person can have any number of tags (including 0)
 Additionally, budget refers to the cost of hiring this contact
 </div>
@@ -90,13 +117,13 @@ Examples:
 * `add n/John Doe p/98765432 e/johnd@example.com w/johndoe.com b/100`
 * `add n/Betsy Crowe t/friend e/betsycrowe@example.com w/betsycrowe.com p/1234567 b/250 t/photographer`
 
-### Listing all persons : `list`
+### Listing all persons: `list`
 
 Shows a list of all persons in the AbsolutSin-ema.
 
 Format: `list`
 
-### Editing a person : `edit`
+### Editing a person: `edit`
 
 Edits an existing person in the AbsolutSin-ema.
 
@@ -134,7 +161,7 @@ Examples:
 * `find alex friend` returns all persons whose name includes "Alex" or who have the tag "friend".
   ![result for 'find alex friend'](images/findAlexResult.png)
 
-### Listing all tags : `listtags`
+### Listing all tags: `listtags`
 
 Lists all tags currently used in the AbsolutSin-ema.
 
@@ -147,7 +174,7 @@ Example:
 * `listtags` displays all tags such as `colleague`, `friend`, `supplier`, etc.
   ![result for 'listTags'](images/listTags.png)
 
-### Deleting a person : `delete`
+### Deleting a person: `delete`
 
 Deletes the specified person from the AbsolutSin-ema.
 
@@ -245,7 +272,7 @@ Example:
 ![result for 'viewParty'](images/viewParty.png)
 
 
-### Clearing all entries : `clear`
+### Clearing all entries: `clear`
 
 Clears all parties, contacts, or both, from the AbsolutSin-ema.
 
@@ -258,11 +285,10 @@ Upon executing the `clear` command, a confirmation message will appear to preven
 
 
 
-<div markdown="span" class="alert alert-warning">:exclamation: **Warning:**
+**Warning:**
 This will delete ALL contacts permanently. While this action can be undone, it should still be used with caution.
-</div>
 
-### Undoing the previous command : `undo`
+### Undoing the previous command: `undo`
 
 Undoes the most recent add, delete, edit, clear, or any party-related command. This restores AbsolutSin-ema to the state before the last command was executed.
 
@@ -282,11 +308,11 @@ Format: `undo`
 - `assign` - Reverts the assignment of contacts to a party
 - `unassign` - Reverts the removal of contacts from a party
 
-<div markdown="span" class="alert alert-info">:information_source: **Note:**
+<div markdown="span" class="alert alert-info"> **Note:**
 Only one level of undo is supported. You can only undo the most recent command.
 </div>
 
-<div markdown="span" class="alert alert-warning">:exclamation: **Important:**
+<div markdown="span" class="alert alert-warning"> **⚠️ Important:**
 Commands like `find`, `list`, `help`, and `exit` do not modify data and therefore cannot be undone. The undo command will only affect the most recent command that actually changed your contacts or parties.
 </div>
 
@@ -295,7 +321,7 @@ Commands like `find`, `list`, `help`, and `exit` do not modify data and therefor
 * After running `assign 1 c/2`, typing `undo` will unassign contact 2 from the 1st party.
 * After running `deletep 2`, typing `undo` will restore the 2nd party back to your party list.
 
-### Exiting the program : `exit`
+### Exiting the program: `exit`
 
 Exits the program.
 
@@ -309,7 +335,7 @@ AbsolutSin-ema data are saved in the hard disk automatically after any command t
 
 AbsolutSin-ema data are saved automatically as a JSON file `[JAR file location]/data/absolutsinema.json`. Advanced users are welcome to update data directly by editing that data file.
 
-<div markdown="span" class="alert alert-warning">:exclamation: **Caution:**
+<div markdown="span" class="alert alert-warning"> **⚠️ Caution:**
 If your changes to the data file makes its format invalid, AbsolutSin-ema will discard all data and start with an empty data file at the next run. Hence, it is recommended to take a backup of the file before editing it.<br>
 Furthermore, certain edits can cause the AbsolutSin-ema to behave in unexpected ways (e.g., if a value entered is outside of the acceptable range). Therefore, edit the data file only if you are confident that you can update it correctly.
 </div>
@@ -319,7 +345,7 @@ Furthermore, certain edits can cause the AbsolutSin-ema to behave in unexpected 
 ## FAQ
 
 **Q**: How do I transfer my data to another computer?<br>
-**A**: Install AbsolutSin-ema on the new computer and overwrite the empty data file it creates with the file that contains the data of your previous AbsolutSin-ema home folder. The data file is located at `[JAR file location]/data/addressbook.json`.
+**A**: Install AbsolutSin-ema on the new computer and overwrite the empty data file it creates with the file that contains the data of your previous AbsolutSin-ema home folder. The data file is located at `[JAR file location]/data/absolutsinema.json`.
 
 **Q**: What happens if I accidentally delete a contact?<br>
 **A**: You can use the `undo` command to restore the deleted contact immediately after the deletion. If you have performed other commands after the deletion, you will need to add the contact again manually.
@@ -356,7 +382,7 @@ Furthermore, certain edits can cause the AbsolutSin-ema to behave in unexpected 
 **A**: Ensure you have Java 17 or above installed. Check that the jar file is not corrupted by re-downloading it. Make sure you're running the command `java -jar absolutsin-ema.jar` from the correct directory. See the [Troubleshooting](#troubleshooting) section for more detailed steps.
 
 **Q**: Can I backup my data?<br>
-**A**: Yes, simply copy the `addressbook.json` file from the data folder to a safe location. You can restore it later by copying it back. It's recommended to backup your data regularly.
+**A**: Yes, simply copy the `absolutsinema.json` file from the data folder to a safe location. You can restore it later by copying it back. It's recommended to backup your data regularly.
 
 **Q**: Are my contacts searchable by phone number or email?<br>
 **A**: Currently, the `find` command only searches by name and tag. To find contacts by other fields, use the `list` command to view all contacts and manually search through them.
@@ -383,9 +409,13 @@ Action | Format, Examples
 **Delete Party** | `deletep INDEX` <br> e.g., `deletep 2`
 **Edit** | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [w/WEBSITE] [t/TAG]... [b/BUDGET]`<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com b/300`
 **Edit Party** | `editp INDEX [n/NAME] [d/DATE] [t/TIME] [b/BUDGET]` <br> e.g., `editp 1 n/John's Birthday d/13-12-2025 t/19:00 b/5200`
+**Exit** | `exit`
 **Assign to Party** | `assign PARTY_INDEX c/CONTACT_INDEX...` <br> e.g., `assign 1 c/1,2,3`
 **Unassign from Party** | `unassign PARTY_INDEX c/CONTACT_INDEX...` <br> e.g., `unassign 1 c/2,3`
 **Find** | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find James Jake`
 **List** | `list`
+**List Tags** | `listtags`
 **Undo** | `undo`
+**View Party** | `view INDEX` <br> e.g., `view 1`
 **Help** | `help`
+
