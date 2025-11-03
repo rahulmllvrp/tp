@@ -440,16 +440,18 @@ and the `clear contacts`, which deletes only contacts respectively.
 
 **How it works:**
 
-1. When user executes `clear all`, the `ClearCommand` displays a warning message:
-   ```
-   Are you sure you want to clear the party planner? (Type 'y' to confirm, 'n' to cancel)
-   ```
-2. User must type `y` to confirm or `n` to cancel the operation
-3. If confirmed, the `ConfirmClearCommand` performs the actual data deletion
-4. If cancelled, the operation is aborted and no data is lost
+1. When user executes a clear command, the `ClearCommand` displays a warning message (one of):
+   - "Are you sure you want to clear the party planner? (Type 'y' to confirm, 'n' to cancel)" (clear all)
+   - "Are you sure you want to clear all contacts? (Type 'y' to confirm, 'n' to cancel)" (clear contacts)
+   - "Are you sure you want to clear all parties? (Type 'y' to confirm, 'n' to cancel)" (clear parties)
+2. User must type `y` to confirm or `n` to cancel the operation.
+3. If confirmed, the `ConfirmClearCommand` performs the actual data deletion and shows one of:
+   - "Address book has been cleared!"
+   - "Contacts have been cleared!"
+   - "Parties have been cleared!"
+4. If cancelled, the operation is aborted and no data is lost.
 
-
-The commands `clear contacts` and `clear parties` work similarly, but just with different warning messages in step 1 
+The commands `clear contacts` and `clear parties` work similarly, but just with different warning messages in step 1
 that refer to what they are deleting (contacts for `clear contacts` and parties for `clear parties`).
 
 **Design Rationale:**
@@ -675,7 +677,7 @@ Priorities: High (must have) - `* * *`, Medium (should have) - `* *`, Low (nice 
 | **Index**                 | Numerical position of vendor/event in the currently displayed list           |
 | **Service Type**          | Category of vendor service (caterer, DJ, venue, etc.)                      |
 | **Party Theme**           | Style of a party (princess, superhero, elegant, tropical)                  |
-| **MVP**                   | Minimum Viable Product, core features needed for release 
+| **MVP**                   | Minimum Viable Product, core features needed for release
 | **Remaining Budget**      | Event budget minus already assigned vendor costs                            |
 | **Bulk Assignment**       | Assigning multiple vendors to an event in a single command                  |
 
@@ -708,7 +710,7 @@ Given below are instructions to test AbsolutSin-ema manually.
    2. **Expected**: New vendor appears in list with all specified details. Success message shows vendor details.
 
    3. Test case: `add n/John's Catering p/91234567 e/different@email.com w/different.com t/caterer b/150`
-   4. **Expected**: Error message indicating vendor already exists (duplicate name detection).
+   4. **Expected**: Error message: "This person already exists in the address book".
 
    5. Test case: `add n/Invalid p/123 e/bad-email w/bad-url t/test b/-50`
    6. **Expected**: Error messages for invalid phone, email, website, and negative budget.
@@ -719,45 +721,132 @@ Given below are instructions to test AbsolutSin-ema manually.
    3. **Expected**: First vendor's phone and budget updated. Success message displays changes.
 
    4. Test case: `edit 0 n/Invalid Name`
-   5. **Expected**: Error message indicating invalid index.
+    5. **Expected**: Error message indicating invalid command format (index out of bounds).
+3. **Deleting a vendor (with confirmation)**
+   1. Prerequisites: At least one vendor
+   2. Test case: `delete 1`
+   3. **Expected**: Warning dialog with message: "Are you sure you want to delete this person? (Type 'y' to confirm, 'n' to cancel)"
+   4. Confirm in the dialog.
+   5. **Expected**: Vendor 1 is removed. Success message: "Deleted Person: ..."
+
+4. **Listing vendors**
+   1. Test case: `list`
+   2. **Expected**: Person list resets to all persons. Message: "Listed all persons"
+
+5. **Listing all tags**
+   1. Test case: `listtags`
+   2. **Expected**: If tags exist, message starts with "Listed all tags:" followed by a sorted list. If none, "No tags found in the address book."
 
 ### Event management
 
 1. **Creating events with budget**
-   1. Test case: `addp n/Birthday Party d/25-12-2024 t/18:00 b/1000`
-   2. **Expected**: New event created with specified budget. Event appears in event list.
+   1. Test case: `addp n/Birthday Party d/25-12-2026 t/18:00 b/1000`
+   2. **Expected**: New event created with specified budget. Event appears in event list. Success: "New party added: ..."
 
-   3. Test case: `addp n/Birthday Party d/25-12-2024 t/18:00 b/500`
-   4. **Expected**: Error message indicating duplicate event (same name).
+   3. Test case: `addp n/Birthday Party d/25-12-2026 t/18:00 b/500`
+   4. **Expected**: Error message: "This party already exists in the party list"
 
-   5. Test case: `addp n/Wedding d/invalid-date t/25:00 b/abc`
-   6. **Expected**: Error messages for invalid date, time, and budget formats.
+   5. Test case: `addp n/Wedding d/32-01-2026 t/25:00 b/abc`
+   6. **Expected**:
+      - Date: "Dates should be in the format dd-MM-yyyy, must be a valid calendar date, and cannot be before today."
+   7. Test case: `addp n/Wedding d/30-01-2026 t/25:00 b/abc`
+   8. **Expected**:
+      - Time: "Times should be in the format HH:mm"
+   9. Test case: `addp n/Wedding d/30-01-2026 t/21:00 b/abc`
+   10. **Expected**:
+      - Budget: "Budget should only contain up to 7 digits with up to 2 decimal places, and it should be at least 0."
+
+   11. Test case: create in the past (use a past date/time): `addp n/Past Party d/01-01-2020 t/00:10 b/100`
+   12. **Expected**: Error message: "Events cannot be scheduled in the past."
 
 2. **Creating events with initial vendor assignments**
    1. Prerequisites: At least 3 vendors with known budgets
-   2. Test case: `addp n/Corporate Event d/15-01-2025 t/14:00 b/2000 c/1,2,3`
-   3. **Expected**: Event created with vendors 1, 2, 3 assigned. Remaining budget calculated correctly.
+   2. Test case: `addp n/Corporate Event d/15-01-2027 t/14:00 b/2000 c/1,2,3`
+   3. **Expected**: Event created; vendors 1, 2, 3 assigned. Remaining budget calculated correctly.
 
-   4. Test case: `addp n/Small Party d/20-01-2025 t/12:00 b/100 c/1,2,3`
-   5. **Expected**: Error if total vendor costs exceed event budget of 100.
+   4. Test case: `addp n/Small Party d/20-01-2027 t/12:00 b/100 c/1,2,3`
+   5. **Expected**: Error message for exceeding budget of any contact during creation:
+      "The budget of <Name> exceeds the remaining budget of the party."
+
+   6. Test case (concurrent assignment on same date):
+      - Create Event A on date D.
+      - Assign vendor X to Event A.
+      - Create Event B on the same date D (time can differ).
+      - Add vendor X in creation: `addp n/Event B d/<D> t/18:00 b/500 c/<index of X>`
+      - **Expected**: Error: "<Name> is already assigned to another party on the same date."
+
+3. **Editing event information**
+   1. Prerequisites: At least one event
+   2. Test case: `editp 1 n/Updated Name t/19:30`
+   3. **Expected**: Success: "Edited Party: ..."
+
+   4. Test case (no fields): `editp 1`
+   5. **Expected**: Error message: "At least one field to edit must be provided."
+
+   6. Test case (move past event without changing date/time):
+      - If event 1 is already in the past, run: `editp 1 n/Name Only`
+      - **Expected**: "Events cannot be scheduled in the past. Please choose a date and time that is now or in the future."
+
+   7. Test case (reduce budget below assigned sum):
+      - Ensure event 1 has participants with total cost S.
+      - Run: `editp 1 b/<S-1>`
+      - **Expected**: "The new budget is less than the total budget of assigned contacts."
+
+4. **Deleting an event (with confirmation)**
+   1. Prerequisites: At least one event
+   2. Test case: `deletep 1`
+   3. **Expected**: Warning dialog with message: "Are you sure you want to delete this party?"
+   4. Confirm in the dialog.
+   5. **Expected**: Event 1 removed. Success message: "Deleted Party: ..."
 
 ### Assignment system
 
 1. **Assigning vendors to events**
-   1. Prerequisites: Events and vendors exist, view current budgets
+   1. Prerequisites: Events and vendors exist; note remaining budget
    2. Test case: `assign 1 c/2,3`
-   3. **Expected**: Vendors 2 and 3 assigned to event 1. Budget updated correctly. Success message lists assigned vendor names.
+   3. **Expected**: Vendors 2 and 3 assigned to event 1. Budget updated. Success message:
+      "Assigned the following people to <Event Name>'s party: <Names>"
 
    4. Test case: `assign 1 c/2`
-   5. **Expected**: Error message if vendor 2 already assigned to event 1.
+   5. **Expected**: If vendor 2 already assigned to event 1: "<Name> has already been assigned to this party."
 
    6. Test case: `assign 1 c/99`
-   7. **Expected**: Error message for invalid vendor index.
+   7. **Expected**: Error message: "The person index provided is invalid Try switching to the person list view and retry."
+
+   8. Test case (duplicate prefix): `assign 1 c/2 c/3`
+   9. **Expected**: Error message: "Invalid command format! \nPlease only include one prefix c/!"
 
 2. **Budget validation during assignment**
-   1. Prerequisites: Event with low remaining budget, expensive vendors available
-   2. Test case: `assign 1 c/5` (where vendor 5's cost exceeds event 1's remaining budget)
-   3. **Expected**: Error message indicating budget exceeded, no assignment made.
+   1. Prerequisites: Event with low remaining budget, and a vendor whose cost exceeds it
+   2. Test case: `assign 1 c/5` (where vendor 5's cost > event 1 remaining budget)
+   3. **Expected**: Error: "The budget of <Name> exceeds the remaining budget of the party."
+
+3. **Prevent scheduling conflicts on the same date**
+   1. Prerequisites: Two events on the same date, vendor X not yet on event 2
+   2. Assign vendor X to event 1, then run `assign 2 c/<index of X>`
+   3. **Expected**: Error: "<Name> is already assigned to another party on the same date."
+
+4. **Unassigning vendors from events**
+   1. Prerequisites: Event 1 has assigned vendors
+   2. Test case: `unassign 1 c/2`
+   3. **Expected**: Vendor 2 removed from event 1. Remaining budget increases appropriately. Success message:
+      "Unassigned the following people from <Event Name>'s party: <Names>"
+
+   4. Test case (not assigned): `unassign 1 c/99` (99 refers to a person that exists but is not assigned)
+   5. **Expected**: "<Name> is not assigned to this party."
+
+   6. Test case (invalid person index in current view): `unassign 1 c/999`
+   7. **Expected**: "The person index provided is invalid Try switching to the person list view and retry."
+
+### Viewing participants of an event
+
+1. **Viewing**
+   1. Prerequisites: Events exist
+   2. Test case: `view 1`
+   5. **Expected**: Error message: "The event index provided is invalid."
+
+   4. Test case: `view 0`
+   5. **Expected**: Error message: "Invalid index for view command. Usage: view INDEX (must be a positive integer)"
 
 ### Search and filter
 
@@ -769,20 +858,40 @@ Given below are instructions to test AbsolutSin-ema manually.
    4. **Expected**: Shows vendors with "john" in their name.
 
    5. Test case: `find caterer photographer`
-   6. **Expected**: Shows vendors tagged with either "caterer" OR "photographer".
+   6. **Expected**: Shows vendors tagged with either "caterer" OR "photographer". Message shows count, e.g., "2 persons listed!"
 
    7. Test case: `find nonexistent`
-   8. **Expected**: Shows "0 persons listed!" message.
+   8. **Expected**: Shows "0 persons listed!"
 
 ### Undo functionality
 
 1. **Undoing recent operations**
    1. Prerequisites: Perform any state-changing command (add, edit, assign, etc.)
    2. Test case: `undo`
-   3. **Expected**: Previous operation reversed, data restored to prior state.
+   3. **Expected**: Previous operation reversed. Message starts with "Previous command undone: ..."
 
    4. Test case: `undo` (when no previous operation exists)
-   5. **Expected**: Error message indicating nothing to undo.
+   5. **Expected**: Error message: "No command to undo."
+
+### Clear operations (with confirmation)
+
+1. **Clear contacts only**
+   1. Test case: `clear contacts`
+   2. **Expected**: Warning dialog: "Are you sure you want to clear all contacts? (Type 'y' to confirm, 'n' to cancel)"
+   3. Confirm in the dialog.
+   4. **Expected**: Message: "Contacts have been cleared!" and the contacts list is empty (events remain).
+
+2. **Clear parties only**
+   1. Test case: `clear parties`
+   2. **Expected**: Warning dialog: "Are you sure you want to clear all parties? (Type 'y' to confirm, 'n' to cancel)"
+   3. Confirm in the dialog.
+   4. **Expected**: Message: "Parties have been cleared!" and the events list is empty (contacts remain).
+
+3. **Clear all data**
+   1. Test case: `clear all`
+   2. **Expected**: Warning dialog: "Are you sure you want to clear the party planner? (Type 'y' to confirm, 'n' to cancel)"
+   3. Confirm in the dialog.
+   4. **Expected**: Message: "Address book has been cleared!" and both lists are empty.
 
 ### Data persistence
 
@@ -796,23 +905,37 @@ Given below are instructions to test AbsolutSin-ema manually.
    1. Make several valid changes (add vendors, create parties, assignments)
    2. Exit and restart application
    3. **Expected**: All changes preserved exactly as made.
-
-### Error handling
-
 1. **Invalid command formats**
    1. Test case: `add` (missing parameters)
-   2. **Expected**: Usage message showing correct command format.
+   2. **Expected**: Error: "Invalid command format!" followed by usage for `add`.
 
    3. Test case: `assign` (missing parameters)
-   4. **Expected**: Usage message for assign command.
-
+   4. **Expected**: Error: "Invalid command format!" followed by usage for `assign`.
+   - For contact indexes inside `c/` lists, a zero value triggers: "Index is not a non-zero unsigned integer.":
    5. Test case: `invalidcommand`
-   6. **Expected**: Error message indicating unknown command.
+   6. **Expected**: Error message: "Unknown command"
 
 2. **Index boundary testing**
    1. Prerequisites: Note the current list sizes for vendors and events
-   2. Test case: `delete 0`, `delete [size+1]`, `assign 0 c/1`, `assign 1 c/0`
-   3. **Expected**: Appropriate error messages for each invalid index scenario.
+   2. Test case: `delete 0`, `deletep 0`, `assign 0 c/1`, `assign 1 c/0`
+   3. **Expected**:
+      - Parser-level invalid index (0): "Index is not a non-zero unsigned integer."
+      - For out-of-range indices in displayed lists:
+        - Person: "The person index provided is invalid"
+        - Event: "The event index provided is invalid"
+   - After parsing succeeds, providing an index larger than the list size results in:
+     - Person operations: "The person index provided is invalid"
+     - Event operations: "The event index provided is invalid"
+
+### Help and exit
+
+1. **Help window**
+   1. Test case: `help`
+   2. **Expected**: Help window opens. Message: "Opened help window."
+
+2. **Exit**
+   1. Test case: `exit`
+   2. **Expected**: Application closes.
 
 These test cases cover the major functionality of AbsolutSin-ema. Testers should also explore edge cases, rapid command sequences, and integration scenarios to ensure robust operation.
 
