@@ -150,6 +150,8 @@ Let's plan Sarah's Birthday Party to see AbsolutSin-ema in action:
 
 Shows a message explaining how to access the help page.
 
+
+
 <img src="images/helpMessage.png" alt="help message" width="500">
 
 Format: `help`
