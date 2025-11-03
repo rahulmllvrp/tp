@@ -64,8 +64,11 @@ public class JsonAddressBookStorage implements AddressBookStorage {
             } catch (Throwable t) {
                 logger.warning("Checksum diagnostics failed: " + t.getMessage());
             }
-            // Validate integrity if a checksum exists
-            jsonAddressBook.get().validateIntegrityOrThrow();
+            try {
+                jsonAddressBook.get().validateIntegrityOrThrow();
+            } catch (DataCorruptionException dce) {
+                logger.warning("Data integrity mismatch in " + filePath + ": " + dce.getMessage());
+            }
 
             ReadOnlyAddressBook readOnly = jsonAddressBook.get().toModelType();
             logger.info("Successfully loaded AddressBook from " + filePath);
@@ -73,9 +76,6 @@ public class JsonAddressBookStorage implements AddressBookStorage {
         } catch (IllegalValueException ive) {
             logger.info("Illegal values found in " + filePath + ": " + ive.getMessage());
             throw new DataLoadingException(ive);
-        } catch (DataCorruptionException dce) {
-            logger.warning("Data corruption detected in " + filePath + ": " + dce.getMessage());
-            throw new DataLoadingException(dce.getMessage(), dce);
         }
     }
 

@@ -6,14 +6,12 @@ import java.util.Optional;
 import java.util.logging.Logger;
 
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 import seedu.address.commons.core.Config;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.commons.core.Version;
-import seedu.address.commons.exceptions.DataCorruptionException;
 import seedu.address.commons.exceptions.DataLoadingException;
 import seedu.address.commons.util.ConfigUtil;
 import seedu.address.commons.util.StringUtil;
@@ -51,8 +49,7 @@ public class MainApp extends Application {
     protected Config config;
 
     // If set during init, we will show an error alert and exit in start().
-    private String startupFatalErrorMessage;
-    private Throwable startupFatalErrorCause;
+    private String startupWarningMessage;
 
     @Override
     public void init() throws Exception {
@@ -70,24 +67,15 @@ public class MainApp extends Application {
 
         try {
             model = initModelManager(storage, userPrefs);
-            logic = new LogicManager(model, storage);
-            ui = new UiManager(logic);
         } catch (DataLoadingException e) {
-            // If data is corrupted, capture the message for the startup alert and skip creating UI/Logic.
-            if (e.getCause() instanceof DataCorruptionException || e instanceof DataCorruptionException) {
-                startupFatalErrorMessage = e.getMessage();
-                startupFatalErrorCause = e;
-                logger.severe("Data corruption detected during initialization: " + e.getMessage());
-                // Do not create logic/ui; start() will display the alert and exit.
-            } else {
-                // For other loading errors, fall back to empty address book
-                logger.warning("Data file at " + storage.getAddressBookFilePath() + " could not be loaded."
-                        + " Will be starting with an empty AbsoluteSin-Ema.");
-                model = new ModelManager(new AddressBook(), userPrefs);
-                logic = new LogicManager(model, storage);
-                ui = new UiManager(logic);
-            }
+            logger.warning("Invalid data file. Starting with empty data: " + e.getMessage());
+            String path = String.valueOf(storage.getAddressBookFilePath());
+            startupWarningMessage = "The data file contains invalid or unsupported values. "
+                    + "The application will start with empty data so you can restart.\n\nFile: " + path;
+            model = new ModelManager(new AddressBook(), userPrefs);
         }
+        logic = new LogicManager(model, storage);
+        ui = new UiManager(logic);
     }
 
     /**
@@ -98,16 +86,8 @@ public class MainApp extends Application {
     private Model initModelManager(Storage storage, ReadOnlyUserPrefs userPrefs) throws DataLoadingException {
         logger.info("Using data file : " + storage.getAddressBookFilePath());
 
-        Optional<ReadOnlyAddressBook> addressBookOptional;
-        ReadOnlyAddressBook initialData;
-
-        addressBookOptional = storage.readAddressBook();
-        if (!addressBookOptional.isPresent()) {
-            logger.info("Creating a new data file " + storage.getAddressBookFilePath()
-                    + " populated with a sample AbsoluteSin-Ema.");
-        }
-        initialData = addressBookOptional.orElseGet(SampleDataUtil::getSampleAddressBook);
-
+        Optional<ReadOnlyAddressBook> addressBookOptional = storage.readAddressBook();
+        ReadOnlyAddressBook initialData = addressBookOptional.orElseGet(SampleDataUtil::getSampleAddressBook);
         return new ModelManager(initialData, userPrefs);
     }
 
@@ -189,25 +169,13 @@ public class MainApp extends Application {
     @Override
     public void start(Stage primaryStage) {
         logger.info("Starting AbsoluteSin-Ema " + MainApp.VERSION);
-        if (startupFatalErrorMessage != null) {
-            // Show a fatal error dialog and exit.
-            final Alert alert = new Alert(AlertType.ERROR);
-            alert.setTitle("Corrupted data file detected");
-            alert.setHeaderText("Your data file is corrupted or has been manually modified.");
-            String path = storage != null
-                    ? String.valueOf(storage.getAddressBookFilePath())
-                    : "<unknown path>";
-            StringBuilder content = new StringBuilder();
-            if (startupFatalErrorMessage != null) {
-                content.append(startupFatalErrorMessage);
-            }
-            content.append("\n\nFile: ").append(path)
-                   .append("\n\nPlease delete the data file and relaunch the application to regenerate a fresh one.");
-            alert.setContentText(content.toString());
+        if (startupWarningMessage != null) {
+            // Show a warning dialog for data issues, but allow the app to start.
+            final Alert alert = new Alert(AlertType.WARNING);
+            alert.setTitle("Invalid data file");
+            alert.setHeaderText("Some data could not be loaded. Starting with empty data.");
+            alert.setContentText(startupWarningMessage);
             alert.showAndWait();
-            Platform.exit();
-            System.exit(1);
-            return;
         }
         ui.start(primaryStage);
     }

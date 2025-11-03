@@ -121,8 +121,12 @@ class JsonAdaptedPerson {
         if (id == null || id.isEmpty()) {
             return new Person(modelName, modelPhone, modelEmail, modelWebsite, modelTags, modelBudget);
         } else {
-            final PersonId modelId = new PersonId(id);
-            return new Person(modelId, modelName, modelPhone, modelEmail, modelWebsite, modelTags, modelBudget);
+            try {
+                final PersonId modelId = new PersonId(id);
+                return new Person(modelId, modelName, modelPhone, modelEmail, modelWebsite, modelTags, modelBudget);
+            } catch (IllegalArgumentException iae) {
+                throw new IllegalValueException(PersonId.MESSAGE_CONSTRAINTS);
+            }
         }
     }
 

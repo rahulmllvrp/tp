@@ -4,6 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.testutil.Assert.assertThrows;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 import org.junit.jupiter.api.Test;
 
 public class EventDateTest {
@@ -52,9 +55,9 @@ public class EventDateTest {
 
     @Test
     public void constructor_validDate_success() {
-        // This should not throw any exception
-        new EventDate("31-10-2025"); // tomorrow
-        new EventDate("28-02-2026"); // future date
-        new EventDate("31-12-2025"); // end of year
+        DateTimeFormatter f = DateTimeFormatter.ofPattern("dd-MM-uuuu");
+        new EventDate(LocalDate.now().plusDays(1).format(f)); // tomorrow
+        new EventDate(LocalDate.now().plusDays(120).format(f)); // future date
+        new EventDate(LocalDate.now().plusDays(400).format(f)); // end of year
     }
 }
