@@ -1045,8 +1045,8 @@ Given below are instructions to test AbsolutSin-ema manually.
    3. Test case: `add n/John's Catering p/91234567 e/different@email.com w/different.com t/caterer b/150`
    4. **Expected**: Error message: "This person already exists in the address book".
 
-   5. Test case: `add n/Invalid p/123 e/bad-email w/bad-url t/test b/-50`
-   6. **Expected**: Error messages for invalid phone, email, website, and negative budget.
+   5. Test case: `add n/Invalid p/13 e/bad-email w/bad-url t/test b/-50`
+   6. **Expected**: Error messages for invalid phone, email, website, or negative budget.
 
 2. **Editing vendor information**
    1. Prerequisites: At least one vendor in the list
