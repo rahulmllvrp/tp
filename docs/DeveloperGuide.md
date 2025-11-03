@@ -229,8 +229,6 @@ This section describes noteworthy implementation details of key features.
 
 AbsolutSin-ema implements sophisticated budget tracking for both individual vendors and events. This system ensures financial constraints are respected when assigning vendors to events.
 
-#### Implementation
-
 **Budget Components:**
 * `Budget` class: Validates and stores monetary values
 * Event budget tracking: Initial vs. remaining budget separation
@@ -257,13 +255,13 @@ When assigning contacts to events, the system:
 
 #### Design Considerations
 
-**Alternative 1 (current choice):** Real-time budget validation
-* Pros: Immediate feedback, prevents budget violations
-* Cons: More complex assignment logic
+- **Alternative 1 (current choice):** Real-time budget validation
+  * Pros: Immediate feedback, prevents budget violations
+  * Cons: More complex assignment logic
 
-**Alternative 2:** Post-assignment budget checking
-* Pros: Simpler implementation
-* Cons: Could allow budget violations
+- **Alternative 2:** Post-assignment budget checking
+  * Pros: Simpler implementation
+  * Cons: Could allow budget violations
 
 ### Event-Person Assignment System
 
@@ -271,7 +269,6 @@ When assigning contacts to events, the system:
 
 The assignment system manages complex relationships between vendors and events with budget constraints and participant tracking.
 
-#### Implementation
 
 **Assignment Command Flow:**
 1. `AssignContactToEventCommand` receives event index and person indexes
@@ -314,7 +311,6 @@ private List<Person> collectAndValidatePersons(List<Person> lastShownList,
 
 AbsolutSin-ema implements a state-saving undo system that captures application state before destructive operations.
 
-#### Implementation
 
 **State Management:**
 ```java
@@ -340,13 +336,13 @@ model.undo(); // Restores to saved state
 
 #### Design Considerations
 
-**Current Implementation:**
-* Pros: Simple and reliable
-* Cons: Memory intensive for large datasets
+- **Current Implementation:**
+  * Pros: Simple and reliable
+  * Cons: Memory intensive for large datasets
 
-**Alternative Approach:** Command-specific undo
-* Pros: Memory efficient
-* Cons: Complex implementation, higher error potential
+- **Alternative Approach:** Command-specific undo
+  * Pros: Memory efficient
+  * Cons: Complex implementation, higher error potential
 
 ### Search and Filter System
 
@@ -354,7 +350,6 @@ model.undo(); // Restores to saved state
 
 Advanced search capabilities supporting both name-based and tag-based filtering across persons and events.
 
-#### Implementation
 
 **Search Components:**
 * `FindCommand`: Unified search across name and tag fields
@@ -364,9 +359,9 @@ Advanced search capabilities supporting both name-based and tag-based filtering 
 
 ### Event Management System
 
-#### Implementation
 
-The event management system allows party planners to create and manage events (parties), track budgets, and assign contacts (vendors/clients) to specific events. This feature is fully integrated with the person management system.
+The event management system allows party planners to create and manage events (parties), track budgets, and assign 
+contacts (vendors/clients) to specific events. This feature is fully integrated with the person management system.
 
 **Key Components:**
 
@@ -412,13 +407,14 @@ Events don't store full `Person` objects, but rather `PersonId` references. This
 
 ### Confirmation System for Destructive Operations
 
-#### Implementation
 
-To prevent accidental data loss, the application implements a confirmation system for the `clear` command, which deletes all contacts and events.
+To prevent accidental data loss, the application implements a confirmation system for the `clear all`
+command, which deletes all contacts and parties, the `clear parties` command, which deletes only parties,
+and the `clear contacts`, which deletes only contacts respectively.
 
 **How it works:**
 
-1. When user executes `clear`, the `ClearCommand` displays a warning message:
+1. When user executes `clear all`, the `ClearCommand` displays a warning message:
    ```
    Are you sure you want to clear the party planner? (Type 'y' to confirm, 'n' to cancel)
    ```
@@ -426,8 +422,12 @@ To prevent accidental data loss, the application implements a confirmation syste
 3. If confirmed, the `ConfirmClearCommand` performs the actual data deletion
 4. If cancelled, the operation is aborted and no data is lost
 
+
+The commands `clear contacts` and `clear parties` work similarly, but just with different warning messages in step 1 
+that refer to what they are deleting (contacts for `clear contacts` and parties for `clear parties`).
+
 **Design Rationale:**
-- Destructive operations like `clear` are irreversible (even with undo, losing all data is risky)
+- Destructive operations like `clear all`, `clear contacts`, and `clear parties` can be fatal (even with undo, losing all data is risky)
 - Interactive confirmation with explicit yes/no response provides a strong safety net
 - The confirmation message clearly explains what will happen and how to proceed
 - User-friendly prompts reduce the chance of accidental data loss from typos or misclicks
