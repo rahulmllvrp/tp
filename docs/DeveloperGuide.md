@@ -720,13 +720,13 @@ Given below are instructions to test AbsolutSin-ema manually.
 
 1. **Initial launch**
    1. Download the jar file and copy into an empty folder
-   2. Double-click the jar file
+   2. Open a command terminal, `cd` into the folder you put the jar file in, and use the `java -jar absolutsinema.jar` command to run the application.<br>
    3. **Expected**: GUI appears with sample vendors and events. Window may not be optimally sized.
 
 2. **Saving window preferences**
    1. Resize window to a comfortable size and move to preferred location
    2. Close the window
-   3. Re-launch the app by double-clicking the jar file
+   3. Re-launch the app by re-typing `java -jar absolutsinema.jar` in the terminal
    4. **Expected**: Window appears in the same size and location as before closing
 
 ### Vendor management
